@@ -2028,6 +2028,19 @@
       busuanzi.async = true;
       document.head.appendChild(busuanzi);
     }
+
+    /* ======================================================
+       8. 保证所有章节默认收起
+       （兼容手机浏览器缓存旧状态、或从返回导航恢复展开状态）
+       ====================================================== */
+    function collapseChapters() {
+      document.querySelectorAll("details.chapter, #albumDetails").forEach(function (d) {
+        d.open = false;
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", collapseChapters);
+    window.addEventListener("pageshow", collapseChapters);
   </script>
 </body>
 </html>
