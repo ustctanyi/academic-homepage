@@ -28,6 +28,16 @@
 ## 修改说明
 
 - 全文搜索「【」即可找到需要替换的占位内容（姓名、论文、项目、荣誉等）。
-- 相册：图片放在 `assets/album/`，网页中每张图对应一个
-  `<figure class="album-item">` 块，改文件名和说明文字即可。
+- 相册：照片放在本地 `albums/` 文件夹（按文件夹分类，支持中文名）。
+  新增或删除照片后，运行 `python build_album.py` 重新生成网页相册资源
+  （自动压缩图片、生成索引到 `assets/albums/`），然后提交推送即可。
 - 头像与头部风景图：替换 `assets/` 下的图片后，修改 `index.html` 中的路径。
+
+## 更新相册的完整流程
+
+```bash
+python build_album.py            # 1. 压缩照片并生成索引
+git add -A
+git commit -m "更新相册"
+git push                         # 2. 推送后 GitHub Pages 自动重新部署
+```

@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="博士生个人学术主页：研究方向、论文成果、项目经历、获奖荣誉与联系方式。" />
   <title>谭义 | 博士生个人主页</title>
+  <!-- 浏览器标签页图标（内联 SVG，无需图片文件） -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%2316324f'/%3E%3Ctext%20x='32'%20y='43'%20font-family='Georgia,serif'%20font-size='36'%20fill='white'%20text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E" />
+  <meta name="theme-color" content="#16324f" />
+  <!-- 社交分享预览（转发到微信/邮件时显示标题与摘要） -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="谭义 | 博士生个人主页" />
+  <meta property="og:description" content="中国科学技术大学化学与材料科学学院博士研究生，研究低维金属纳米材料、界面外延生长与电催化。" />
+  <meta property="og:url" content="https://ustctanyi.github.io/academic-homepage/" />
+  <meta property="og:image" content="https://ustctanyi.github.io/academic-homepage/assets/hero.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <!--
     ============================================================
@@ -198,7 +208,7 @@
       /* ▼【可替换】背景风景图：换成你喜欢的本地图片，例如 assets/hero.jpg */
       background-image:
         linear-gradient(160deg, rgba(22, 50, 79, 0.90), rgba(22, 50, 79, 0.78)),
-        url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80");
+        url("assets/hero.jpg");
       background-size: cover;
       background-position: center 35%;
     }
@@ -436,18 +446,169 @@
       display: block;
     }
 
-    /* 相册：图片底部说明文字 */
-    .album-caption {
+    /* 相册：加载状态提示 */
+    .album-mode {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 12px;
+    }
+
+    /* 文件夹网格 */
+    .album-folders {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
+    }
+
+    .album-folder {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 20px 14px 16px;
+      text-align: center;
+      background: rgba(22, 50, 79, 0.04);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .album-folder:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .album-folder svg {
+      width: 34px;
+      height: 34px;
+      fill: var(--accent);
+      opacity: 0.9;
+    }
+
+    .album-folder .folder-name {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+      color: var(--deep-blue);
+      font-size: 0.92rem;
+      word-break: break-all;
+    }
+
+    .album-folder .folder-count {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-top: 2px;
+    }
+
+    /* 文件夹内的照片视图 */
+    .album-photo-view[hidden],
+    .album-folders[hidden] {
+      display: none !important;
+    }
+
+    .album-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      color: var(--deep-blue);
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .album-btn {
+      padding: 7px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--deep-blue);
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .album-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .album-item img {
+      cursor: zoom-in;                        /* 提示可点击放大 */
+    }
+
+    /* 大图查看（lightbox） */
+    .album-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(10, 20, 35, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 40px 20px;
+    }
+
+    .album-lightbox[hidden] {
+      display: none !important;
+    }
+
+    .album-lightbox img {
+      max-width: min(92vw, 1100px);
+      max-height: 82vh;
+      border-radius: 8px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .album-lightbox .lightbox-caption {
+      color: rgba(255, 255, 255, 0.9);
+      margin-top: 12px;
+      font-size: 0.9rem;
+    }
+
+    .lightbox-close {
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      margin: 0;
-      padding: 20px 10px 8px;
-      background: linear-gradient(transparent, rgba(22, 50, 79, 0.75));
+      top: 18px;
+      right: 22px;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
       color: var(--white);
-      font-size: 0.8rem;
-      text-align: left;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .lightbox-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* 回到顶部按钮 */
+    .back-to-top {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 90;
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background: var(--deep-blue);
+      color: var(--white);
+      font-size: 18px;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+      box-shadow: 0 6px 18px rgba(22, 50, 79, 0.3);
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      transform: translateY(-2px);
     }
 
     /* 手机上相册改为两列 */
@@ -767,10 +928,8 @@
       <li><a href="#projects">项目经历</a></li>
       <li><a href="#honors">获奖荣誉</a></li>
       <li><a href="#contact">联系方式</a></li>
-      <!-- 需要时取消注释，把“教育经历”加入导航 -->
-      <!-- <li><a href="#education">教育经历</a></li> -->
-      <!-- 需要时取消注释，把“相册”加入导航 -->
-      <!-- <li><a href="#album">相册</a></li> -->
+      <li><a href="#education">教育经历</a></li>
+      <li><a href="#album">相册</a></li>
     </ul>
 
     <button class="nav-toggle" id="navToggle" type="button" aria-label="打开菜单" aria-expanded="false">
@@ -961,9 +1120,7 @@
               <div>
                 <p class="pub-title">Interfacial Epitaxial Growth for the Synthesis of Noble/Non-Noble Metal Alloy Nanostructures toward High-Efficiency Hydrogen Oxidation Reaction</p>
                 <p class="pub-meta">H. Ding, <strong>Yi Tan</strong>, et al. 在投（共同第一作者）.</p>
-                <a class="pub-doi" href="https://doi.org/10.xxxx/xxxx" target="_blank" rel="noopener">
-                  DOI 占位：
-                </a>
+                <span class="pub-doi">DOI：接收后补充</span>
               </div>
             </article>
 
@@ -972,9 +1129,7 @@
               <div>
                 <p class="pub-title">Atomically Ordered Phosphorus Engineering Modulates Interfacial Water Structure for Highly Efficient Alkaline Hydrogen Oxidation</p>
                 <p class="pub-meta">R. Gui, <strong>Yi Tan</strong>, et al. 在投（共同第一作者）.</p>
-                <a class="pub-doi" href="https://doi.org/10.xxxx/xxxx" target="_blank" rel="noopener">
-                  DOI 占位：
-                </a>
+                <span class="pub-doi">DOI：接收后补充</span>
               </div>
             </article>
           </div>
@@ -1109,61 +1264,33 @@
         </div>
 
         <!-- <details> 折叠组件：默认收起，点击标题栏展开。
-             相册为静态展示：图片来自 assets/album/ 文件夹。
-             换照片：把新图命名为同名文件替换即可，或复制一个
-             <figure class="album-item"> 块并修改 src 与说明文字。 -->
-        <details class="edu-card">
+             相册为“文件夹模式”：点击文件夹进入查看照片，点击照片可放大。
+             照片索引由 build_album.py 自动生成到 assets/albums/。 -->
+        <details class="edu-card" id="albumDetails">
           <summary>生活相册（点击展开查看）</summary>
           <div class="edu-body">
-            <div class="album-grid">
+            <p class="album-mode" id="albumMode">正在加载相册…</p>
 
-              <figure class="album-item">
-                <img src="assets/album/snow.jpg" alt="科大雪景" loading="lazy" />
-                <figcaption class="album-caption">科大雪景</figcaption>
-              </figure>
+            <!-- 相册根目录：文件夹列表 -->
+            <div id="albumFolders" class="album-folders"></div>
 
-              <figure class="album-item">
-                <img src="assets/album/tianzhushan.jpg" alt="天柱山" loading="lazy" />
-                <figcaption class="album-caption">天柱山</figcaption>
-              </figure>
-
-              <figure class="album-item">
-                <img src="assets/album/suzhou-garden.jpg" alt="苏州园林" loading="lazy" />
-                <figcaption class="album-caption">苏州园林</figcaption>
-              </figure>
-
-              <figure class="album-item">
-                <img src="assets/album/cherry.jpg" alt="樱花" loading="lazy" />
-                <figcaption class="album-caption">樱花</figcaption>
-              </figure>
-
-              <figure class="album-item">
-                <img src="assets/album/shushan.jpg" alt="蜀山" loading="lazy" />
-                <figcaption class="album-caption">蜀山</figcaption>
-              </figure>
-
-              <figure class="album-item">
-                <img src="assets/album/jinan.jpg" alt="济南" loading="lazy" />
-                <figcaption class="album-caption">济南</figcaption>
-              </figure>
-
-              <figure class="album-item">
-                <img src="assets/album/huiban.jpg" alt="徽班" loading="lazy" />
-                <figcaption class="album-caption">徽班</figcaption>
-              </figure>
-
-              <figure class="album-item">
-                <img src="assets/album/jingdezhen.jpg" alt="景德镇" loading="lazy" />
-                <figcaption class="album-caption">景德镇</figcaption>
-              </figure>
-
-              <figure class="album-item">
-                <img src="assets/album/yantai.jpg" alt="烟台·威海" loading="lazy" />
-                <figcaption class="album-caption">烟台·威海</figcaption>
-              </figure>
+            <!-- 文件夹内：照片网格 -->
+            <div id="albumPhotoView" class="album-photo-view" hidden>
+              <div class="album-breadcrumb">
+                <button type="button" class="album-btn" id="btnBack">← 返回相册</button>
+                <span id="albumFolderName"></span>
+              </div>
+              <div id="albumPhotos" class="album-grid"></div>
             </div>
           </div>
         </details>
+
+        <!-- 大图查看（lightbox） -->
+        <div id="albumLightbox" class="album-lightbox" hidden>
+          <button type="button" class="lightbox-close" id="lightboxClose" aria-label="关闭">✕</button>
+          <img id="lightboxImg" src="" alt="照片大图" />
+          <p class="lightbox-caption" id="lightboxCaption"></p>
+        </div>
       </div>
     </section>
 
@@ -1237,6 +1364,9 @@
     <p class="footer-note">以好奇心和自由探索精神做科研 · <a href="#home">回到顶部</a></p>
   </footer>
 
+  <!-- 回到顶部按钮（滚动超过一屏后显示） -->
+  <button type="button" id="backToTop" class="back-to-top" aria-label="回到顶部">↑</button>
+
   <script>
     /* ======================================================
        少量 JavaScript：只有三件小事
@@ -1287,6 +1417,152 @@
       });
     }
 
+    /* ======================================================
+       4. 相册：文件夹模式（点进文件夹看照片，点击照片放大）
+       数据来源：assets/albums/index.json（由 build_album.py 生成）
+       ====================================================== */
+    (function () {
+      const albumDetails = document.getElementById("albumDetails");
+      const modeEl = document.getElementById("albumMode");
+      const foldersEl = document.getElementById("albumFolders");
+      const photoView = document.getElementById("albumPhotoView");
+      const photosEl = document.getElementById("albumPhotos");
+      const folderNameEl = document.getElementById("albumFolderName");
+      const btnBack = document.getElementById("btnBack");
+      const lightbox = document.getElementById("albumLightbox");
+      const lightboxImg = document.getElementById("lightboxImg");
+      const lightboxCaption = document.getElementById("lightboxCaption");
+      const lightboxClose = document.getElementById("lightboxClose");
+
+      const folderIconSvg =
+        '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+        '<path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2z"/>' +
+        "</svg>";
+
+      let data = { folders: [] };
+      let currentFolder = null;   // null = 在相册根目录
+
+      async function loadAlbum() {
+        modeEl.textContent = "正在加载相册…";
+        try {
+          const res = await fetch("assets/albums/index.json?t=" + Date.now());
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          data = await res.json();
+          const total = data.folders.reduce(function (n, f) { return n + f.photos.length; }, 0);
+          modeEl.textContent = "共 " + data.folders.length + " 个相册、" + total + " 张照片，点击文件夹进入查看。";
+        } catch (e) {
+          data = { folders: [] };
+          modeEl.textContent = "相册索引加载失败：请先在项目目录运行 python build_album.py 生成相册资源。";
+        }
+        render();
+      }
+
+      function render() {
+        if (currentFolder === null) {
+          photoView.hidden = true;
+          foldersEl.hidden = false;
+          renderFolders();
+        } else {
+          foldersEl.hidden = true;
+          photoView.hidden = false;
+          renderPhotos();
+        }
+      }
+
+      function renderFolders() {
+        foldersEl.innerHTML = "";
+        data.folders.forEach(function (folder) {
+          const card = document.createElement("div");
+          card.className = "album-folder";
+          card.innerHTML = folderIconSvg +
+            '<span class="folder-name"></span><span class="folder-count"></span>';
+          card.querySelector(".folder-name").textContent = folder.name;
+          card.querySelector(".folder-count").textContent = folder.photos.length + " 张照片";
+          card.addEventListener("click", function () { openFolder(folder.name); });
+          foldersEl.appendChild(card);
+        });
+      }
+
+      function renderPhotos() {
+        folderNameEl.textContent = currentFolder.name;
+        photosEl.innerHTML = "";
+        currentFolder.photos.forEach(function (photo) {
+          const item = document.createElement("div");
+          item.className = "album-item";
+          const img = document.createElement("img");
+          img.src = "assets/albums/" + encodeURIComponent(currentFolder.name) +
+            "/" + encodeURIComponent(photo);
+          img.alt = currentFolder.name + " - " + photo;
+          img.loading = "lazy";
+          img.addEventListener("click", function () {
+            openLightbox(img.src, img.alt);
+          });
+          item.appendChild(img);
+          photosEl.appendChild(item);
+        });
+      }
+
+      function openFolder(name) {
+        const found = data.folders.find(function (f) { return f.name === name; });
+        if (found) {
+          currentFolder = found;
+          render();
+        }
+      }
+
+      btnBack.addEventListener("click", function () {
+        currentFolder = null;
+        render();
+      });
+
+      /* 大图查看 */
+      function openLightbox(src, caption) {
+        lightboxImg.src = src;
+        lightboxCaption.textContent = caption;
+        lightbox.hidden = false;
+        document.body.style.overflow = "hidden";   // 防止背景滚动
+      }
+
+      function closeLightbox() {
+        lightbox.hidden = true;
+        document.body.style.overflow = "";
+        lightboxImg.src = "";
+      }
+
+      lightboxClose.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", function (e) {
+        if (e.target === lightbox) closeLightbox();   // 点击遮罩空白处关闭
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !lightbox.hidden) closeLightbox();
+      });
+
+      /* 每次展开相册时刷新（带时间戳避开缓存） */
+      albumDetails.addEventListener("toggle", function () {
+        if (albumDetails.open) loadAlbum();
+      });
+    })();
+
+    /* ======================================================
+       5. 点击导航中的折叠板块（教育经历 / 相册）时自动展开
+       ====================================================== */
+    document.querySelectorAll('.nav-links a[href="#education"], .nav-links a[href="#album"]').forEach(function (a) {
+      a.addEventListener("click", function () {
+        const target = document.querySelector(a.getAttribute("href"));
+        if (target) target.open = true;
+      });
+    });
+
+    /* ======================================================
+       6. 回到顶部按钮
+       ====================================================== */
+    const backToTop = document.getElementById("backToTop");
+    window.addEventListener("scroll", function () {
+      backToTop.classList.toggle("show", window.scrollY > 600);
+    });
+    backToTop.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
   </script>
 </body>
 </html>

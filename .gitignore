@@ -1,5 +1,6 @@
-# 原图相册：体积大且不进入仓库，网页只使用 assets/album/ 下的压缩图
-albums/
+# 原图相册（仅根目录）：体积大且不进入仓库，
+# 网页相册使用的是 assets/albums/ 下的压缩图（由 build_album.py 生成）
+/albums/
 
 # Python 缓存
 __pycache__/
