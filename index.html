@@ -127,6 +127,234 @@
     }
 
     /* ==========================================================
+        板块照片背景：白色半透明覆盖，保留风景气息又保证可读性
+        ========================================================== */
+    .section-photo {
+      background-size: cover;
+      background-position: center;
+    }
+
+    .section-forest {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
+        url("assets/bg/forest.jpg");
+    }
+
+    .section-mist {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.90)),
+        url("assets/bg/mist.jpg");
+    }
+
+    .section-lake {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.90)),
+        url("assets/bg/lake.jpg");
+    }
+
+    .section-stars {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.93), rgba(255, 255, 255, 0.93)),
+        url("assets/bg/stars.jpg");
+    }
+
+    .section-sunrise {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.90)),
+        url("assets/bg/sunrise.jpg");
+    }
+
+    /* ==========================================================
+        创意折叠章节（chapter 手风琴）
+        ========================================================== */
+    .chapter {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 26px;
+    }
+
+    .chapter-head {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 22px 26px;
+      cursor: pointer;
+      list-style: none;                  /* 去掉浏览器默认三角 */
+      transition: background 0.25s ease;
+      user-select: none;
+    }
+
+    .chapter-head::-webkit-details-marker {
+      display: none;
+    }
+
+    .chapter-head:hover {
+      background: rgba(47, 109, 179, 0.05);
+    }
+
+    .chapter-icon {
+      flex-shrink: 0;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: rgba(47, 109, 179, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .chapter-head:hover .chapter-icon {
+      transform: rotate(-8deg) scale(1.06);
+    }
+
+    .chapter-icon svg {
+      width: 26px;
+      height: 26px;
+      fill: var(--accent);
+    }
+
+    .chapter-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .chapter-kicker {
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .chapter-title {
+      color: var(--deep-blue);
+      font-family: Georgia, "Songti SC", "SimSun", serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .chapter-sub {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .chapter-num {
+      margin-left: auto;
+      font-family: Georgia, serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1;
+      color: rgba(22, 50, 79, 0.14);
+      letter-spacing: 2px;
+    }
+
+    /* 展开按钮：+ 号旋转成 × 并点亮 */
+    .chapter-toggle {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      line-height: 1;
+      transition: transform 0.35s ease, background 0.3s ease, color 0.3s ease;
+    }
+
+    details[open] .chapter-toggle {
+      transform: rotate(135deg);
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
+    }
+
+    .chapter-body {
+      border-top: 1px solid var(--line);
+      padding: 26px;
+      animation: chapterIn 0.4s ease;
+    }
+
+    /* 展开后内容逐条浮现 */
+    details[open] .chapter-body > * {
+      animation: chapterIn 0.45s ease both;
+    }
+
+    details[open] .chapter-body > *:nth-child(2) { animation-delay: 0.06s; }
+    details[open] .chapter-body > *:nth-child(3) { animation-delay: 0.12s; }
+    details[open] .chapter-body > *:nth-child(4) { animation-delay: 0.18s; }
+    details[open] .chapter-body > *:nth-child(5) { animation-delay: 0.24s; }
+
+    @keyframes chapterIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* 教育经历：竖向时间线 */
+    .edu-timeline {
+      position: relative;
+      padding-left: 28px;
+      border-left: 2px solid var(--line);
+    }
+
+    .edu-timeline .edu-item {
+      position: relative;
+      display: block;
+      padding: 14px 0;
+      border-bottom: 1px dashed var(--line);
+    }
+
+    .edu-timeline .edu-item:last-child {
+      border-bottom: none;
+    }
+
+    .edu-timeline .edu-item::before {
+      content: "";
+      position: absolute;
+      left: -33px;
+      top: 22px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 3px solid var(--accent);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .edu-timeline .edu-item:hover::before {
+      transform: scale(1.35);
+      box-shadow: 0 0 0 5px rgba(47, 109, 179, 0.15);
+    }
+
+    /* 小屏幕上的章节与时间线适配 */
+    @media (max-width: 700px) {
+      .chapter-head {
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 18px;
+      }
+
+      .chapter-num {
+        display: none;
+      }
+
+      .chapter-body {
+        padding: 18px;
+      }
+
+      .edu-timeline {
+        padding-left: 22px;
+      }
+
+      .edu-timeline .edu-item::before {
+        left: -27px;
+      }
+    }
+
+    /* ==========================================================
         三、顶部导航栏（吸顶 + 移动端汉堡菜单）
         ========================================================== */
     .topnav {
@@ -943,13 +1171,10 @@
   <header class="hero" id="home">
     <div class="hero-inner">
 
-      <!-- ▼【可替换】头像占位：默认显示“XY”两个字母。
-          换真实照片时，删除下面这个 <div class="avatar">…</div>，
-          改用它：
-          <div class="avatar">
-            <img src="assets/avatar.jpg" alt="个人头像" style="width:100%;height:100%;object-fit:cover;" />
-          </div> -->
-      <div class="avatar">TY</div>
+      <!-- 头像：把新照片放到 assets/avatar.jpg（或 .jpeg/.png）即可替换 -->
+      <div class="avatar">
+        <img src="assets/avatar.jpeg" alt="谭义的照片" />
+      </div>
 
       <h1>谭义</h1>
       <p class="hero-title">博士研究生</p>
@@ -973,7 +1198,7 @@
     <!-- ======================================================
          二、研究方向
          ====================================================== -->
-    <section id="research">
+    <section id="research" class="section-photo section-forest">
       <div class="container">
         <div class="section-head">
           <p class="section-kicker">Research</p>
@@ -1018,42 +1243,54 @@
     <!-- ======================================================
          三、教育经历（默认折叠，点击展开）
          ====================================================== -->
-    <section id="education">
+    <section id="education" class="section-photo section-mist">
       <div class="container">
-        <div class="section-head">
-          <p class="section-kicker">Education</p>
-          <h2>教育经历</h2>
-        </div>
+        <!-- 创意折叠章节：点击标题展开时间线 -->
+        <details class="chapter">
+          <summary class="chapter-head">
+            <span class="chapter-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3 1 9l11 6 9-4.91V17h2V9L12 3zm-1 12.6L3.7 9.9 11 6.1l7.3 3.8L11 15.6z"/>
+                <path d="M5 12.2V16c0 1.66 3.13 3 7 3s7-1.34 7-3v-3.8l-7 3.8-7-3.8z"/>
+              </svg>
+            </span>
+            <span class="chapter-text">
+              <span class="chapter-kicker">Education</span>
+              <span class="chapter-title">教育经历</span>
+              <span class="chapter-sub">点击展开求学时间线</span>
+            </span>
+            <span class="chapter-num">01</span>
+            <span class="chapter-toggle" aria-hidden="true">＋</span>
+          </summary>
 
-        <!-- <details> 是浏览器原生折叠组件：默认收起，点击标题栏展开 -->
-        <details class="edu-card">
-          <summary>教育经历</summary>
-          <div class="edu-body">
+          <div class="chapter-body">
+            <div class="edu-timeline">
 
-            <!-- ▼ 教育条目：按时间倒序排列，复制整块修改 -->
-            <article class="edu-item">
-              <span class="edu-year">2025 – 至今</span>
-              <div>
-                <p class="edu-degree">博士研究生 · 无机化学</p>
-                <p class="edu-school">中国科学技术大学（导师：吴长征）</p>
-              </div>
-            </article>
+              <!-- ▼ 教育条目：按时间倒序排列，复制整块修改 -->
+              <article class="edu-item">
+                <span class="edu-year">2025 – 至今</span>
+                <div>
+                  <p class="edu-degree">博士研究生 · 无机化学</p>
+                  <p class="edu-school">中国科学技术大学（导师：吴长征）</p>
+                </div>
+              </article>
 
-            <article class="edu-item">
-              <span class="edu-year">2023 – 2025</span>
-              <div>
-                <p class="edu-degree">硕士研究生 · 无机化学</p>
-                <p class="edu-school">中国科学技术大学（导师：吴长征）</p>
-              </div>
-            </article>
+              <article class="edu-item">
+                <span class="edu-year">2023 – 2025</span>
+                <div>
+                  <p class="edu-degree">硕士研究生 · 无机化学</p>
+                  <p class="edu-school">中国科学技术大学（导师：吴长征）</p>
+                </div>
+              </article>
 
-            <article class="edu-item">
-              <span class="edu-year">2019 – 2023</span>
-              <div>
-                <p class="edu-degree">本科 · 材料化学</p>
-                <p class="edu-school">中国科学技术大学</p>
-              </div>
-            </article>
+              <article class="edu-item">
+                <span class="edu-year">2019 – 2023</span>
+                <div>
+                  <p class="edu-degree">本科 · 材料化学</p>
+                  <p class="edu-school">中国科学技术大学</p>
+                </div>
+              </article>
+            </div>
           </div>
         </details>
       </div>
@@ -1062,12 +1299,26 @@
     <!-- ======================================================
          四、论文成果：已发表 / 在投
          ====================================================== -->
-    <section id="publications" class="section-alt">
+    <section id="publications" class="section-photo section-lake">
       <div class="container">
-        <div class="section-head">
-          <p class="section-kicker">Publications</p>
-          <h2>论文成果</h2>
-        </div>
+        <!-- 创意折叠章节：默认展开，可点击收起 -->
+        <details class="chapter" open>
+          <summary class="chapter-head">
+            <span class="chapter-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-1 12h-6v-2h6v2zm0-4h-6V9h6v2z"/>
+              </svg>
+            </span>
+            <span class="chapter-text">
+              <span class="chapter-kicker">Publications</span>
+              <span class="chapter-title">论文成果</span>
+              <span class="chapter-sub">已发表 · 在投 · 专利</span>
+            </span>
+            <span class="chapter-num">02</span>
+            <span class="chapter-toggle" aria-hidden="true">＋</span>
+          </summary>
+
+          <div class="chapter-body">
 
         <!-- 已发表 -->
         <div class="pub-group">
@@ -1174,20 +1425,35 @@
             </article>
           </div>
         </div>
+          </div>
+        </details>
       </div>
     </section>
 
     <!-- ======================================================
          五、项目经历：科研项目 / 助教经历
          ====================================================== -->
-    <section id="projects">
+    <section id="projects" class="section-photo section-stars">
       <div class="container">
-        <div class="section-head">
-          <p class="section-kicker">Experience</p>
-          <h2>项目经历</h2>
-        </div>
+        <!-- 创意折叠章节：点击展开 -->
+        <details class="chapter">
+          <summary class="chapter-head">
+            <span class="chapter-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2 21h20L14 4l-4 8-2-3-6 12z"/>
+              </svg>
+            </span>
+            <span class="chapter-text">
+              <span class="chapter-kicker">Experience</span>
+              <span class="chapter-title">项目经历</span>
+              <span class="chapter-sub">科研项目 · 助教经历</span>
+            </span>
+            <span class="chapter-num">03</span>
+            <span class="chapter-toggle" aria-hidden="true">＋</span>
+          </summary>
 
-        <div class="two-col">
+          <div class="chapter-body">
+            <div class="two-col">
           <!-- 科研项目 -->
           <div>
             <h3 style="color:var(--deep-blue); margin-bottom:8px;">科研项目</h3>
@@ -1210,21 +1476,36 @@
             </article>
 
                      </div>
-        </div>
+            </div>
+          </div>
+        </details>
       </div>
     </section>
 
     <!-- ======================================================
          六、获奖荣誉：奖学金 / 竞赛奖励
          ====================================================== -->
-    <section id="honors" class="section-alt">
+    <section id="honors" class="section-photo section-sunrise">
       <div class="container">
-        <div class="section-head">
-          <p class="section-kicker">Honors</p>
-          <h2>获奖荣誉</h2>
-        </div>
+        <!-- 创意折叠章节：点击展开 -->
+        <details class="chapter">
+          <summary class="chapter-head">
+            <span class="chapter-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a5 5 0 0 0-5 5c0 .34.04.67.1 1L5.5 9.6 7 12l1.8-1.4c.8 1 1.9 1.8 3.2 2.2V21h1.8v-8.2c1.3-.4 2.4-1.2 3.2-2.2L19 12l1.5-2.4-3.6-2.6c.06-.33.1-.66.1-1a5 5 0 0 0-5-5zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/>
+              </svg>
+            </span>
+            <span class="chapter-text">
+              <span class="chapter-kicker">Honors</span>
+              <span class="chapter-title">获奖荣誉</span>
+              <span class="chapter-sub">奖学金 · 竞赛奖励</span>
+            </span>
+            <span class="chapter-num">04</span>
+            <span class="chapter-toggle" aria-hidden="true">＋</span>
+          </summary>
 
-        <div class="honor-list">
+          <div class="chapter-body">
+            <div class="honor-list">
 
     <article class="honor-item">
             <span class="honor-year">2026</span>
@@ -1249,7 +1530,9 @@
             <span class="honor-name">【研究生学业一等奖学金】</span>
             <span class="honor-level">校级</span>
           </article>
-        </div>
+            </div>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -1544,12 +1827,14 @@
     })();
 
     /* ======================================================
-       5. 点击导航中的折叠板块（教育经历 / 相册）时自动展开
+       5. 点击导航中的折叠板块（教育/论文/项目/荣誉/相册）时自动展开
        ====================================================== */
-    document.querySelectorAll('.nav-links a[href="#education"], .nav-links a[href="#album"]').forEach(function (a) {
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(function (a) {
       a.addEventListener("click", function () {
         const target = document.querySelector(a.getAttribute("href"));
-        if (target) target.open = true;
+        if (!target) return;
+        const inner = target.querySelector("details");
+        if (inner) inner.open = true;
       });
     });
 
