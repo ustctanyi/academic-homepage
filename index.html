@@ -1210,6 +1210,75 @@
         margin-top: 4px;
       }
     }
+
+    /* 电脑端：章节面板整体放大，避免文字相对背景显得过小 */
+    @media (min-width: 901px) {
+      .chapter-panel {
+        width: min(700px, 92vw);
+      }
+
+      .chapter-stage {
+        min-height: 640px;
+      }
+
+      .chapter-head {
+        gap: 22px;
+        padding: 32px 36px;
+      }
+
+      .chapter-icon {
+        width: 64px;
+        height: 64px;
+      }
+
+      .chapter-icon svg {
+        width: 30px;
+        height: 30px;
+      }
+
+      .chapter-kicker {
+        font-size: 0.88rem;
+      }
+
+      .chapter-title {
+        font-size: 1.9rem;
+      }
+
+      .chapter-sub {
+        font-size: 0.98rem;
+      }
+
+      .chapter-num {
+        font-size: 3.8rem;
+      }
+
+      .chapter-toggle {
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
+      }
+
+      .chapter-body {
+        padding: 34px 36px;
+      }
+
+      /* 面板内正文同步放大 */
+      .chapter-body .pub-title { font-size: 1.14rem; }
+      .chapter-body .pub-meta { font-size: 1rem; }
+      .chapter-body .pub-doi { font-size: 0.96rem; }
+      .chapter-body .pub-year { font-size: 1.05rem; }
+      .chapter-body .edu-year { font-size: 1.05rem; }
+      .chapter-body .edu-degree { font-size: 1.18rem; }
+      .chapter-body .edu-school { font-size: 1.02rem; }
+      .chapter-body .edu-timeline .edu-item { padding: 18px 0; }
+      .chapter-body .proj-role { font-size: 0.98rem; }
+      .chapter-body .project-item h4 { font-size: 1.18rem; }
+      .chapter-body .project-item p { font-size: 1.02rem; }
+      .chapter-body .honor-name { font-size: 1.14rem; }
+      .chapter-body .honor-year { font-size: 1.05rem; }
+      .chapter-body .honor-level { font-size: 0.92rem; }
+      .chapter-body .honor-item { padding: 20px 0; }
+    }
   </style>
 </head>
 
@@ -1224,12 +1293,12 @@
     <ul class="nav-links" id="navLinks">
       <li><a href="#home">首页</a></li>
       <li><a href="#research">研究方向</a></li>
+      <li><a href="#education">教育经历</a></li>
       <li><a href="#publications">论文成果</a></li>
       <li><a href="#projects">项目经历</a></li>
       <li><a href="#honors">获奖荣誉</a></li>
-      <li><a href="#contact">联系方式</a></li>
-      <li><a href="#education">教育经历</a></li>
       <li><a href="#album">相册</a></li>
+      <li><a href="#contact">联系方式</a></li>
     </ul>
 
     <button class="nav-toggle" id="navToggle" type="button" aria-label="打开菜单" aria-expanded="false">
