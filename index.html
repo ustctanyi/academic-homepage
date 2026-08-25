@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="博士生个人学术主页：研究方向、论文成果、项目经历、获奖荣誉与联系方式。" />
+  <title>谭义 | 博士生个人主页</title>
+
+  <!--
+    ============================================================
+    使用说明（重要，先读这里）
+    ------------------------------------------------------------
+    1. 全文搜索“【”即可找到所有需要替换的占位内容。
+    2. 头像：搜索“头像占位”，替换为 <img> 标签并填图片路径。
+    3. 头部风景图：搜索“hero-bg”附近的 background-image 链接。
+    4. 论文/项目/荣誉：每个条目都写了注释，直接改文字即可。
+    5. 联系方式：搜索“your.email / researchgate / orcid”替换为真实链接。
+    ============================================================
+  -->
+
+  <style>
+    /* ==========================================================
+       一、设计变量（想换配色只需改这里）
+       ========================================================== */
+    :root {
+      --deep-blue: #16324f;        /* 主色：深蓝（头部、页脚、标题） */
+      --deep-blue-2: #1e4466;      /* 深蓝的浅一档，用于渐变 */
+      --accent: #2f6db3;           /* 点缀色：亮蓝（链接、小标题） */
+      --bg: #f5f7fa;               /* 页面浅灰背景 */
+      --white: #ffffff;
+      --text: #2c3e50;             /* 正文深灰 */
+      --muted: #6b7a8c;            /* 次要文字 */
+      --line: #e3e9f0;             /* 分隔线 */
+      --radius: 12px;
+      --shadow: 0 6px 20px rgba(22, 50, 79, 0.08);
+      --nav-height: 64px;
+    }
+
+    /* ==========================================================
+        二、基础重置与排版
+        ========================================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;              /* 锚点平滑滚动 */
+      scroll-padding-top: calc(var(--nav-height) + 12px); /* 锚点避开吸顶导航 */
+    }
+
+    body {
+      font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    a:hover {
+      color: var(--deep-blue);
+    }
+
+    .container {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 76px 0;
+    }
+
+    .section-alt {
+      background: var(--white);            /* 交替区块：浅灰 / 白色 */
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    /* 区块标题通用样式 */
+    .section-head {
+      margin-bottom: 40px;
+    }
+
+    .section-kicker {
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      color: var(--deep-blue);
+      position: relative;
+      padding-bottom: 12px;
+    }
+
+    .section-head h2::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 52px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+
+    /* ==========================================================
+        三、顶部导航栏（吸顶 + 移动端汉堡菜单）
+        ========================================================== */
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-brand {
+      font-weight: 700;
+      color: var(--deep-blue);
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 6px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 8px 14px;
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent);
+      background: rgba(47, 109, 179, 0.08);
+    }
+
+    /* 汉堡按钮：桌面端隐藏，移动端显示 */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      padding: 8px;
+      background: none;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .nav-toggle span {
+      display: block;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--deep-blue);
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    /* 汉堡按钮打开时的“X”形 */
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* ==========================================================
+        四、头部 Hero（姓名 / 头衔 / 院校 / 头像占位 + 风景背景）
+        ========================================================== */
+    .hero {
+      position: relative;
+      color: var(--white);
+      text-align: center;
+      padding: 110px 24px 96px;
+      /* ▼【可替换】背景风景图：换成你喜欢的本地图片，例如 assets/hero.jpg */
+      background-image:
+        linear-gradient(160deg, rgba(22, 50, 79, 0.90), rgba(22, 50, 79, 0.78)),
+        url("https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1920&q=80");
+      background-size: cover;
+      background-position: center 35%;
+    }
+
+    .hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* ▼【可替换】头像占位：下面这行是默认圆形占位，
+       换真实照片时删掉它，改用注释里的 <img> 即可 */
+    .avatar {
+      width: 128px;
+      height: 128px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      font-family: Georgia, "Songti SC", serif;
+      letter-spacing: 2px;
+      overflow: hidden;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+    }
+
+    .hero h1 {
+      font-family: Georgia, "Songti SC", "SimSun", serif;
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .hero-title {
+      font-size: 1.05rem;
+      letter-spacing: 1px;
+      opacity: 0.95;
+      margin-bottom: 6px;
+    }
+
+    .hero-affil {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 20px;
+    }
+
+    /* 研究方向关键词小标签 */
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 18px 0 28px;
+    }
+
+    .hero-tags span {
+      padding: 5px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 999px;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* 自由风格的一句话：可换成你喜欢的话 */
+    .hero-quote {
+      font-style: italic;
+      font-size: 0.98rem;
+      opacity: 0.92;
+      margin-top: 6px;
+    }
+
+    /* ==========================================================
+        五、研究方向
+        ========================================================== */
+    .research-intro {
+      max-width: 720px;
+      margin-bottom: 36px;
+      color: var(--muted);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px 24px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);          /* 轻微上浮，仅此而已 */
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      color: var(--deep-blue);
+      margin-bottom: 10px;
+      font-size: 1.05rem;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    /* ==========================================================
+        教育经历（默认折叠，点击标题展开）
+        ========================================================== */
+    .edu-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .edu-card summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 20px 24px;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--deep-blue);
+      list-style: none;                 /* 去掉浏览器默认三角箭头 */
+      user-select: none;
+    }
+
+    /* Safari / Chrome 去掉 summary 默认三角箭头 */
+    .edu-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    /* 右侧的“+/-”圆形按钮 */
+    .edu-card summary::after {
+      content: "+";
+      flex-shrink: 0;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(47, 109, 179, 0.1);
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      line-height: 1;
+      transition: transform 0.2s ease;
+    }
+
+    .edu-card[open] summary::after {
+      content: "−";
+      transform: rotate(180deg);
+    }
+
+    .edu-body {
+      border-top: 1px solid var(--line);
+      padding: 6px 24px 10px;
+    }
+
+    .edu-item {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 16px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .edu-item:last-child {
+      border-bottom: none;
+    }
+
+    .edu-year {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .edu-degree {
+      font-weight: 600;
+      color: var(--deep-blue);
+      margin-bottom: 2px;
+    }
+
+    .edu-school {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    /* 手机上教育经历条目改为上下堆叠 */
+    @media (max-width: 700px) {
+      .edu-item {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
+    }
+
+    /* ==========================================================
+        相册（默认折叠；复用 .edu-card 的折叠样式）
+        ========================================================== */
+    .album-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      padding: 18px 0 6px;
+    }
+
+    .album-item {
+      position: relative;
+      aspect-ratio: 4 / 3;                    /* 统一横图比例 */
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: rgba(22, 50, 79, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .album-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;                      /* 图片裁切铺满，保持 4:3 */
+      display: block;
+    }
+
+    /* 相册：图片底部说明文字 */
+    .album-caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: 20px 10px 8px;
+      background: linear-gradient(transparent, rgba(22, 50, 79, 0.75));
+      color: var(--white);
+      font-size: 0.8rem;
+      text-align: left;
+    }
+
+    /* 手机上相册改为两列 */
+    @media (max-width: 700px) {
+      .album-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* ==========================================================
+        六、论文成果（已发表 / 在投）
+        ========================================================== */
+    .pub-group {
+      margin-bottom: 44px;
+    }
+
+    .pub-group h3 {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--deep-blue);
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+    }
+
+    .pub-group h3::before {
+      content: "";
+      width: 4px;
+      height: 18px;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+
+    .pub-sub {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 10px;
+    }
+
+    .pub-list {
+      border-top: 1px solid var(--line);
+    }
+
+    .pub-item {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 18px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pub-year {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding-top: 2px;
+    }
+
+    .pub-title {
+      font-weight: 600;
+      color: var(--deep-blue);
+      margin-bottom: 4px;
+    }
+
+    .pub-meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    /* 自己名字高亮 */
+    .pub-meta strong {
+      color: var(--deep-blue);
+    }
+
+    .pub-doi {
+      font-size: 0.85rem;
+      color: var(--accent);
+      border-bottom: 1px dashed transparent;
+    }
+
+    .pub-doi:hover {
+      border-bottom-color: var(--accent);
+    }
+
+    /* ==========================================================
+        七、项目经历（科研项目 / 助教经历）
+        ========================================================== */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .project-item {
+      padding: 20px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .project-item:last-child {
+      border-bottom: none;
+    }
+
+    .project-item .proj-role {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .project-item h4 {
+      color: var(--deep-blue);
+      font-size: 1.02rem;
+      margin-bottom: 6px;
+    }
+
+    .project-item p {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    /* ==========================================================
+        八、获奖荣誉
+        ========================================================== */
+    .honor-list {
+      border-top: 1px solid var(--line);
+    }
+
+    .honor-item {
+      display: grid;
+      grid-template-columns: 84px 1fr auto;
+      align-items: center;
+      gap: 18px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .honor-year {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .honor-name {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .honor-level {
+      font-size: 0.78rem;
+      color: var(--deep-blue);
+      background: rgba(22, 50, 79, 0.08);
+      padding: 3px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    /* ==========================================================
+        九、联系方式
+        ========================================================== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .contact-card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .contact-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .contact-icon {
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      background: rgba(47, 109, 179, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .contact-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--accent);
+    }
+
+    .contact-card h3 {
+      color: var(--deep-blue);
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .contact-card p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 10px;
+    }
+
+    .contact-card a {
+      word-break: break-all;
+      font-size: 0.92rem;
+    }
+
+    /* ==========================================================
+        十、页脚
+        ========================================================== */
+    .site-footer {
+      background: var(--deep-blue);
+      color: rgba(255, 255, 255, 0.78);
+      text-align: center;
+      padding: 30px 24px;
+      font-size: 0.88rem;
+    }
+
+    .site-footer a {
+      color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.4);
+    }
+
+    .site-footer .footer-note {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    /* ==========================================================
+        十一、响应式适配（平板 / 手机）
+        ========================================================== */
+    @media (max-width: 860px) {
+      .two-col {
+        grid-template-columns: 1fr;          /* 项目经历改为单列 */
+      }
+
+      .hero {
+        padding: 84px 20px 72px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      /* 导航折叠为汉堡菜单 */
+      .nav-toggle {
+        display: flex;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: var(--nav-height);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: var(--white);
+        border-bottom: 1px solid var(--line);
+        box-shadow: 0 12px 24px rgba(22, 50, 79, 0.08);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+      }
+
+      .nav-links.open {
+        max-height: 340px;
+      }
+
+      .nav-links a {
+        padding: 14px 24px;
+        border-radius: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      section {
+        padding: 56px 0;
+      }
+
+      /* 论文条目在手机上精简为标题 + 信息堆叠 */
+      .pub-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .honor-item {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding: 16px 0;
+      }
+
+      .honor-level {
+        justify-self: start;
+        margin-top: 4px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ======================================================
+       导航栏：页面锚点与移动端菜单
+       ====================================================== -->
+  <nav class="topnav">
+    <a class="nav-brand" href="#home">TY</a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">首页</a></li>
+      <li><a href="#research">研究方向</a></li>
+      <li><a href="#publications">论文成果</a></li>
+      <li><a href="#projects">项目经历</a></li>
+      <li><a href="#honors">获奖荣誉</a></li>
+      <li><a href="#contact">联系方式</a></li>
+      <!-- 需要时取消注释，把“教育经历”加入导航 -->
+      <!-- <li><a href="#education">教育经历</a></li> -->
+      <!-- 需要时取消注释，把“相册”加入导航 -->
+      <!-- <li><a href="#album">相册</a></li> -->
+    </ul>
+
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="打开菜单" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ======================================================
+       一、头部：姓名 / 头衔 / 院校 / 研究方向 / 头像占位
+       ====================================================== -->
+  <header class="hero" id="home">
+    <div class="hero-inner">
+
+      <!-- ▼【可替换】头像占位：默认显示“XY”两个字母。
+          换真实照片时，删除下面这个 <div class="avatar">…</div>，
+          改用它：
+          <div class="avatar">
+            <img src="assets/avatar.jpg" alt="个人头像" style="width:100%;height:100%;object-fit:cover;" />
+          </div> -->
+      <div class="avatar">TY</div>
+
+      <h1>谭义</h1>
+      <p class="hero-title">博士研究生</p>
+      <p class="hero-affil">化学与材料科学学院 · 中国科学技术大学</p>
+
+      <!-- 研究方向关键词：按需增删 -->
+      <div class="hero-tags">
+        <span>低维金属纳米材料</span>
+        <span>界面外延生长</span>
+        <span>能源小分子转化</span>
+        <span>精细结构表征</span>
+      </div>
+
+      <!-- 自由风格的一句话，可自由替换 -->
+      <p class="hero-quote">科研如登山——目标清晰，路径自由。</p>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ======================================================
+         二、研究方向
+         ====================================================== -->
+    <section id="research">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">Research</p>
+          <h2>研究方向</h2>
+        </div>
+
+        <!-- ▼【可替换】研究领域总体介绍 -->
+        <p class="research-intro">
+          化学反应的极限，往往不是热力学，而是动力学——催化剂，正是打破这一极限的钥匙。研究以低维贵金属基纳米材料为核心，
+          追问一个根本性的科学问题：能否在原子尺度上精确设计催化活性位点，让能源小分子被高效活化，并沿着我们设定的路径精准转化？
+        </p>
+        <p class="research-intro">
+          我始终相信，催化性能并非偶然，而是由原子尺度的结构决定的。围绕这一信念，致力于建立从材料设计、结构表征到性能验证的完整研究路径：
+          以界面外延生长为手段，在异质界面上构筑晶格匹配的纳米结构；以表界面限域合成开辟新范式，将金属-非金属键合引入贵金属体系，
+          发展二维金属间化合物等新型低维材料平台；并结合原位与多尺度表征，在真实反应条件下追踪结构与电子态的演化，让机理与性能相互印证。
+        </p>
+        <p class="research-intro">
+          研究的意义，在于让分子尺度的洞察转化为真实世界的变革——更高效的能量转化、更清洁的化学过程、更可持续的未来。
+          我的目标，是让每一颗经过设计的活性位点，都能在真实器件中兑现其潜力。
+        </p>
+
+        <div class="card-grid">
+          <!-- 卡片 1：按需增删复制 -->
+          <article class="card">
+            <h3>低维金属纳米材料可控合成</h3>
+            <p>结构决定性能，合成决定结构。通过界面外延生长与表界面限域合成，在原子尺度上“雕刻”低维贵金属基材料，为活性位点的精准构筑提供新平台。</p>
+          </article>
+
+          <article class="card">
+            <h3>多尺度精细结构表征</h3>
+            <p>看见，才能理解。综合 TEM/HRTEM、HAADF-STEM、XRD、XPS、XAFS 与同步辐射原位技术，在真实反应条件下追踪结构与电子态的演化，为催化机理提供原子级证据。</p>
+          </article>
+
+          <article class="card">
+            <h3>电催化与能源小分子转化</h3>
+            <p>从活性位点到反应机理。聚焦氢气、氧气、二氧化碳等能源小分子的活化与选择性转化，打通材料设计到性能验证的完整链条，让原子尺度的设计兑现为宏观性能。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================
+         三、教育经历（默认折叠，点击展开）
+         ====================================================== -->
+    <section id="education">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">Education</p>
+          <h2>教育经历</h2>
+        </div>
+
+        <!-- <details> 是浏览器原生折叠组件：默认收起，点击标题栏展开 -->
+        <details class="edu-card">
+          <summary>教育经历</summary>
+          <div class="edu-body">
+
+            <!-- ▼ 教育条目：按时间倒序排列，复制整块修改 -->
+            <article class="edu-item">
+              <span class="edu-year">2025 – 至今</span>
+              <div>
+                <p class="edu-degree">博士研究生 · 无机化学</p>
+                <p class="edu-school">中国科学技术大学（导师：吴长征）</p>
+              </div>
+            </article>
+
+            <article class="edu-item">
+              <span class="edu-year">2023 – 2025</span>
+              <div>
+                <p class="edu-degree">硕士研究生 · 无机化学</p>
+                <p class="edu-school">中国科学技术大学（导师：吴长征）</p>
+              </div>
+            </article>
+
+            <article class="edu-item">
+              <span class="edu-year">2019 – 2023</span>
+              <div>
+                <p class="edu-degree">本科 · 材料化学</p>
+                <p class="edu-school">中国科学技术大学</p>
+              </div>
+            </article>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ======================================================
+         四、论文成果：已发表 / 在投
+         ====================================================== -->
+    <section id="publications" class="section-alt">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">Publications</p>
+          <h2>论文成果</h2>
+        </div>
+
+        <!-- 已发表 -->
+        <div class="pub-group">
+          <h3>已发表</h3>
+          <div class="pub-list">
+
+            <!-- ▼ 论文条目：复制整块修改 -->
+            <article class="pub-item">
+              <span class="pub-year">2025</span>
+              <div>
+                <p class="pub-title">Atomic-Layered Platinum-Based Intermetallic with Phosphorus Pillar Nanoengineering Enables pH-universal Hydrogen Oxidation Catalysis</p>
+                <p class="pub-meta">R. Gui, H. Cheng, <strong>Yi Tan</strong>, et al. <em>Angew. Chem. Int. Ed.</em>, <strong>2025</strong>, e15811（共同第一作者）.</p>
+                <a class="pub-doi" href="https://doi.org/10.1002/anie.202515811" target="_blank" rel="noopener">
+                  DOI: 10.1002/anie.202515811
+                </a>
+              </div>
+            </article>
+
+            <article class="pub-item">
+              <span class="pub-year">2024</span>
+              <div>
+                <p class="pub-title">Highly Crystalline Iridium-Nickel Nanocages with Sub-Nanopores for Acidic Bifunctional Water Splitting Electrolysis</p>
+                <p class="pub-meta">H. Ding, et al. <em>J. Am. Chem. Soc.</em>, <strong>2024</strong>, 146, 7858–7867（第四作者）.</p>
+                <a class="pub-doi" href="https://doi.org/10.1021/jacs.4c01379" target="_blank" rel="noopener">
+                  DOI: 10.1021/jacs.4c01379
+                </a>
+              </div>
+            </article>
+
+            <article class="pub-item">
+              <span class="pub-year">2026</span>
+              <div>
+                <p class="pub-title">Construction of Porous PtCo Alloy Nanotubes via an Epitaxial Growth Method for Efficient and Stable Electrochemical Oxygen Reduction Reaction</p>
+                <p class="pub-meta">C. Su, C. Chen, <strong>Yi Tan</strong>, et al. <em>Nano Lett.</em>, <strong>2026</strong></p>
+                <a class="pub-doi" href="https://doi.org/10.1021/acs.nanolett.6c01157" target="_blank" rel="noopener">
+                  DOI: 10.1021/acs.nanolett.6c01157
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- 在投 / 准备中 -->
+        <div class="pub-group">
+          <h3>在投 / 准备中</h3>
+          <div class="pub-list">
+
+            <article class="pub-item">
+              <span class="pub-year">2026</span>
+              <div>
+                <p class="pub-title">Interfacial Epitaxial Growth for the Synthesis of Noble/Non-Noble Metal Alloy Nanostructures toward High-Efficiency Hydrogen Oxidation Reaction</p>
+                <p class="pub-meta">H. Ding, <strong>Yi Tan</strong>, et al. 在投（共同第一作者）.</p>
+                <a class="pub-doi" href="https://doi.org/10.xxxx/xxxx" target="_blank" rel="noopener">
+                  DOI 占位：
+                </a>
+              </div>
+            </article>
+
+            <article class="pub-item">
+              <span class="pub-year">2026</span>
+              <div>
+                <p class="pub-title">Atomically Ordered Phosphorus Engineering Modulates Interfacial Water Structure for Highly Efficient Alkaline Hydrogen Oxidation</p>
+                <p class="pub-meta">R. Gui, <strong>Yi Tan</strong>, et al. 在投（共同第一作者）.</p>
+                <a class="pub-doi" href="https://doi.org/10.xxxx/xxxx" target="_blank" rel="noopener">
+                  DOI 占位：
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- 专利（若不需要此分区，整块删除即可） -->
+        <div class="pub-group">
+          <h3>专利</h3>
+     
+          <div class="pub-list">
+            <article class="pub-item">
+              <span class="pub-year">专利</span>
+              <div>
+                <p class="pub-title">介孔碳负载的层状铂基金属间化合物及其制备方法与用途</p>
+                <p class="pub-meta">发明人：桂仁杰， <strong>谭义</strong>（第二发明人）</p>
+                <a class="pub-doi" href="https://cprs.patentstar.com.cn/Search/Detail?ANE=9EHE9DHB8FBAAEIA7BFA3ADA9DIG9HIG9GEE9BHE9DCA9FBB" target="_blank" rel="noopener">
+                  公开号：CN202510403544.0
+                </a>
+              </div>
+            </article>
+
+            <article class="pub-item">
+              <span class="pub-year">专利</span>
+              <div>
+                <p class="pub-title">一种镍基贵金属多壳层纳米笼材料及其制备方法与应用</p>
+                <p class="pub-meta">发明人：吴长征，<strong>谭义</strong>（第二发明人，导师为第一发明人）</p>
+                <a class="pub-doi" href="https://cprs.patentstar.com.cn/Search/Detail?ANE=9GCB8FDA9IDE8CBA6EBA8HAA9BCBBEFAAHBA9FFFCFGA9BIH" target="_blank" rel="noopener">
+                  公开号：CN202511799487.9
+                </a>
+              </div>
+            </article>
+
+            <article class="pub-item">
+              <span class="pub-year">专利</span>
+              <div>
+                <p class="pub-title">一种氢燃料电池与锂电池混合动力无人机</p>
+                <p class="pub-meta">发明人：程晗，桂仁杰，<strong>谭义</strong></p>
+                <a class="pub-doi" href="https://cprs.patentstar.com.cn/Search/Detail?ANE=5BCA8FDA9FFDFIIA9CGA6FBA9IEGDEHA9IDD8EEABDIA9GEG" target="_blank" rel="noopener">
+                  公开号：CN122276198A
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================
+         五、项目经历：科研项目 / 助教经历
+         ====================================================== -->
+    <section id="projects">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">Experience</p>
+          <h2>项目经历</h2>
+        </div>
+
+        <div class="two-col">
+          <!-- 科研项目 -->
+          <div>
+            <h3 style="color:var(--deep-blue); margin-bottom:8px;">科研项目</h3>
+
+            <article class="project-item">
+              <p class="proj-role">中国科学技术大学青年创新基金 · 项目成员 · 2027.1 – 2028.12</p>
+              <h4>【非金属插层诱导铂基二维层状序构及其燃料电池电催化性能研究】</h4>
+              <p>【项目职责与成果：负责催化剂合成、电化学测试与数据分析】</p>
+            </article>
+          </div>
+
+          <!-- 助教经历 -->
+          <div>
+            <h3 style="color:var(--deep-blue); margin-bottom:8px;">助教经历</h3>
+
+            <article class="project-item">
+              <p class="proj-role">《高等无机化学》课程助教 · 2026</p>
+              <h4>高等无机化学</h4>
+              <p>【工作内容：组织习题课、批改作业与答疑等，按实际情况补充】</p>
+            </article>
+
+                     </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================
+         六、获奖荣誉：奖学金 / 竞赛奖励
+         ====================================================== -->
+    <section id="honors" class="section-alt">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">Honors</p>
+          <h2>获奖荣誉</h2>
+        </div>
+
+        <div class="honor-list">
+
+    <article class="honor-item">
+            <span class="honor-year">2026</span>
+            <span class="honor-name">【研究生学业一等奖学金】</span>
+            <span class="honor-level">校级</span>
+          </article>
+
+          <article class="honor-item">
+            <span class="honor-year">2025</span>
+            <span class="honor-name">【研究生学业一等奖学金】</span>
+            <span class="honor-level">校级</span>
+          </article>
+
+    <article class="honor-item">
+            <span class="honor-year">2024</span>
+            <span class="honor-name">【研究生学业一等奖学金】</span>
+            <span class="honor-level">校级</span>
+          </article>
+
+    <article class="honor-item">
+            <span class="honor-year">2023</span>
+            <span class="honor-name">【研究生学业一等奖学金】</span>
+            <span class="honor-level">校级</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================
+         七、相册（默认折叠，点击展开；与“教育经历”同款交互）
+         ====================================================== -->
+    <section id="album">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">Album</p>
+          <h2>相册</h2>
+        </div>
+
+        <!-- <details> 折叠组件：默认收起，点击标题栏展开。
+             相册为静态展示：图片来自 assets/album/ 文件夹。
+             换照片：把新图命名为同名文件替换即可，或复制一个
+             <figure class="album-item"> 块并修改 src 与说明文字。 -->
+        <details class="edu-card">
+          <summary>生活相册（点击展开查看）</summary>
+          <div class="edu-body">
+            <div class="album-grid">
+
+              <figure class="album-item">
+                <img src="assets/album/snow.jpg" alt="科大雪景" loading="lazy" />
+                <figcaption class="album-caption">科大雪景</figcaption>
+              </figure>
+
+              <figure class="album-item">
+                <img src="assets/album/tianzhushan.jpg" alt="天柱山" loading="lazy" />
+                <figcaption class="album-caption">天柱山</figcaption>
+              </figure>
+
+              <figure class="album-item">
+                <img src="assets/album/suzhou-garden.jpg" alt="苏州园林" loading="lazy" />
+                <figcaption class="album-caption">苏州园林</figcaption>
+              </figure>
+
+              <figure class="album-item">
+                <img src="assets/album/cherry.jpg" alt="樱花" loading="lazy" />
+                <figcaption class="album-caption">樱花</figcaption>
+              </figure>
+
+              <figure class="album-item">
+                <img src="assets/album/shushan.jpg" alt="蜀山" loading="lazy" />
+                <figcaption class="album-caption">蜀山</figcaption>
+              </figure>
+
+              <figure class="album-item">
+                <img src="assets/album/jinan.jpg" alt="济南" loading="lazy" />
+                <figcaption class="album-caption">济南</figcaption>
+              </figure>
+
+              <figure class="album-item">
+                <img src="assets/album/huiban.jpg" alt="徽班" loading="lazy" />
+                <figcaption class="album-caption">徽班</figcaption>
+              </figure>
+
+              <figure class="album-item">
+                <img src="assets/album/jingdezhen.jpg" alt="景德镇" loading="lazy" />
+                <figcaption class="album-caption">景德镇</figcaption>
+              </figure>
+
+              <figure class="album-item">
+                <img src="assets/album/yantai.jpg" alt="烟台·威海" loading="lazy" />
+                <figcaption class="album-caption">烟台·威海</figcaption>
+              </figure>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ======================================================
+         八、联系方式：邮箱 / ResearchGate / ORCID
+         ====================================================== -->
+    <section id="contact">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">Contact</p>
+          <h2>联系方式</h2>
+        </div>
+
+        <div class="contact-grid">
+
+          <!-- 邮箱 -->
+          <article class="contact-card">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+            </div>
+            <h3>邮箱</h3>
+            <p>欢迎交流与合作</p>
+            <!-- ▼【可替换】邮箱地址 -->
+            <a href="mailto:ty12345@mail.ustc.edu.cn">ty12345@mail.ustc.edu.cn</a>
+            <p>备用：3313952565@qq.com</p>
+          </article>
+
+          <!-- ResearchGate -->
+          <article class="contact-card">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round">
+                <circle cx="12" cy="12" r="9.2" stroke-width="1.4" />
+                <path d="M8.7 7.2v9.6M8.7 7.2h3.5a2.3 2.3 0 0 1 0 4.6H8.7M13.7 11.8 16 16.8" />
+              </svg>
+            </div>
+            <h3>ResearchGate</h3>
+            <p>查看论文与科研动态</p>
+            <!-- ▼【可替换】ResearchGate 个人主页链接 -->
+            <a href="https://www.researchgate.net/profile/Yi-Tan-87/research" target="_blank" rel="noopener">
+              researchgate.net/profile/Yi-Tan-87
+            </a>
+          </article>
+
+          <!-- ORCID -->
+          <article class="contact-card">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.8 14.4H8.2V7.6h2v8.8zm1.3-8.8h2.2c1.4 0 2.5.3 3.1.9.7.6 1 1.5 1 2.7 0 1.2-.3 2.1-1 2.7-.6.6-1.7.9-3.1.9h-2.2V7.6zm2.2 5.9c.8 0 1.4-.2 1.7-.5.3-.3.5-.8.5-1.4 0-.6-.2-1.1-.5-1.4-.3-.3-.9-.5-1.7-.5h-.2v3.8h.2z"/>
+              </svg>
+            </div>
+            <h3>ORCID</h3>
+            <p>学术身份标识</p>
+            <!-- ▼【可替换】ORCID 编号 -->
+            <a href="https://orcid.org/0009-0000-6530-3270" target="_blank" rel="noopener">
+              orcid.org/0009-0000-6530-3270
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================
+       页脚：版权信息（年份由 JavaScript 自动更新）
+       ====================================================== -->
+  <footer class="site-footer">
+    <p>© <span id="year">2026</span> 谭义. 保留所有权利.</p>
+    <p class="footer-note">以好奇心和自由探索精神做科研 · <a href="#home">回到顶部</a></p>
+  </footer>
+
+  <script>
+    /* ======================================================
+       少量 JavaScript：只有三件小事
+       1. 自动更新页脚年份
+       2. 移动端汉堡菜单展开/收起
+       3. 滚动时高亮当前所在导航项
+       ====================================================== */
+
+    // 1. 页脚年份自动更新
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // 2. 移动端汉堡菜单
+    const navToggle = document.getElementById("navToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    navToggle.addEventListener("click", function () {
+      const isOpen = navLinks.classList.toggle("open");
+      navToggle.classList.toggle("open", isOpen);
+      navToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    // 点击任一导航链接后，自动收起移动端菜单
+    navLinks.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", function () {
+        navLinks.classList.remove("open");
+        navToggle.classList.remove("open");
+        navToggle.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    // 3. 滚动高亮当前板块对应的导航项（对不支持 IntersectionObserver
+    //    的旧浏览器无影响，只是少了高亮效果）
+    if ("IntersectionObserver" in window) {
+      const sections = document.querySelectorAll("main section[id]");
+      const navAnchors = document.querySelectorAll(".nav-links a");
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            navAnchors.forEach(function (a) {
+              a.classList.toggle("active", a.getAttribute("href") === "#" + entry.target.id);
+            });
+          }
+        });
+      }, { rootMargin: "-35% 0px -55% 0px" });
+
+      sections.forEach(function (section) {
+        observer.observe(section);
+      });
+    }
+
+  </script>
+</body>
+</html>

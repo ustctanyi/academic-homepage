@@ -1,0 +1,9 @@
+# 原图相册：体积大且不进入仓库，网页只使用 assets/album/ 下的压缩图
+albums/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 嵌套的空仓库目录（确认无用后可删除整个 academic-homepage/academic-homepage）
+academic-homepage/
