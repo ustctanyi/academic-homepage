@@ -911,6 +911,23 @@
       transform: translateY(-2px);
     }
 
+    /* 左下角访问计数（不显眼的小药丸，仅正式域名显示有效数字） */
+    .site-visits {
+      position: fixed;
+      left: 14px;
+      bottom: 14px;
+      z-index: 80;
+      margin: 0;
+      padding: 5px 13px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.75rem;
+      box-shadow: 0 2px 10px rgba(22, 50, 79, 0.08);
+      backdrop-filter: blur(4px);
+    }
+
     /* 手机上相册改为两列 */
     @media (max-width: 700px) {
       .album-grid {
@@ -1799,6 +1816,9 @@
   <!-- 回到顶部按钮（滚动超过一屏后显示） -->
   <button type="button" id="backToTop" class="back-to-top" aria-label="回到顶部">↑</button>
 
+  <!-- 左下角访问统计：由“不蒜子”提供，正式域名下才计数，失败时只显示 “–” -->
+  <div class="site-visits" id="siteVisits" aria-hidden="false">累计访问 <span id="busuanzi_value_site_pv">–</span> 次</div>
+
   <script>
     /* ======================================================
        少量 JavaScript：只有三件小事
@@ -1997,6 +2017,17 @@
     backToTop.addEventListener("click", function () {
       window.scrollTo({ top: 0, behavior: "smooth" });
     });
+
+    /* ======================================================
+       7. 访问统计（不蒜子）：只在正式域名加载计数脚本，
+          本地预览不计数；脚本失败时保持 “–” 显示
+       ====================================================== */
+    if (location.hostname === "ustctanyi.github.io") {
+      const busuanzi = document.createElement("script");
+      busuanzi.src = "https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js";
+      busuanzi.async = true;
+      document.head.appendChild(busuanzi);
+    }
   </script>
 </body>
 </html>
