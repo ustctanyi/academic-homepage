@@ -4,6 +4,3 @@ albums/
 # Python 缓存
 __pycache__/
 *.pyc
-
-# 嵌套的空仓库目录（确认无用后可删除整个 academic-homepage/academic-homepage）
-academic-homepage/
