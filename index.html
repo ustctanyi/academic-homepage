@@ -127,7 +127,7 @@
     }
 
     /* ==========================================================
-        板块照片背景：加深图片可见度，保留可读性
+        沉浸式深色板块（首页同款感觉）：照片全幅显示 + 深蓝渐变
         ========================================================== */
     .section-photo {
       background-size: cover;
@@ -135,28 +135,21 @@
     }
 
     .section-forest {
-      background-image: linear-gradient(rgba(255, 255, 255, 0.62), rgba(255, 255, 255, 0.62)),
+      background-image: linear-gradient(115deg, rgba(22, 50, 79, 0.72), rgba(22, 50, 79, 0.38)),
         url("assets/bg/forest.jpg");
     }
 
-    .section-mist {
-      background-image: linear-gradient(rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.58)),
-        url("assets/bg/mist.jpg");
+    /* 深色板块上的标题改为白色 */
+    .section-dark .section-kicker {
+      color: rgba(255, 255, 255, 0.85);
     }
 
-    .section-lake {
-      background-image: linear-gradient(rgba(255, 255, 255, 0.60), rgba(255, 255, 255, 0.60)),
-        url("assets/bg/lake.jpg");
+    .section-dark .section-head h2 {
+      color: var(--white);
     }
 
-    .section-stars {
-      background-image: linear-gradient(rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0.66)),
-        url("assets/bg/stars.jpg");
-    }
-
-    .section-sunrise {
-      background-image: linear-gradient(rgba(255, 255, 255, 0.58), rgba(255, 255, 255, 0.58)),
-        url("assets/bg/sunrise.jpg");
+    .section-dark .section-head h2::after {
+      background: rgba(255, 255, 255, 0.75);
     }
 
     /* 直接压在图片上的文字块：半透明白色毛玻璃 */
@@ -171,44 +164,69 @@
     }
 
     /* ==========================================================
-        创意折叠章节：2×2 网格卡片 + 照片横幅
+        沉浸式章节：整幅风景照背景 + 左右交替白色面板（企业风格）
         ========================================================== */
-    .chapters-grid {
-      max-width: 1080px;
-      margin: 0 auto;
-      padding: 76px 24px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 28px;
-      align-items: start;
+    .chapter-stage {
+      position: relative;
+      min-height: 580px;
+      display: flex;
+      align-items: center;
+      padding: 96px 0;
+      background-size: cover;
+      background-position: center;
     }
 
-    .chapters-grid > section {
-      padding: 0;
+    .chapter-stage--mist {
+      background-image: linear-gradient(115deg, rgba(22, 50, 79, 0.76), rgba(22, 50, 79, 0.30)),
+        url("assets/bg/mist.jpg");
+    }
+
+    .chapter-stage--lake {
+      background-image: linear-gradient(115deg, rgba(22, 50, 79, 0.76), rgba(22, 50, 79, 0.30)),
+        url("assets/bg/lake.jpg");
+    }
+
+    .chapter-stage--stars {
+      background-image: linear-gradient(115deg, rgba(22, 50, 79, 0.82), rgba(22, 50, 79, 0.36)),
+        url("assets/bg/stars.jpg");
+    }
+
+    .chapter-stage--sunrise {
+      background-image: linear-gradient(115deg, rgba(22, 50, 79, 0.76), rgba(22, 50, 79, 0.30)),
+        url("assets/bg/sunrise.jpg");
+    }
+
+    /* 悬浮在照片上的白色面板 */
+    .chapter-panel {
+      width: min(620px, 94vw);
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.30);
+    }
+
+    /* 左右交替：偶数章节面板靠右 */
+    .panel-right .chapter-panel {
+      margin-left: auto;
     }
 
     .chapter {
-      background: var(--white);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(22, 50, 79, 0.12);
-      margin-bottom: 0;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      margin: 0;
     }
 
-    /* 章节照片横幅：深蓝渐变压暗，突出图片 */
     .chapter-head {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       gap: 18px;
-      min-height: 158px;
-      padding: 24px 26px;
+      padding: 26px 28px;
       cursor: pointer;
       list-style: none;
-      color: var(--white);
-      background-size: cover;
-      background-position: center;
-      transition: filter 0.3s ease;
+      border-bottom: 1px solid var(--line);
+      transition: background 0.25s ease;
       user-select: none;
     }
 
@@ -217,27 +235,7 @@
     }
 
     .chapter-head:hover {
-      filter: brightness(1.1);
-    }
-
-    .chapter-photo-mist {
-      background-image: linear-gradient(120deg, rgba(22, 50, 79, 0.82), rgba(22, 50, 79, 0.30)),
-        url("assets/bg/mist.jpg");
-    }
-
-    .chapter-photo-lake {
-      background-image: linear-gradient(120deg, rgba(22, 50, 79, 0.82), rgba(22, 50, 79, 0.30)),
-        url("assets/bg/lake.jpg");
-    }
-
-    .chapter-photo-stars {
-      background-image: linear-gradient(120deg, rgba(22, 50, 79, 0.85), rgba(22, 50, 79, 0.35)),
-        url("assets/bg/stars.jpg");
-    }
-
-    .chapter-photo-sunrise {
-      background-image: linear-gradient(120deg, rgba(22, 50, 79, 0.82), rgba(22, 50, 79, 0.30)),
-        url("assets/bg/sunrise.jpg");
+      background: rgba(47, 109, 179, 0.06);
     }
 
     .chapter-icon {
@@ -245,8 +243,7 @@
       width: 54px;
       height: 54px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.45);
+      background: rgba(47, 109, 179, 0.12);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -260,7 +257,7 @@
     .chapter-icon svg {
       width: 26px;
       height: 26px;
-      fill: var(--white);
+      fill: var(--accent);
     }
 
     .chapter-text {
@@ -270,7 +267,7 @@
     }
 
     .chapter-kicker {
-      color: rgba(255, 255, 255, 0.85);
+      color: var(--accent);
       font-size: 0.75rem;
       font-weight: 600;
       letter-spacing: 2px;
@@ -282,21 +279,21 @@
       font-size: 1.45rem;
       font-weight: 700;
       line-height: 1.3;
-      color: var(--white);
+      color: var(--deep-blue);
     }
 
     .chapter-sub {
-      color: rgba(255, 255, 255, 0.82);
+      color: var(--muted);
       font-size: 0.82rem;
     }
 
     .chapter-num {
       margin-left: auto;
       font-family: Georgia, serif;
-      font-size: 3.1rem;
+      font-size: 3rem;
       font-weight: 700;
       line-height: 1;
-      color: rgba(255, 255, 255, 0.45);
+      color: rgba(22, 50, 79, 0.12);
       letter-spacing: 2px;
     }
 
@@ -306,8 +303,8 @@
       width: 36px;
       height: 36px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.65);
-      color: var(--white);
+      border: 1px solid var(--line);
+      color: var(--accent);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -318,9 +315,9 @@
 
     details[open] .chapter-toggle {
       transform: rotate(135deg);
-      background: var(--white);
-      color: var(--deep-blue);
-      border-color: var(--white);
+      background: var(--accent);
+      color: var(--white);
+      border-color: var(--accent);
     }
 
     .chapter-body {
@@ -380,15 +377,21 @@
       box-shadow: 0 0 0 5px rgba(47, 109, 179, 0.15);
     }
 
-    /* 平板宽度下章节网格改为单列 */
-    @media (max-width: 900px) {
-      .chapters-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
     /* 小屏幕上的章节与时间线适配 */
     @media (max-width: 700px) {
+      .chapter-stage {
+        min-height: 0;
+        padding: 64px 0;
+      }
+
+      .chapter-panel {
+        width: 92vw;
+      }
+
+      .panel-right .chapter-panel {
+        margin-left: 0;
+      }
+
       .chapter-head {
         flex-wrap: wrap;
         gap: 12px;
@@ -1267,7 +1270,7 @@
     <!-- ======================================================
          二、研究方向
          ====================================================== -->
-    <section id="research" class="section-photo section-forest">
+    <section id="research" class="section-photo section-forest section-dark">
       <div class="container">
         <div class="section-head">
           <p class="section-kicker">Research</p>
@@ -1312,12 +1315,12 @@
     <!-- ======================================================
          三~六、创意折叠章节：2×2 网格（教育/论文/项目/荣誉）
          ====================================================== -->
-    <div class="chapters-grid">
-
-    <section id="education">
+    <section id="education" class="chapter-stage chapter-stage--mist">
+      <div class="container">
+        <div class="chapter-panel">
         <!-- 创意折叠章节：点击标题展开时间线 -->
         <details class="chapter">
-          <summary class="chapter-head chapter-photo chapter-photo-mist">
+          <summary class="chapter-head">
             <span class="chapter-icon">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 3 1 9l11 6 9-4.91V17h2V9L12 3zm-1 12.6L3.7 9.9 11 6.1l7.3 3.8L11 15.6z"/>
@@ -1363,15 +1366,19 @@
             </div>
           </div>
         </details>
+        </div>
+      </div>
     </section>
 
     <!-- ======================================================
          四、论文成果：已发表 / 在投
          ====================================================== -->
-    <section id="publications">
+    <section id="publications" class="chapter-stage chapter-stage--lake panel-right">
+      <div class="container">
+        <div class="chapter-panel">
         <!-- 创意折叠章节：默认展开，可点击收起 -->
         <details class="chapter" open>
-          <summary class="chapter-head chapter-photo chapter-photo-lake">
+          <summary class="chapter-head">
             <span class="chapter-icon">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-1 12h-6v-2h6v2zm0-4h-6V9h6v2z"/>
@@ -1495,15 +1502,19 @@
         </div>
           </div>
         </details>
+        </div>
+      </div>
     </section>
 
     <!-- ======================================================
          五、项目经历：科研项目 / 助教经历
          ====================================================== -->
-    <section id="projects">
+    <section id="projects" class="chapter-stage chapter-stage--stars">
+      <div class="container">
+        <div class="chapter-panel">
         <!-- 创意折叠章节：点击展开 -->
         <details class="chapter">
-          <summary class="chapter-head chapter-photo chapter-photo-stars">
+          <summary class="chapter-head">
             <span class="chapter-icon">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M2 21h20L14 4l-4 8-2-3-6 12z"/>
@@ -1545,15 +1556,19 @@
             </div>
           </div>
         </details>
+        </div>
+      </div>
     </section>
 
     <!-- ======================================================
          六、获奖荣誉：奖学金 / 竞赛奖励
          ====================================================== -->
-    <section id="honors">
+    <section id="honors" class="chapter-stage chapter-stage--sunrise panel-right">
+      <div class="container">
+        <div class="chapter-panel">
         <!-- 创意折叠章节：点击展开 -->
         <details class="chapter">
-          <summary class="chapter-head chapter-photo chapter-photo-sunrise">
+          <summary class="chapter-head">
             <span class="chapter-icon">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 2a5 5 0 0 0-5 5c0 .34.04.67.1 1L5.5 9.6 7 12l1.8-1.4c.8 1 1.9 1.8 3.2 2.2V21h1.8v-8.2c1.3-.4 2.4-1.2 3.2-2.2L19 12l1.5-2.4-3.6-2.6c.06-.33.1-.66.1-1a5 5 0 0 0-5-5zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/>
@@ -1597,8 +1612,9 @@
             </div>
           </div>
         </details>
+        </div>
+      </div>
     </section>
-    </div><!-- /chapters-grid -->
 
     <!-- ======================================================
          七、相册（默认折叠，点击展开；与“教育经历”同款交互）
