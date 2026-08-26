@@ -2454,7 +2454,7 @@
     <!-- ======================================================
          九、站点统计 + 日历时钟（板块模式）
          - 统计卡：累计访问/访客来自“不蒜子”（正式域名自动计数）；
-           今日访问/访客需在 JS 的 TODAY_API 中配置免费计数服务后显示；
+           今日访问/访客由 CounterAPI 提供（见 JS 中 TODAY_API 配置）；
            已运行时间与“实时”动态标记由本地 JS 计算，每秒跳动。
          - 日历卡：实时时钟 + 含农历、节日、节气的月历（农历库为本地
            assets/lunar.min.js，无需外网 CDN）。
@@ -2506,7 +2506,7 @@
                  这里放一个隐藏占位，供 JS 读取后同步到上方统计卡 -->
             <span id="busuanzi_value_site_uv" hidden></span>
 
-            <p class="stats-note" data-i18n="stats.note">今日访问 / 访客：在下方 JS 的 TODAY_API 中配置免费计数服务后自动显示。</p>
+            <p class="stats-note" data-i18n="stats.note">今日访问 / 访客数据由 CounterAPI 免费计数服务提供。</p>
           </article>
 
           <!-- 右：日历 + 时钟 -->
@@ -2867,7 +2867,7 @@
         "stats.totalVisits": "累计访问", "stats.totalVisitors": "累计访客",
         "stats.todayVisits": "今日访问", "stats.todayVisitors": "今日访客",
         "stats.runtime": "本站已运行",
-        "stats.note": "今日访问 / 访客：在下方 JS 的 TODAY_API 中配置免费计数服务后自动显示。",
+        "stats.note": "今日访问 / 访客数据由 CounterAPI 免费计数服务提供。",
         "cal.title": "日历 · 时钟", "cal.backToday": "今天",
         "cal.prevMonth": "上个月", "cal.nextMonth": "下个月",
         "footer.copy": "© <span id=\"year\">{y}</span> 谭义. 保留所有权利.",
@@ -2955,7 +2955,7 @@
         "stats.totalVisits": "Total Visits", "stats.totalVisitors": "Total Visitors",
         "stats.todayVisits": "Today Visits", "stats.todayVisitors": "Today Visitors",
         "stats.runtime": "Site Running Time",
-        "stats.note": "Today's visits/visitors will appear after configuring a free counter service in TODAY_API (see code comments).",
+        "stats.note": "Today's visits/visitors are powered by the free CounterAPI service.",
         "cal.title": "Calendar · Clock", "cal.backToday": "Today",
         "cal.prevMonth": "Previous month", "cal.nextMonth": "Next month",
         "footer.copy": "© <span id=\"year\">{y}</span> Tan Yi. All rights reserved.",
@@ -3052,56 +3052,106 @@
        11. 站点统计 + 日历时钟
        ====================================================== */
 
-    /* ---------- 11.1 今日访问 / 今日访客接入点（默认关闭） ----------
-       说明：不蒜子只提供“累计”数据，没有“今日”维度。
-       如需显示今日访问/访客，推荐使用免费的 CounterAPI：
-         1. 到 https://counterapi.dev 注册账号并创建 workspace；
-         2. 把下面的 enabled 改为 true，并填入你的 workspace 名；
-         3. 部署后，代码会按日期自动建立计数器，例如：
-              ustctanyi-homepage-visit-2026-08-26   （今日访问）
-              ustctanyi-homepage-visitor-2026-08-26 （今日访客）
-         （PV 每次刷新 +1；UV 用 localStorage 标记，每台设备每天只 +1）
+    /* ---------- 11.1 今日访问 / 今日访客（CounterAPI v2，已启用） ----------
+       说明：不蒜子只提供“累计”数据，没有“今日”维度，今日数据改用 CounterAPI。
+       接入前提（需在仪表盘 https://app.counterapi.dev 完成）：
+         1. 注册账号并创建 workspace，把下方 workspace 改为你的 slug；
+         2. 在仪表盘创建两个【公开】计数器，名称必须与下方一致：
+              ustctanyi-site-visits     → 今日访问（每次打开页面 +1）
+              ustctanyi-site-visitors   → 今日访客（同一浏览器同一天只 +1）
+         3. 若换用其它 workspace / 计数器名，直接改下方 TODAY_API 即可。
+       接口说明（v2 全部为 GET 请求，公开计数器无需 API key）：
+         {base}/{workspace}/{name}/up     → 递增，响应 {code, data:{up_count,...}}
+         {base}/{workspace}/{name}/stats  → 统计，今日数在 data.stats.today.up
        ----------------------------------------------------------- */
     const TODAY_API = {
-      enabled: false,               // ← 配置好后改为 true
-      workspace: "YOUR_WORKSPACE",  // ← 你的 CounterAPI workspace 名
-      counterPrefix: "ustctanyi-homepage",
+      enabled: true,                    // ← 已启用
+      workspace: "ustctanyis-team-5254", // ← 你的 CounterAPI workspace slug
+      counterVisits: "ustctanyi-site-visits",     // ← 今日访问计数器（需先在仪表盘创建）
+      counterVisitors: "ustctanyi-site-visitors", // ← 今日访客计数器（需先在仪表盘创建）
       base: "https://api.counterapi.dev/v2"
     };
 
-    function todayCounterName(kind) {
-      const d = new Date();
-      const ymd = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-      return TODAY_API.counterPrefix + "-" + kind + "-" + ymd;
+    // 拼接 v2 请求地址；action 可为 "up" / "stats" / ""（读取当前值）
+    function counterApiUrl(name, action) {
+      const p = encodeURIComponent(TODAY_API.workspace) + "/" + encodeURIComponent(name);
+      return TODAY_API.base + "/" + p + (action ? "/" + action : "");
     }
 
-    function bumpCounter(name, el) {
-      if (!TODAY_API.enabled || !TODAY_API.workspace || TODAY_API.workspace === "YOUR_WORKSPACE") return;
-      const url = TODAY_API.base + "/" + encodeURIComponent(TODAY_API.workspace) + "/" + encodeURIComponent(name) + "/";
-      fetch(url, { method: "PUT" })
+    // 读取计数器统计：返回 { today, total }，失败返回 null
+    function fetchCounterStats(name) {
+      return fetch(counterApiUrl(name, "stats"))
         .then(function (r) { return r.json(); })
         .then(function (j) {
-          const v = j && (j.data !== undefined ? j.data : (j.value !== undefined ? j.value : j.count));
-          if (v !== undefined && el) el.textContent = Number(v).toLocaleString();
+          const d = j && j.data;
+          if (!d) return null;
+          return {
+            today: (d.stats && d.stats.today && typeof d.stats.today.up === "number") ? d.stats.today.up : 0,
+            total: typeof d.up_count === "number" ? d.up_count : null
+          };
         })
-        .catch(function () { /* 网络失败时保持 “–”，不影响页面 */ });
+        .catch(function () { return null; });
     }
 
+    // 递增计数器；成功返回新总数，失败返回 null（页面保持 “–”，不影响浏览）
+    function bumpCounter(name) {
+      return fetch(counterApiUrl(name, "up"))
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          return (j && j.data && typeof j.data.up_count === "number") ? j.data.up_count : null;
+        })
+        .catch(function () { return null; });
+    }
+
+    // 加载并展示“今日访问 / 今日访客”
     function loadTodayStats() {
-      if (!TODAY_API.enabled || !TODAY_API.workspace || TODAY_API.workspace === "YOUR_WORKSPACE") return;
+      if (!TODAY_API.enabled || !TODAY_API.workspace) return;
       const elPv = document.getElementById("statTodayPv");
       const elUv = document.getElementById("statTodayUv");
+      if (!elPv) return;
+
+      const d = new Date();
+      const ymd = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+
       // 今日访客标记：同一浏览器同一天只计一次
       let isNewVisitor = false;
       try {
-        const d = new Date();
-        const ymd = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
         const key = "site-uv-" + ymd;
         isNewVisitor = !localStorage.getItem(key);
         if (isNewVisitor) localStorage.setItem(key, "1");
       } catch (e) { /* 忽略隐私模式等异常 */ }
-      bumpCounter(todayCounterName("visit"), elPv);
-      if (isNewVisitor) bumpCounter(todayCounterName("visitor"), elUv);
+
+      // 同一页面会话内不重复递增（避免切回标签页时重复计数）
+      let shouldBumpPv = true;
+      const shouldBumpUv = isNewVisitor;
+      try {
+        const keyPv = "site-bumped-" + TODAY_API.counterVisits + "-" + ymd;
+        if (sessionStorage.getItem(keyPv)) shouldBumpPv = false;
+        else sessionStorage.setItem(keyPv, "1");
+      } catch (e) { /* 忽略隐私模式等异常 */ }
+
+      // 先读取今日数值展示，再递增计数；递增成功才把显示值 +1
+      Promise.all([fetchCounterStats(TODAY_API.counterVisits), fetchCounterStats(TODAY_API.counterVisitors)])
+        .then(function (res) {
+          const sV = res[0], sU = res[1];
+          const baseV = (sV && typeof sV.today === "number") ? sV.today : null;
+          const baseU = (sU && typeof sU.today === "number") ? sU.today : null;
+          if (baseV !== null) elPv.textContent = baseV.toLocaleString();
+          if (baseU !== null) elUv.textContent = baseU.toLocaleString();
+          const tasks = [];
+          if (shouldBumpPv) {
+            tasks.push(bumpCounter(TODAY_API.counterVisits).then(function (ok) {
+              if (ok !== null && baseV !== null) elPv.textContent = (baseV + 1).toLocaleString();
+            }));
+          }
+          if (shouldBumpUv) {
+            tasks.push(bumpCounter(TODAY_API.counterVisitors).then(function (ok) {
+              if (ok !== null && baseU !== null) elUv.textContent = (baseU + 1).toLocaleString();
+            }));
+          }
+          return Promise.all(tasks);
+        })
+        .catch(function () { /* 网络失败时保持 “–”，不影响页面 */ });
     }
 
     /* ---------- 11.2 累计访问 / 访客：从不蒜子读取 ---------- */
