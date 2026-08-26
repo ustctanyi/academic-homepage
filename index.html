@@ -4,13 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="博士生个人学术主页：研究方向、论文成果、项目经历、获奖荣誉与联系方式。" />
-  <title>谭义 | 博士生个人主页</title>
+  <title>谭义个人主页</title>
   <!-- 浏览器标签页图标（内联 SVG，无需图片文件） -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2064%2064'%3E%3Crect%20width='64'%20height='64'%20rx='14'%20fill='%2316324f'/%3E%3Ctext%20x='32'%20y='43'%20font-family='Georgia,serif'%20font-size='36'%20fill='white'%20text-anchor='middle'%3ET%3C/text%3E%3C/svg%3E" />
   <meta name="theme-color" content="#16324f" />
+  <!-- 主题初始化：先于页面渲染应用亮/暗色，避免闪烁 -->
+  <script>
+    (function () {
+      try {
+        var choice = localStorage.getItem("site-theme") || "auto";
+        var dark = choice === "dark" ||
+          (choice === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "light");
+      }
+    })();
+  </script>
   <!-- 社交分享预览（转发到微信/邮件时显示标题与摘要） -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="谭义 | 博士生个人主页" />
+  <meta property="og:title" content="谭义个人主页" />
   <meta property="og:description" content="中国科学技术大学化学与材料科学学院博士研究生，研究低维金属纳米材料、界面外延生长与电催化。" />
   <meta property="og:url" content="https://ustctanyi.github.io/academic-homepage/" />
   <meta property="og:image" content="https://ustctanyi.github.io/academic-homepage/assets/hero.jpg" />
@@ -38,12 +51,29 @@
       --accent: #2f6db3;           /* 点缀色：亮蓝（链接、小标题） */
       --bg: #f5f7fa;               /* 页面浅灰背景 */
       --white: #ffffff;
+      --surface: #ffffff;          /* 卡片/面板背景（随主题切换） */
+      --nav-bg: rgba(255, 255, 255, 0.94);
+      --glass-bg: rgba(255, 255, 255, 0.88);
+      --panel-bg: rgba(255, 255, 255, 0.97);
       --text: #2c3e50;             /* 正文深灰 */
       --muted: #6b7a8c;            /* 次要文字 */
       --line: #e3e9f0;             /* 分隔线 */
       --radius: 12px;
       --shadow: 0 6px 20px rgba(22, 50, 79, 0.08);
       --nav-height: 64px;
+    }
+
+    /* 暗色主题：覆盖设计变量（跟随 html[data-theme]） */
+    html[data-theme="dark"] {
+      --bg: #0e1a29;
+      --surface: #17273c;
+      --nav-bg: rgba(14, 26, 41, 0.94);
+      --glass-bg: rgba(23, 39, 60, 0.86);
+      --panel-bg: rgba(23, 39, 60, 0.97);
+      --text: #dce8f5;
+      --muted: #93a7bd;
+      --line: #263c55;
+      --shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
     }
 
     /* ==========================================================
@@ -79,7 +109,7 @@
     }
 
     .container {
-      max-width: 1020px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 0 24px;
     }
@@ -152,15 +182,19 @@
       background: rgba(255, 255, 255, 0.75);
     }
 
-    /* 直接压在图片上的文字块：半透明白色毛玻璃 */
+    /* 直接压在图片上的文字块：半透明白色毛玻璃（暗色下自动变深） */
     .glass-card {
-      background: rgba(255, 255, 255, 0.88);
+      background: var(--glass-bg);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.7);
       border-radius: 14px;
       padding: 18px 22px;
       box-shadow: 0 8px 24px rgba(22, 50, 79, 0.10);
+    }
+
+    html[data-theme="dark"] .glass-card {
+      border-color: rgba(255, 255, 255, 0.12);
     }
 
     /* ==========================================================
@@ -199,7 +233,7 @@
     /* 悬浮在照片上的白色面板 */
     .chapter-panel {
       width: min(620px, 94vw);
-      background: rgba(255, 255, 255, 0.97);
+      background: var(--panel-bg);
       border-radius: 22px;
       overflow: hidden;
       box-shadow: 0 24px 70px rgba(0, 0, 0, 0.30);
@@ -208,6 +242,58 @@
     /* 左右交替：偶数章节面板靠右 */
     .panel-right .chapter-panel {
       margin-left: auto;
+    }
+
+    /* 章节舞台：面板与另一侧的说明内容并排，填补桌面端空白 */
+    .chapter-stage .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 48px;
+    }
+
+    .stage-caption {
+      flex: 1;
+      min-width: 0;
+      color: var(--white);
+    }
+
+    .stage-caption .sc-num {
+      font-family: Georgia, serif;
+      font-size: 6rem;
+      line-height: 1;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.18);
+      letter-spacing: 3px;
+    }
+
+    .stage-caption .sc-title {
+      font-family: Georgia, "Songti SC", "SimSun", serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin: 10px 0 10px;
+    }
+
+    .stage-caption .sc-line {
+      font-size: 1rem;
+      line-height: 1.75;
+      color: rgba(255, 255, 255, 0.88);
+      max-width: 380px;
+    }
+
+    .stage-caption .sc-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .stage-caption .sc-stats span {
+      padding: 5px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      background: rgba(255, 255, 255, 0.08);
     }
 
     .chapter {
@@ -378,6 +464,16 @@
     }
 
     /* 小屏幕上的章节与时间线适配 */
+    @media (max-width: 900px) {
+      .chapter-stage .container {
+        display: block;
+      }
+
+      .stage-caption {
+        display: none;          /* 手机/平板上隐藏空侧的说明，避免拥挤 */
+      }
+    }
+
     @media (max-width: 700px) {
       .chapter-stage {
         min-height: 0;
@@ -427,15 +523,169 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 24px;
-      background: rgba(255, 255, 255, 0.94);
+      background: var(--nav-bg);
       backdrop-filter: blur(8px);
       border-bottom: 1px solid var(--line);
     }
 
-    .nav-brand {
+    /* 左上角语言切换（中 / EN） */
+    .lang-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .lang-switch:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(47, 109, 179, 0.12);
+    }
+
+    .lang-switch .lang-zh,
+    .lang-switch .lang-en {
+      padding: 1px 5px;
+      border-radius: 7px;
       font-weight: 700;
-      color: var(--deep-blue);
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+    }
+
+    .lang-switch .lang-sep {
+      opacity: 0.4;
+    }
+
+    .lang-switch[data-lang="zh"] .lang-zh {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .lang-switch[data-lang="en"] .lang-en {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* 右侧操作区：主题切换 + 汉堡菜单 */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .theme-wrap {
+      position: relative;
+    }
+
+    .theme-btn {
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--surface);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .theme-btn:hover {
+      border-color: var(--accent);
+      transform: rotate(12deg);
+    }
+
+    .theme-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .theme-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      min-width: 158px;
+      padding: 6px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+      z-index: 130;
+    }
+
+    .theme-menu[hidden] {
+      display: none;
+    }
+
+    .theme-menu button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 8px 10px;
+      border: none;
+      border-radius: 8px;
+      background: none;
+      color: var(--text);
+      font-size: 0.88rem;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .theme-menu button:hover {
+      background: rgba(47, 109, 179, 0.10);
+    }
+
+    .theme-menu button.active {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .theme-menu .tm-check {
+      margin-left: auto;
+      opacity: 0;
+    }
+
+    .theme-menu button.active .tm-check {
+      opacity: 1;
+    }
+
+    /* 暗色主题下的细节修正 */
+    html[data-theme="dark"] .album-item,
+    html[data-theme="dark"] .album-folder {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    html[data-theme="dark"] .chapter-head:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* 暗色主题下，原本的深蓝标题改为亮色文字保证可读性 */
+    html[data-theme="dark"] .section-head h2,
+    html[data-theme="dark"] .card h3,
+    html[data-theme="dark"] .chapter-title,
+    html[data-theme="dark"] .pub-title,
+    html[data-theme="dark"] .pub-meta strong,
+    html[data-theme="dark"] .project-item h4,
+    html[data-theme="dark"] .edu-degree,
+    html[data-theme="dark"] .contact-card h3,
+    html[data-theme="dark"] .album-folder .folder-name,
+    html[data-theme="dark"] .album-breadcrumb {
+      color: var(--text);
+    }
+
+    html[data-theme="dark"] .chapter-num {
+      color: rgba(255, 255, 255, 0.14);
+    }
+
+    html[data-theme="dark"] .album-btn {
+      color: var(--text);
     }
 
     .nav-links {
@@ -599,7 +849,7 @@
     }
 
     .card {
-      background: var(--white);
+      background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 26px 24px;
@@ -626,7 +876,7 @@
         教育经历（默认折叠，点击标题展开）
         ========================================================== */
     .edu-card {
-      background: var(--white);
+      background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       overflow: hidden;
@@ -818,7 +1068,7 @@
       padding: 7px 14px;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: var(--white);
+      background: var(--surface);
       color: var(--deep-blue);
       font-size: 0.88rem;
       cursor: pointer;
@@ -920,7 +1170,7 @@
       margin: 0;
       padding: 5px 13px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.88);
+      background: var(--glass-bg);
       border: 1px solid var(--line);
       color: var(--muted);
       font-size: 0.75rem;
@@ -1093,7 +1343,7 @@
     }
 
     .contact-card {
-      background: var(--white);
+      background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 28px 24px;
@@ -1138,6 +1388,350 @@
     .contact-card a {
       word-break: break-all;
       font-size: 0.92rem;
+    }
+
+    /* ==========================================================
+        九·五、站点统计 + 日历时钟板块
+        （统计卡：累计/今日访问、访客、运行时间、动态标记；
+          日历卡：实时时钟 + 农历节日日历）
+        ========================================================== */
+    .site-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .site-card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 26px 26px 24px;
+      overflow: hidden;
+    }
+
+    /* 卡片顶部点缀色条，呼应“板块”感 */
+    .site-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), rgba(47, 109, 179, 0));
+    }
+
+    .site-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .site-card-head h3 {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--deep-blue);
+      font-size: 1.18rem;
+    }
+
+    .site-card-head h3::before {
+      content: "";
+      width: 4px;
+      height: 18px;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+
+    /* 动态标记：呼吸灯圆点 + “实时”字样 */
+    .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+      color: #0d7a4f;
+      background: rgba(29, 178, 106, 0.12);
+      border: 1px solid rgba(29, 178, 106, 0.35);
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #1db26a;
+      animation: livePulse 1.6s ease-in-out infinite;
+    }
+
+    @keyframes livePulse {
+      0%, 100% {
+        box-shadow: 0 0 0 0 rgba(29, 178, 106, 0.55);
+        opacity: 1;
+      }
+      50% {
+        box-shadow: 0 0 0 6px rgba(29, 178, 106, 0);
+        opacity: 0.65;
+      }
+    }
+
+    html[data-theme="dark"] .live-badge {
+      color: #6fe3ab;
+      background: rgba(29, 178, 106, 0.16);
+      border-color: rgba(29, 178, 106, 0.45);
+    }
+
+    /* 统计格子 */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 14px 16px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(22, 50, 79, 0.08);
+    }
+
+    .stat-value {
+      color: var(--deep-blue);
+      font-size: 1.7rem;
+      font-weight: 700;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-value.small {
+      font-size: 1.02rem;
+      font-weight: 600;
+      word-break: break-all;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .stat-runtime {
+      grid-column: 1 / -1;
+    }
+
+    .stats-note {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    /* 时钟 */
+    .clock-wrap {
+      padding: 16px 10px 18px;
+      margin-bottom: 20px;
+      border-radius: 14px;
+      text-align: center;
+      color: #fff;
+      background: linear-gradient(135deg, var(--deep-blue), var(--deep-blue-2));
+    }
+
+    .clock-time {
+      font-family: "Consolas", "Menlo", monospace;
+      font-size: clamp(1.9rem, 4vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: 2px;
+      line-height: 1.25;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .clock-date {
+      margin-top: 2px;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .cal-today-fest {
+      max-width: 62%;
+      color: var(--muted);
+      font-size: 0.78rem;
+      line-height: 1.4;
+      text-align: right;
+    }
+
+    /* 日历导航 */
+    .cal-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .cal-nav button {
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .cal-nav button:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .cal-title {
+      flex: 1;
+      color: var(--deep-blue);
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .cal-today-btn {
+      width: auto !important;
+      margin-left: auto;
+      padding: 0 10px;
+      font-size: 0.78rem !important;
+    }
+
+    /* 星期表头 + 日期格 */
+    .cal-week,
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .cal-week span {
+      padding: 4px 0;
+      color: var(--muted);
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .cal-week span:nth-child(6),
+    .cal-week span:nth-child(7) {
+      color: var(--accent);
+    }
+
+    .cal-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      min-height: 58px;
+      padding: 6px 4px 4px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: var(--bg);
+      cursor: default;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .cal-cell:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .cal-cell.dim {
+      opacity: 0.35;
+    }
+
+    .cal-day {
+      color: var(--text);
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .cal-lunar {
+      color: var(--muted);
+      font-size: 0.66rem;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .cal-fest {
+      color: #c0392b;
+      font-size: 0.6rem;
+      font-weight: 600;
+      line-height: 1.1;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .cal-cell.weekend .cal-day {
+      color: var(--accent);
+    }
+
+    .cal-cell.festival .cal-day {
+      color: #c0392b;
+    }
+
+    /* 今天：深蓝底反白，醒目但不刺眼 */
+    .cal-cell.today {
+      background: var(--deep-blue);
+      border-color: var(--deep-blue);
+      box-shadow: 0 4px 12px rgba(22, 50, 79, 0.25);
+    }
+
+    .cal-cell.today .cal-day,
+    .cal-cell.today .cal-lunar,
+    .cal-cell.today .cal-fest {
+      color: #fff;
+    }
+
+    /* 日历在手机端的紧凑适配（见下方响应式媒体查询） */
+    @media (max-width: 860px) {
+      .site-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cal-cell {
+        min-height: 50px;
+        padding: 4px 2px;
+      }
+
+      .cal-fest {
+        white-space: normal;
+        font-size: 0.55rem;
+      }
+
+      .cal-lunar {
+        font-size: 0.6rem;
+      }
+
+      .site-card {
+        padding: 20px 16px 18px;
+      }
+
+      .stat-item {
+        padding: 12px 12px;
+      }
     }
 
     /* ==========================================================
@@ -1188,7 +1782,7 @@
         right: 0;
         flex-direction: column;
         gap: 0;
-        background: var(--white);
+        background: var(--surface);
         border-bottom: 1px solid var(--line);
         box-shadow: 0 12px 24px rgba(22, 50, 79, 0.08);
         max-height: 0;
@@ -1305,22 +1899,47 @@
        导航栏：页面锚点与移动端菜单
        ====================================================== -->
   <nav class="topnav">
-    <a class="nav-brand" href="#home">TY</a>
+    <!-- 左上角语言切换：点击在 中文 / English 之间切换 -->
+    <button type="button" class="lang-switch" id="langSwitch" data-lang="zh" aria-label="切换语言 / Switch language">
+      <span class="lang-zh">中</span><span class="lang-sep">/</span><span class="lang-en">EN</span>
+    </button>
 
     <ul class="nav-links" id="navLinks">
-      <li><a href="#home">首页</a></li>
-      <li><a href="#research">研究方向</a></li>
-      <li><a href="#education">教育经历</a></li>
-      <li><a href="#publications">论文成果</a></li>
-      <li><a href="#projects">项目经历</a></li>
-      <li><a href="#honors">获奖荣誉</a></li>
-      <li><a href="#album">相册</a></li>
-      <li><a href="#contact">联系方式</a></li>
+      <li><a href="#home" data-i18n="nav.home">首页</a></li>
+      <li><a href="#research" data-i18n="nav.research">研究方向</a></li>
+      <li><a href="#education" data-i18n="nav.education">教育经历</a></li>
+      <li><a href="#publications" data-i18n="nav.publications">论文成果</a></li>
+      <li><a href="#projects" data-i18n="nav.projects">项目经历</a></li>
+      <li><a href="#honors" data-i18n="nav.honors">获奖荣誉</a></li>
+      <li><a href="#album" data-i18n="nav.album">相册</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">联系方式</a></li>
     </ul>
 
-    <button class="nav-toggle" id="navToggle" type="button" aria-label="打开菜单" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav-actions">
+      <!-- 主题控制：亮色 / 暗色 / 跟随系统 -->
+      <div class="theme-wrap">
+        <button type="button" class="theme-btn" id="themeBtn" aria-label="切换主题">
+          <svg viewBox="0 0 24 24" id="themeIcon" aria-hidden="true">
+            <path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-5.4-5.4 5.4 5.4 0 0 1 2.26-4.4A9.03 9.03 0 0 0 12 3z"/>
+          </svg>
+        </button>
+        <div class="theme-menu" id="themeMenu" hidden>
+          <button type="button" data-theme-option="light">
+            <span>☀</span><span data-i18n="theme.light">亮色</span><span class="tm-check">✓</span>
+          </button>
+          <button type="button" data-theme-option="dark">
+            <span>☾</span><span data-i18n="theme.dark">暗色</span><span class="tm-check">✓</span>
+          </button>
+          <button type="button" data-theme-option="auto">
+            <span>◐</span><span data-i18n="theme.auto">跟随系统</span><span class="tm-check">✓</span>
+          </button>
+        </div>
+      </div>
+
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="打开菜单" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </nav>
 
   <!-- ======================================================
@@ -1335,19 +1954,19 @@
       </div>
 
       <h1>谭义</h1>
-      <p class="hero-title">博士研究生</p>
-      <p class="hero-affil">化学与材料科学学院 · 中国科学技术大学</p>
+      <p class="hero-title" data-i18n="hero.title">博士研究生</p>
+      <p class="hero-affil" data-i18n="hero.affil">化学与材料科学学院 · 中国科学技术大学</p>
 
       <!-- 研究方向关键词：按需增删 -->
       <div class="hero-tags">
-        <span>低维金属纳米材料</span>
-        <span>界面外延生长</span>
-        <span>能源小分子转化</span>
-        <span>精细结构表征</span>
+        <span data-i18n="hero.tag1">低维金属纳米材料</span>
+        <span data-i18n="hero.tag2">界面外延生长</span>
+        <span data-i18n="hero.tag3">能源小分子转化</span>
+        <span data-i18n="hero.tag4">精细结构表征</span>
       </div>
 
       <!-- 自由风格的一句话，可自由替换 -->
-      <p class="hero-quote">科研如登山——目标清晰，路径自由。</p>
+      <p class="hero-quote" data-i18n="hero.quote">科研如登山——目标清晰，路径自由。</p>
     </div>
   </header>
 
@@ -1360,20 +1979,20 @@
       <div class="container">
         <div class="section-head">
           <p class="section-kicker">Research</p>
-          <h2>研究方向</h2>
+          <h2 data-i18n="research.title">研究方向</h2>
         </div>
 
         <!-- ▼【可替换】研究领域总体介绍 -->
-        <p class="research-intro glass-card">
+        <p class="research-intro glass-card" data-i18n="research.p1">
           化学反应的极限，往往不是热力学，而是动力学——催化剂，正是打破这一极限的钥匙。研究以低维贵金属基纳米材料为核心，
           追问一个根本性的科学问题：能否在原子尺度上精确设计催化活性位点，让能源小分子被高效活化，并沿着我们设定的路径精准转化？
         </p>
-        <p class="research-intro glass-card">
+        <p class="research-intro glass-card" data-i18n="research.p2">
           我始终相信，催化性能并非偶然，而是由原子尺度的结构决定的。围绕这一信念，致力于建立从材料设计、结构表征到性能验证的完整研究路径：
           以界面外延生长为手段，在异质界面上构筑晶格匹配的纳米结构；以表界面限域合成开辟新范式，将金属-非金属键合引入贵金属体系，
           发展二维金属间化合物等新型低维材料平台；并结合原位与多尺度表征，在真实反应条件下追踪结构与电子态的演化，让机理与性能相互印证。
         </p>
-        <p class="research-intro glass-card">
+        <p class="research-intro glass-card" data-i18n="research.p3">
           研究的意义，在于让分子尺度的洞察转化为真实世界的变革——更高效的能量转化、更清洁的化学过程、更可持续的未来。
           我的目标，是让每一颗经过设计的活性位点，都能在真实器件中兑现其潜力。
         </p>
@@ -1381,20 +2000,21 @@
         <div class="card-grid">
           <!-- 卡片 1：按需增删复制 -->
           <article class="card">
-            <h3>低维金属纳米材料可控合成</h3>
-            <p>结构决定性能，合成决定结构。通过界面外延生长与表界面限域合成，在原子尺度上“雕刻”低维贵金属基材料，为活性位点的精准构筑提供新平台。</p>
+            <h3 data-i18n="research.c1t">低维金属纳米材料可控合成</h3>
+            <p data-i18n="research.c1d">结构决定性能，合成决定结构。通过界面外延生长与表界面限域合成，在原子尺度上“雕刻”低维贵金属基材料，为活性位点的精准构筑提供新平台。</p>
           </article>
 
           <article class="card">
-            <h3>多尺度精细结构表征</h3>
-            <p>看见，才能理解。综合 TEM/HRTEM、HAADF-STEM、XRD、XPS、XAFS 与同步辐射原位技术，在真实反应条件下追踪结构与电子态的演化，为催化机理提供原子级证据。</p>
+            <h3 data-i18n="research.c2t">多尺度精细结构表征</h3>
+            <p data-i18n="research.c2d">看见，才能理解。综合 TEM/HRTEM、HAADF-STEM、XRD、XPS、XAFS 与同步辐射原位技术，在真实反应条件下追踪结构与电子态的演化，为催化机理提供原子级证据。</p>
           </article>
 
           <article class="card">
-            <h3>电催化与能源小分子转化</h3>
-            <p>从活性位点到反应机理。聚焦氢气、氧气、二氧化碳等能源小分子的活化与选择性转化，打通材料设计到性能验证的完整链条，让原子尺度的设计兑现为宏观性能。</p>
+            <h3 data-i18n="research.c3t">电催化与能源小分子转化</h3>
+            <p data-i18n="research.c3d">从活性位点到反应机理。聚焦氢气、氧气、二氧化碳等能源小分子的活化与选择性转化，打通材料设计到性能验证的完整链条，让原子尺度的设计兑现为宏观性能。</p>
           </article>
         </div>
+
       </div>
     </section>
 
@@ -1415,8 +2035,8 @@
             </span>
             <span class="chapter-text">
               <span class="chapter-kicker">Education</span>
-              <span class="chapter-title">教育经历</span>
-              <span class="chapter-sub">点击展开求学时间线</span>
+              <span class="chapter-title" data-i18n="education.title">教育经历</span>
+              <span class="chapter-sub" data-i18n="education.sub">点击展开求学时间线</span>
             </span>
             <span class="chapter-num">01</span>
             <span class="chapter-toggle" aria-hidden="true">＋</span>
@@ -1429,29 +2049,36 @@
               <article class="edu-item">
                 <span class="edu-year">2025 – 至今</span>
                 <div>
-                  <p class="edu-degree">博士研究生 · 无机化学</p>
-                  <p class="edu-school">中国科学技术大学（导师：吴长征）</p>
+                  <p class="edu-degree" data-i18n="education.deg1">博士研究生 · 无机化学</p>
+                  <p class="edu-school" data-i18n="education.school1">中国科学技术大学（导师：吴长征）</p>
                 </div>
               </article>
 
               <article class="edu-item">
                 <span class="edu-year">2023 – 2025</span>
                 <div>
-                  <p class="edu-degree">硕士研究生 · 无机化学</p>
-                  <p class="edu-school">中国科学技术大学（导师：吴长征）</p>
+                  <p class="edu-degree" data-i18n="education.deg2">硕士研究生 · 无机化学</p>
+                  <p class="edu-school" data-i18n="education.school2">中国科学技术大学（导师：吴长征）</p>
                 </div>
               </article>
 
               <article class="edu-item">
                 <span class="edu-year">2019 – 2023</span>
                 <div>
-                  <p class="edu-degree">本科 · 材料化学</p>
-                  <p class="edu-school">中国科学技术大学</p>
+                  <p class="edu-degree" data-i18n="education.deg3">本科 · 材料化学</p>
+                  <p class="edu-school" data-i18n="education.school3">中国科学技术大学</p>
                 </div>
               </article>
             </div>
           </div>
         </details>
+        </div>
+        <!-- 面板另一侧的说明内容（桌面端显示） -->
+        <div class="stage-caption">
+          <div class="sc-num">01</div>
+          <div class="sc-title" data-i18n="education.stageTitle">教育经历</div>
+          <p class="sc-line" data-i18n="education.stageLine">从材料化学出发，一路走向无机化学的前沿。</p>
+          <div class="sc-stats"><span data-i18n="education.stageStats">博士 · 硕士 · 学士</span></div>
         </div>
       </div>
     </section>
@@ -1461,6 +2088,13 @@
          ====================================================== -->
     <section id="publications" class="chapter-stage chapter-stage--lake panel-right">
       <div class="container">
+        <!-- 面板另一侧的说明内容（桌面端显示） -->
+        <div class="stage-caption">
+          <div class="sc-num">02</div>
+          <div class="sc-title" data-i18n="publications.stageTitle">论文成果</div>
+          <p class="sc-line" data-i18n="publications.stageLine">把每一个科学问题，写进经受同行评审的篇章。</p>
+          <div class="sc-stats"><span data-i18n="publications.stageStats">已发表 3 · 在投 2 · 专利 3</span></div>
+        </div>
         <div class="chapter-panel">
         <!-- 创意折叠章节：默认收起，点击展开 -->
         <details class="chapter">
@@ -1472,8 +2106,8 @@
             </span>
             <span class="chapter-text">
               <span class="chapter-kicker">Publications</span>
-              <span class="chapter-title">论文成果</span>
-              <span class="chapter-sub">已发表 · 在投 · 专利</span>
+              <span class="chapter-title" data-i18n="publications.title">论文成果</span>
+              <span class="chapter-sub" data-i18n="publications.sub">已发表 · 在投 · 专利</span>
             </span>
             <span class="chapter-num">02</span>
             <span class="chapter-toggle" aria-hidden="true">＋</span>
@@ -1483,7 +2117,7 @@
 
         <!-- 已发表 -->
         <div class="pub-group">
-          <h3>已发表</h3>
+          <h3 data-i18n="publications.published">已发表</h3>
           <div class="pub-list">
 
             <!-- ▼ 论文条目：复制整块修改 -->
@@ -1491,7 +2125,7 @@
               <span class="pub-year">2025</span>
               <div>
                 <p class="pub-title">Atomic-Layered Platinum-Based Intermetallic with Phosphorus Pillar Nanoengineering Enables pH-universal Hydrogen Oxidation Catalysis</p>
-                <p class="pub-meta">R. Gui, H. Cheng, <strong>Yi Tan</strong>, et al. <em>Angew. Chem. Int. Ed.</em>, <strong>2025</strong>, e15811（共同第一作者）.</p>
+                <p class="pub-meta" data-i18n="publications.pub1meta">R. Gui, H. Cheng, <strong>Yi Tan</strong>, et al. <em>Angew. Chem. Int. Ed.</em>, <strong>2025</strong>, e15811（共同第一作者）.</p>
                 <a class="pub-doi" href="https://doi.org/10.1002/anie.202515811" target="_blank" rel="noopener">
                   DOI: 10.1002/anie.202515811
                 </a>
@@ -1502,7 +2136,7 @@
               <span class="pub-year">2024</span>
               <div>
                 <p class="pub-title">Highly Crystalline Iridium-Nickel Nanocages with Sub-Nanopores for Acidic Bifunctional Water Splitting Electrolysis</p>
-                <p class="pub-meta">H. Ding, et al. <em>J. Am. Chem. Soc.</em>, <strong>2024</strong>, 146, 7858–7867（第四作者）.</p>
+                <p class="pub-meta" data-i18n="publications.pub2meta">H. Ding, et al. <em>J. Am. Chem. Soc.</em>, <strong>2024</strong>, 146, 7858–7867（第四作者）.</p>
                 <a class="pub-doi" href="https://doi.org/10.1021/jacs.4c01379" target="_blank" rel="noopener">
                   DOI: 10.1021/jacs.4c01379
                 </a>
@@ -1513,7 +2147,7 @@
               <span class="pub-year">2026</span>
               <div>
                 <p class="pub-title">Construction of Porous PtCo Alloy Nanotubes via an Epitaxial Growth Method for Efficient and Stable Electrochemical Oxygen Reduction Reaction</p>
-                <p class="pub-meta">C. Su, C. Chen, <strong>Yi Tan</strong>, et al. <em>Nano Lett.</em>, <strong>2026</strong></p>
+                <p class="pub-meta" data-i18n="publications.pub3meta">C. Su, C. Chen, <strong>Yi Tan</strong>, et al. <em>Nano Lett.</em>, <strong>2026</strong></p>
                 <a class="pub-doi" href="https://doi.org/10.1021/acs.nanolett.6c01157" target="_blank" rel="noopener">
                   DOI: 10.1021/acs.nanolett.6c01157
                 </a>
@@ -1524,15 +2158,15 @@
 
         <!-- 在投 / 准备中 -->
         <div class="pub-group">
-          <h3>在投 / 准备中</h3>
+          <h3 data-i18n="publications.pending">在投 / 准备中</h3>
           <div class="pub-list">
 
             <article class="pub-item">
               <span class="pub-year">2026</span>
               <div>
                 <p class="pub-title">Interfacial Epitaxial Growth for the Synthesis of Noble/Non-Noble Metal Alloy Nanostructures toward High-Efficiency Hydrogen Oxidation Reaction</p>
-                <p class="pub-meta">H. Ding, <strong>Yi Tan</strong>, et al. 在投（共同第一作者）.</p>
-                <span class="pub-doi">DOI：接收后补充</span>
+                <p class="pub-meta" data-i18n="publications.pub4meta">H. Ding, <strong>Yi Tan</strong>, et al. 在投（共同第一作者）.</p>
+                <span class="pub-doi" data-i18n="publications.doiPending">DOI：接收后补充</span>
               </div>
             </article>
 
@@ -1540,8 +2174,8 @@
               <span class="pub-year">2026</span>
               <div>
                 <p class="pub-title">Atomically Ordered Phosphorus Engineering Modulates Interfacial Water Structure for Highly Efficient Alkaline Hydrogen Oxidation</p>
-                <p class="pub-meta">R. Gui, <strong>Yi Tan</strong>, et al. 在投（共同第一作者）.</p>
-                <span class="pub-doi">DOI：接收后补充</span>
+                <p class="pub-meta" data-i18n="publications.pub5meta">R. Gui, <strong>Yi Tan</strong>, et al. 在投（共同第一作者）.</p>
+                <span class="pub-doi" data-i18n="publications.doiPending">DOI：接收后补充</span>
               </div>
             </article>
           </div>
@@ -1549,38 +2183,38 @@
 
         <!-- 专利（若不需要此分区，整块删除即可） -->
         <div class="pub-group">
-          <h3>专利</h3>
+          <h3 data-i18n="publications.patents">专利</h3>
      
           <div class="pub-list">
             <article class="pub-item">
-              <span class="pub-year">专利</span>
+              <span class="pub-year" data-i18n="publications.patentTag">专利</span>
               <div>
-                <p class="pub-title">介孔碳负载的层状铂基金属间化合物及其制备方法与用途</p>
-                <p class="pub-meta">发明人：桂仁杰， <strong>谭义</strong>（第二发明人）</p>
+                <p class="pub-title" data-i18n="publications.pat1t">介孔碳负载的层状铂基金属间化合物及其制备方法与用途</p>
+                <p class="pub-meta" data-i18n="publications.pat1meta">发明人：桂仁杰， <strong>谭义</strong>（第二发明人）</p>
                 <a class="pub-doi" href="https://cprs.patentstar.com.cn/Search/Detail?ANE=9EHE9DHB8FBAAEIA7BFA3ADA9DIG9HIG9GEE9BHE9DCA9FBB" target="_blank" rel="noopener">
-                  公开号：CN202510403544.0
+                  <span data-i18n="publications.pubNo">公开号：</span>CN202510403544.0
                 </a>
               </div>
             </article>
 
             <article class="pub-item">
-              <span class="pub-year">专利</span>
+              <span class="pub-year" data-i18n="publications.patentTag">专利</span>
               <div>
-                <p class="pub-title">一种镍基贵金属多壳层纳米笼材料及其制备方法与应用</p>
-                <p class="pub-meta">发明人：吴长征，<strong>谭义</strong>（第二发明人，导师为第一发明人）</p>
+                <p class="pub-title" data-i18n="publications.pat2t">一种镍基贵金属多壳层纳米笼材料及其制备方法与应用</p>
+                <p class="pub-meta" data-i18n="publications.pat2meta">发明人：吴长征，<strong>谭义</strong>（第二发明人，导师为第一发明人）</p>
                 <a class="pub-doi" href="https://cprs.patentstar.com.cn/Search/Detail?ANE=9GCB8FDA9IDE8CBA6EBA8HAA9BCBBEFAAHBA9FFFCFGA9BIH" target="_blank" rel="noopener">
-                  公开号：CN202511799487.9
+                  <span data-i18n="publications.pubNo">公开号：</span>CN202511799487.9
                 </a>
               </div>
             </article>
 
             <article class="pub-item">
-              <span class="pub-year">专利</span>
+              <span class="pub-year" data-i18n="publications.patentTag">专利</span>
               <div>
-                <p class="pub-title">一种氢燃料电池与锂电池混合动力无人机</p>
-                <p class="pub-meta">发明人：程晗，桂仁杰，<strong>谭义</strong></p>
+                <p class="pub-title" data-i18n="publications.pat3t">一种氢燃料电池与锂电池混合动力无人机</p>
+                <p class="pub-meta" data-i18n="publications.pat3meta">发明人：程晗，桂仁杰，<strong>谭义</strong></p>
                 <a class="pub-doi" href="https://cprs.patentstar.com.cn/Search/Detail?ANE=5BCA8FDA9FFDFIIA9CGA6FBA9IEGDEHA9IDD8EEABDIA9GEG" target="_blank" rel="noopener">
-                  公开号：CN122276198A
+                  <span data-i18n="publications.pubNo">公开号：</span>CN122276198A
                 </a>
               </div>
             </article>
@@ -1608,8 +2242,8 @@
             </span>
             <span class="chapter-text">
               <span class="chapter-kicker">Experience</span>
-              <span class="chapter-title">项目经历</span>
-              <span class="chapter-sub">科研项目 · 助教经历</span>
+              <span class="chapter-title" data-i18n="projects.title">项目经历</span>
+              <span class="chapter-sub" data-i18n="projects.sub">科研项目 · 助教经历</span>
             </span>
             <span class="chapter-num">03</span>
             <span class="chapter-toggle" aria-hidden="true">＋</span>
@@ -1619,29 +2253,36 @@
             <div class="two-col">
           <!-- 科研项目 -->
           <div>
-            <h3 style="color:var(--deep-blue); margin-bottom:8px;">科研项目</h3>
+            <h3 style="color:var(--deep-blue); margin-bottom:8px;" data-i18n="projects.researchTitle">科研项目</h3>
 
             <article class="project-item">
-              <p class="proj-role">中国科学技术大学青年创新基金 · 项目成员 · 2027.1 – 2028.12</p>
-              <h4>【非金属插层诱导铂基二维层状序构及其燃料电池电催化性能研究】</h4>
-              <p>【项目职责与成果：负责催化剂合成、电化学测试与数据分析】</p>
+              <p class="proj-role" data-i18n="projects.p1role">中国科学技术大学青年创新基金 · 项目成员 · 2027.1 – 2028.12</p>
+              <h4 data-i18n="projects.p1title">【非金属插层诱导铂基二维层状序构及其燃料电池电催化性能研究】</h4>
+              <p data-i18n="projects.p1desc">【项目职责与成果：负责催化剂合成、电化学测试与数据分析】</p>
             </article>
           </div>
 
           <!-- 助教经历 -->
           <div>
-            <h3 style="color:var(--deep-blue); margin-bottom:8px;">助教经历</h3>
+            <h3 style="color:var(--deep-blue); margin-bottom:8px;" data-i18n="projects.taTitle">助教经历</h3>
 
             <article class="project-item">
-              <p class="proj-role">《高等无机化学》课程助教 · 2026</p>
-              <h4>高等无机化学</h4>
-              <p>【工作内容：组织习题课、批改作业与答疑等，按实际情况补充】</p>
+              <p class="proj-role" data-i18n="projects.ta1role">《高等无机化学》课程助教 · 2026</p>
+              <h4 data-i18n="projects.ta1title">高等无机化学</h4>
+              <p data-i18n="projects.ta1desc">【工作内容：组织习题课、批改作业与答疑等，按实际情况补充】</p>
             </article>
 
                      </div>
             </div>
           </div>
         </details>
+        </div>
+        <!-- 面板另一侧的说明内容（桌面端显示） -->
+        <div class="stage-caption">
+          <div class="sc-num">03</div>
+          <div class="sc-title" data-i18n="projects.stageTitle">项目经历</div>
+          <p class="sc-line" data-i18n="projects.stageLine">在基金项目与三尺讲台之间，连接科研与传承。</p>
+          <div class="sc-stats"><span data-i18n="projects.stageStats">科研项目 1 · 助教经历 1</span></div>
         </div>
       </div>
     </section>
@@ -1651,6 +2292,13 @@
          ====================================================== -->
     <section id="honors" class="chapter-stage chapter-stage--sunrise panel-right">
       <div class="container">
+        <!-- 面板另一侧的说明内容（桌面端显示） -->
+        <div class="stage-caption">
+          <div class="sc-num">04</div>
+          <div class="sc-title" data-i18n="honors.stageTitle">获奖荣誉</div>
+          <p class="sc-line" data-i18n="honors.stageLine">每一份肯定，都是继续前行的注脚。</p>
+          <div class="sc-stats"><span data-i18n="honors.stageStats">获奖荣誉 4 项</span></div>
+        </div>
         <div class="chapter-panel">
         <!-- 创意折叠章节：点击展开 -->
         <details class="chapter">
@@ -1662,8 +2310,8 @@
             </span>
             <span class="chapter-text">
               <span class="chapter-kicker">Honors</span>
-              <span class="chapter-title">获奖荣誉</span>
-              <span class="chapter-sub">奖学金 · 竞赛奖励</span>
+              <span class="chapter-title" data-i18n="honors.title">获奖荣誉</span>
+              <span class="chapter-sub" data-i18n="honors.sub">奖学金 · 竞赛奖励</span>
             </span>
             <span class="chapter-num">04</span>
             <span class="chapter-toggle" aria-hidden="true">＋</span>
@@ -1674,26 +2322,26 @@
 
     <article class="honor-item">
             <span class="honor-year">2026</span>
-            <span class="honor-name">【研究生学业一等奖学金】</span>
-            <span class="honor-level">校级</span>
+            <span class="honor-name" data-i18n="honors.h1">【研究生学业一等奖学金】</span>
+            <span class="honor-level" data-i18n="honors.schoolLevel">校级</span>
           </article>
 
           <article class="honor-item">
             <span class="honor-year">2025</span>
-            <span class="honor-name">【研究生学业一等奖学金】</span>
-            <span class="honor-level">校级</span>
+            <span class="honor-name" data-i18n="honors.h2">【研究生学业一等奖学金】</span>
+            <span class="honor-level" data-i18n="honors.schoolLevel">校级</span>
           </article>
 
     <article class="honor-item">
             <span class="honor-year">2024</span>
-            <span class="honor-name">【研究生学业一等奖学金】</span>
-            <span class="honor-level">校级</span>
+            <span class="honor-name" data-i18n="honors.h3">【研究生学业一等奖学金】</span>
+            <span class="honor-level" data-i18n="honors.schoolLevel">校级</span>
           </article>
 
     <article class="honor-item">
             <span class="honor-year">2023</span>
-            <span class="honor-name">【研究生学业一等奖学金】</span>
-            <span class="honor-level">校级</span>
+            <span class="honor-name" data-i18n="honors.h4">【研究生学业一等奖学金】</span>
+            <span class="honor-level" data-i18n="honors.schoolLevel">校级</span>
           </article>
             </div>
           </div>
@@ -1709,16 +2357,16 @@
       <div class="container">
         <div class="section-head">
           <p class="section-kicker">Album</p>
-          <h2>相册</h2>
+          <h2 data-i18n="album.title">相册</h2>
         </div>
 
         <!-- <details> 折叠组件：默认收起，点击标题栏展开。
              相册为“文件夹模式”：点击文件夹进入查看照片，点击照片可放大。
              照片索引由 build_album.py 自动生成到 assets/albums/。 -->
         <details class="edu-card" id="albumDetails">
-          <summary>生活相册（点击展开查看）</summary>
+          <summary data-i18n="album.summary">生活相册（点击展开查看）</summary>
           <div class="edu-body">
-            <p class="album-mode" id="albumMode">正在加载相册…</p>
+            <p class="album-mode" id="albumMode" data-i18n="album.loading">正在加载相册…</p>
 
             <!-- 相册根目录：文件夹列表 -->
             <div id="albumFolders" class="album-folders"></div>
@@ -1726,7 +2374,7 @@
             <!-- 文件夹内：照片网格 -->
             <div id="albumPhotoView" class="album-photo-view" hidden>
               <div class="album-breadcrumb">
-                <button type="button" class="album-btn" id="btnBack">← 返回相册</button>
+                <button type="button" class="album-btn" id="btnBack" data-i18n="album.back">← 返回相册</button>
                 <span id="albumFolderName"></span>
               </div>
               <div id="albumPhotos" class="album-grid"></div>
@@ -1750,7 +2398,7 @@
       <div class="container">
         <div class="section-head">
           <p class="section-kicker">Contact</p>
-          <h2>联系方式</h2>
+          <h2 data-i18n="contact.title">联系方式</h2>
         </div>
 
         <div class="contact-grid">
@@ -1762,11 +2410,11 @@
                 <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
               </svg>
             </div>
-            <h3>邮箱</h3>
-            <p>欢迎交流与合作</p>
+            <h3 data-i18n="contact.emailTitle">邮箱</h3>
+            <p data-i18n="contact.emailNote">欢迎交流与合作</p>
             <!-- ▼【可替换】邮箱地址 -->
             <a href="mailto:ty12345@mail.ustc.edu.cn">ty12345@mail.ustc.edu.cn</a>
-            <p>备用：3313952565@qq.com</p>
+            <p data-i18n="contact.emailAlt">备用：3313952565@qq.com</p>
           </article>
 
           <!-- ResearchGate -->
@@ -1777,8 +2425,8 @@
                 <path d="M8.7 7.2v9.6M8.7 7.2h3.5a2.3 2.3 0 0 1 0 4.6H8.7M13.7 11.8 16 16.8" />
               </svg>
             </div>
-            <h3>ResearchGate</h3>
-            <p>查看论文与科研动态</p>
+            <h3 data-i18n="contact.scholarTitle">ResearchGate</h3>
+            <p data-i18n="contact.scholarNote">查看论文与科研动态</p>
             <!-- ▼【可替换】ResearchGate 个人主页链接 -->
             <a href="https://www.researchgate.net/profile/Yi-Tan-87/research" target="_blank" rel="noopener">
               researchgate.net/profile/Yi-Tan-87
@@ -1792,12 +2440,98 @@
                 <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.8 14.4H8.2V7.6h2v8.8zm1.3-8.8h2.2c1.4 0 2.5.3 3.1.9.7.6 1 1.5 1 2.7 0 1.2-.3 2.1-1 2.7-.6.6-1.7.9-3.1.9h-2.2V7.6zm2.2 5.9c.8 0 1.4-.2 1.7-.5.3-.3.5-.8.5-1.4 0-.6-.2-1.1-.5-1.4-.3-.3-.9-.5-1.7-.5h-.2v3.8h.2z"/>
               </svg>
             </div>
-            <h3>ORCID</h3>
-            <p>学术身份标识</p>
+            <h3 data-i18n="contact.orcidTitle">ORCID</h3>
+            <p data-i18n="contact.orcidNote">学术身份标识</p>
             <!-- ▼【可替换】ORCID 编号 -->
             <a href="https://orcid.org/0009-0000-6530-3270" target="_blank" rel="noopener">
               orcid.org/0009-0000-6530-3270
             </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================
+         九、站点统计 + 日历时钟（板块模式）
+         - 统计卡：累计访问/访客来自“不蒜子”（正式域名自动计数）；
+           今日访问/访客需在 JS 的 TODAY_API 中配置免费计数服务后显示；
+           已运行时间与“实时”动态标记由本地 JS 计算，每秒跳动。
+         - 日历卡：实时时钟 + 含农历、节日、节气的月历（农历库为本地
+           assets/lunar.min.js，无需外网 CDN）。
+         ====================================================== -->
+    <section id="site">
+      <div class="container">
+        <div class="section-head">
+          <p class="section-kicker">Site</p>
+          <h2 data-i18n="site.title">站点统计 · 日历时钟</h2>
+        </div>
+
+        <div class="site-grid">
+
+          <!-- 左：站点统计 -->
+          <article class="site-card">
+            <div class="site-card-head">
+              <h3 data-i18n="stats.title">站点统计</h3>
+              <!-- 动态标记：呼吸灯圆点 + “实时”，表示下方数据每秒刷新 -->
+              <span class="live-badge">
+                <span class="live-dot" aria-hidden="true"></span>
+                <span data-i18n="stats.live">实时</span>
+              </span>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-value" id="statPv">–</span>
+                <span class="stat-label" data-i18n="stats.totalVisits">累计访问</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statUv">–</span>
+                <span class="stat-label" data-i18n="stats.totalVisitors">累计访客</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statTodayPv">–</span>
+                <span class="stat-label" data-i18n="stats.todayVisits">今日访问</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value" id="statTodayUv">–</span>
+                <span class="stat-label" data-i18n="stats.todayVisitors">今日访客</span>
+              </div>
+              <div class="stat-item stat-runtime">
+                <span class="stat-value small" id="statRuntime">–</span>
+                <span class="stat-label" data-i18n="stats.runtime">本站已运行</span>
+              </div>
+            </div>
+
+            <!-- 不蒜子会自动向具有以下 id 的元素写入“累计访客”数值，
+                 这里放一个隐藏占位，供 JS 读取后同步到上方统计卡 -->
+            <span id="busuanzi_value_site_uv" hidden></span>
+
+            <p class="stats-note" data-i18n="stats.note">今日访问 / 访客：在下方 JS 的 TODAY_API 中配置免费计数服务后自动显示。</p>
+          </article>
+
+          <!-- 右：日历 + 时钟 -->
+          <article class="site-card">
+            <div class="site-card-head">
+              <h3 data-i18n="cal.title">日历 · 时钟</h3>
+              <!-- “今日”的农历与节日，由 JS 每秒刷新 -->
+              <span class="cal-today-fest" id="todayFest"></span>
+            </div>
+
+            <div class="clock-wrap">
+              <div class="clock-time" id="clockTime">00:00:00</div>
+              <div class="clock-date" id="clockDate">–</div>
+            </div>
+
+            <div class="calendar-wrap">
+              <div class="cal-nav">
+                <button type="button" id="calPrev" aria-label="上个月">‹</button>
+                <span class="cal-title" id="calTitle">–</span>
+                <button type="button" id="calNext" aria-label="下个月">›</button>
+                <button type="button" id="calTodayBtn" class="cal-today-btn" data-i18n="cal.backToday">今天</button>
+              </div>
+              <div class="cal-week" id="calWeek"></div>
+              <div class="cal-grid" id="calGrid"></div>
+            </div>
           </article>
         </div>
       </div>
@@ -1809,15 +2543,18 @@
        页脚：版权信息（年份由 JavaScript 自动更新）
        ====================================================== -->
   <footer class="site-footer">
-    <p>© <span id="year">2026</span> 谭义. 保留所有权利.</p>
-    <p class="footer-note">以好奇心和自由探索精神做科研 · <a href="#home">回到顶部</a></p>
+    <p data-i18n="footer.copy">© <span id="year">2026</span> 谭义. 保留所有权利.</p>
+    <p class="footer-note" data-i18n="footer.note">以好奇心和自由探索精神做科研 · <a href="#home">回到顶部</a></p>
   </footer>
 
   <!-- 回到顶部按钮（滚动超过一屏后显示） -->
   <button type="button" id="backToTop" class="back-to-top" aria-label="回到顶部">↑</button>
 
   <!-- 左下角访问统计：由“不蒜子”提供，正式域名下才计数，失败时只显示 “–” -->
-  <div class="site-visits" id="siteVisits" aria-hidden="false">累计访问 <span id="busuanzi_value_site_pv">–</span> 次</div>
+  <div class="site-visits" id="siteVisits" aria-hidden="false"><span data-i18n="footer.visits">累计访问</span> <span id="busuanzi_value_site_pv">–</span> <span data-i18n="footer.times">次</span></div>
+
+  <!-- 农历库（本地托管，含节日/节气/农历换算，无需外网 CDN） -->
+  <script src="assets/lunar.min.js"></script>
 
   <script>
     /* ======================================================
@@ -1895,16 +2632,16 @@
       let currentFolder = null;   // null = 在相册根目录
 
       async function loadAlbum() {
-        modeEl.textContent = "正在加载相册…";
+        modeEl.textContent = t("album.loading");
         try {
           const res = await fetch("assets/albums/index.json?t=" + Date.now());
           if (!res.ok) throw new Error("HTTP " + res.status);
           data = await res.json();
           const total = data.folders.reduce(function (n, f) { return n + f.photos.length; }, 0);
-          modeEl.textContent = "共 " + data.folders.length + " 个相册、" + total + " 张照片，点击文件夹进入查看。";
+          modeEl.textContent = t("album.count", { f: data.folders.length, n: total });
         } catch (e) {
           data = { folders: [] };
-          modeEl.textContent = "相册索引加载失败：请先在项目目录运行 python build_album.py 生成相册资源。";
+          modeEl.textContent = t("album.fail");
         }
         render();
       }
@@ -1929,7 +2666,7 @@
           card.innerHTML = folderIconSvg +
             '<span class="folder-name"></span><span class="folder-count"></span>';
           card.querySelector(".folder-name").textContent = folder.name;
-          card.querySelector(".folder-count").textContent = folder.photos.length + " 张照片";
+          card.querySelector(".folder-count").textContent = t("album.photoCount", { n: folder.photos.length });
           card.addEventListener("click", function () { openFolder(folder.name); });
           foldersEl.appendChild(card);
         });
@@ -1993,6 +2730,9 @@
       albumDetails.addEventListener("toggle", function () {
         if (albumDetails.open) loadAlbum();
       });
+
+      /* 供语言切换后刷新相册文案 */
+      window.albumRefresh = loadAlbum;
     })();
 
     /* ======================================================
@@ -2041,6 +2781,550 @@
 
     document.addEventListener("DOMContentLoaded", collapseChapters);
     window.addEventListener("pageshow", collapseChapters);
+
+    /* ======================================================
+       9. 语言切换（中文 / English）
+       ====================================================== */
+    const I18N = {
+      zh: {
+        "nav.home": "首页", "nav.research": "研究方向", "nav.education": "教育经历",
+        "nav.publications": "论文成果", "nav.projects": "项目经历", "nav.honors": "获奖荣誉",
+        "nav.album": "相册", "nav.contact": "联系方式",
+        "theme.light": "亮色", "theme.dark": "暗色", "theme.auto": "跟随系统",
+        "hero.title": "博士研究生",
+        "hero.affil": "化学与材料科学学院 · 中国科学技术大学",
+        "hero.tag1": "低维金属纳米材料", "hero.tag2": "界面外延生长",
+        "hero.tag3": "能源小分子转化", "hero.tag4": "精细结构表征",
+        "hero.quote": "科研如登山——目标清晰，路径自由。",
+        "research.title": "研究方向",
+        "research.p1": "化学反应的极限，往往不是热力学，而是动力学——催化剂，正是打破这一极限的钥匙。研究以低维贵金属基纳米材料为核心，追问一个根本性的科学问题：能否在原子尺度上精确设计催化活性位点，让能源小分子被高效活化，并沿着我们设定的路径精准转化？",
+        "research.p2": "我始终相信，催化性能并非偶然，而是由原子尺度的结构决定的。围绕这一信念，致力于建立从材料设计、结构表征到性能验证的完整研究路径：以界面外延生长为手段，在异质界面上构筑晶格匹配的纳米结构；以表界面限域合成开辟新范式，将金属-非金属键合引入贵金属体系，发展二维金属间化合物等新型低维材料平台；并结合原位与多尺度表征，在真实反应条件下追踪结构与电子态的演化，让机理与性能相互印证。",
+        "research.p3": "研究的意义，在于让分子尺度的洞察转化为真实世界的变革——更高效的能量转化、更清洁的化学过程、更可持续的未来。我的目标，是让每一颗经过设计的活性位点，都能在真实器件中兑现其潜力。",
+        "research.c1t": "低维金属纳米材料可控合成",
+        "research.c1d": "结构决定性能，合成决定结构。通过界面外延生长与表界面限域合成，在原子尺度上“雕刻”低维贵金属基材料，为活性位点的精准构筑提供新平台。",
+        "research.c2t": "多尺度精细结构表征",
+        "research.c2d": "看见，才能理解。综合 TEM/HRTEM、HAADF-STEM、XRD、XPS、XAFS 与同步辐射原位技术，在真实反应条件下追踪结构与电子态的演化，为催化机理提供原子级证据。",
+        "research.c3t": "电催化与能源小分子转化",
+        "research.c3d": "从活性位点到反应机理。聚焦氢气、氧气、二氧化碳等能源小分子的活化与选择性转化，打通材料设计到性能验证的完整链条，让原子尺度的设计兑现为宏观性能。",
+        "education.title": "教育经历", "education.sub": "点击展开求学时间线",
+        "education.stageTitle": "教育经历",
+        "education.stageLine": "从材料化学出发，一路走向无机化学的前沿。",
+        "education.stageStats": "博士 · 硕士 · 学士",
+        "education.deg1": "博士研究生 · 无机化学",
+        "education.school1": "中国科学技术大学（导师：吴长征）",
+        "education.deg2": "硕士研究生 · 无机化学",
+        "education.school2": "中国科学技术大学（导师：吴长征）",
+        "education.deg3": "本科 · 材料化学",
+        "education.school3": "中国科学技术大学",
+        "publications.title": "论文成果", "publications.sub": "已发表 · 在投 · 专利",
+        "publications.stageTitle": "论文成果",
+        "publications.stageLine": "把每一个科学问题，写进经受同行评审的篇章。",
+        "publications.stageStats": "已发表 3 · 在投 2 · 专利 3",
+        "publications.published": "已发表", "publications.pending": "在投 / 准备中",
+        "publications.patents": "专利", "publications.patentTag": "专利", "publications.pubNo": "公开号：",
+        "publications.doiPending": "DOI：接收后补充",
+        "publications.pub1meta": "R. Gui, H. Cheng, <strong>Yi Tan</strong>, et al. <em>Angew. Chem. Int. Ed.</em>, <strong>2025</strong>, e15811（共同第一作者）.",
+        "publications.pub2meta": "H. Ding, et al. <em>J. Am. Chem. Soc.</em>, <strong>2024</strong>, 146, 7858–7867（第四作者）.",
+        "publications.pub3meta": "C. Su, C. Chen, <strong>Yi Tan</strong>, et al. <em>Nano Lett.</em>, <strong>2026</strong>",
+        "publications.pub4meta": "H. Ding, <strong>Yi Tan</strong>, et al. 在投（共同第一作者）.",
+        "publications.pub5meta": "R. Gui, <strong>Yi Tan</strong>, et al. 在投（共同第一作者）.",
+        "publications.pat1t": "介孔碳负载的层状铂基金属间化合物及其制备方法与用途",
+        "publications.pat1meta": "发明人：桂仁杰， <strong>谭义</strong>（第二发明人）",
+        "publications.pat2t": "一种镍基贵金属多壳层纳米笼材料及其制备方法与应用",
+        "publications.pat2meta": "发明人：吴长征，<strong>谭义</strong>（第二发明人，导师为第一发明人）",
+        "publications.pat3t": "一种氢燃料电池与锂电池混合动力无人机",
+        "publications.pat3meta": "发明人：程晗，桂仁杰，<strong>谭义</strong>",
+        "projects.title": "项目经历", "projects.sub": "科研项目 · 助教经历",
+        "projects.stageTitle": "项目经历",
+        "projects.stageLine": "在基金项目与三尺讲台之间，连接科研与传承。",
+        "projects.stageStats": "科研项目 1 · 助教经历 1",
+        "projects.researchTitle": "科研项目", "projects.taTitle": "助教经历",
+        "projects.p1role": "中国科学技术大学青年创新基金 · 项目成员 · 2027.1 – 2028.12",
+        "projects.p1title": "【非金属插层诱导铂基二维层状序构及其燃料电池电催化性能研究】",
+        "projects.p1desc": "【项目职责与成果：负责催化剂合成、电化学测试与数据分析】",
+        "projects.ta1role": "《高等无机化学》课程助教 · 2026",
+        "projects.ta1title": "高等无机化学",
+        "projects.ta1desc": "【工作内容：组织习题课、批改作业与答疑等，按实际情况补充】",
+        "honors.title": "获奖荣誉", "honors.sub": "奖学金 · 竞赛奖励",
+        "honors.stageTitle": "获奖荣誉",
+        "honors.stageLine": "每一份肯定，都是继续前行的注脚。",
+        "honors.stageStats": "获奖荣誉 4 项",
+        "honors.h1": "【研究生学业一等奖学金】", "honors.h2": "【研究生学业一等奖学金】",
+        "honors.h3": "【研究生学业一等奖学金】", "honors.h4": "【研究生学业一等奖学金】",
+        "honors.schoolLevel": "校级",
+        "album.title": "相册", "album.summary": "生活相册（点击展开查看）",
+        "album.loading": "正在加载相册…",
+        "album.count": "共 {f} 个相册、{n} 张照片，点击文件夹进入查看。",
+        "album.fail": "相册索引加载失败：请先在项目目录运行 python build_album.py 生成相册资源。",
+        "album.back": "← 返回相册", "album.photoCount": "{n} 张照片",
+        "contact.title": "联系方式",
+        "contact.emailTitle": "邮箱", "contact.emailNote": "欢迎交流与合作",
+        "contact.emailAlt": "备用：3313952565@qq.com",
+        "contact.scholarTitle": "ResearchGate", "contact.scholarNote": "查看论文与科研动态",
+        "contact.orcidTitle": "ORCID", "contact.orcidNote": "学术身份标识",
+        "site.title": "站点统计 · 日历时钟",
+        "stats.title": "站点统计", "stats.live": "实时",
+        "stats.totalVisits": "累计访问", "stats.totalVisitors": "累计访客",
+        "stats.todayVisits": "今日访问", "stats.todayVisitors": "今日访客",
+        "stats.runtime": "本站已运行",
+        "stats.note": "今日访问 / 访客：在下方 JS 的 TODAY_API 中配置免费计数服务后自动显示。",
+        "cal.title": "日历 · 时钟", "cal.backToday": "今天",
+        "cal.prevMonth": "上个月", "cal.nextMonth": "下个月",
+        "footer.copy": "© <span id=\"year\">{y}</span> 谭义. 保留所有权利.",
+        "footer.note": "以好奇心和自由探索精神做科研 · <a href=\"#home\">回到顶部</a>",
+        "footer.visits": "累计访问", "footer.times": "次"
+      },
+      en: {
+        "nav.home": "Home", "nav.research": "Research", "nav.education": "Education",
+        "nav.publications": "Publications", "nav.projects": "Projects", "nav.honors": "Honors",
+        "nav.album": "Album", "nav.contact": "Contact",
+        "theme.light": "Light", "theme.dark": "Dark", "theme.auto": "System",
+        "hero.title": "Ph.D. Candidate",
+        "hero.affil": "School of Chemistry and Materials Science · University of Science and Technology of China",
+        "hero.tag1": "Low-dimensional Metal Nanomaterials", "hero.tag2": "Interfacial Epitaxial Growth",
+        "hero.tag3": "Energy Small-molecule Conversion", "hero.tag4": "Advanced Characterization",
+        "hero.quote": "Research is like climbing — a clear goal, yet freedom in the path.",
+        "research.title": "Research Interests",
+        "research.p1": "The limits of a chemical reaction are often kinetic rather than thermodynamic — catalysts are the key to breaking them. My research centers on low-dimensional noble-metal nanomaterials, asking a fundamental question: can we design catalytic active sites at the atomic scale, so that energy small molecules are efficiently activated and selectively converted along the pathways we define?",
+        "research.p2": "I believe catalytic performance is not accidental but dictated by atomic-scale structure. Around this conviction, I build a complete pipeline from materials design and structural characterization to performance validation: interfacial epitaxial growth constructs lattice-matched nanostructures on heterogeneous interfaces; surface–interface confined synthesis introduces metal–nonmetal bonding into noble-metal systems, developing new low-dimensional platforms such as two-dimensional intermetallics; combined with in situ and multiscale characterization under real reaction conditions, mechanism and performance corroborate each other.",
+        "research.p3": "The meaning of research lies in turning molecular-scale insight into real-world change — more efficient energy conversion, cleaner chemical processes, and a more sustainable future. My goal is to let every designed active site fulfill its potential in real devices.",
+        "research.c1t": "Controllable Synthesis of Low-dimensional Nanomaterials",
+        "research.c1d": "Structure dictates performance; synthesis dictates structure. Through interfacial epitaxial growth and surface–interface confined synthesis, I sculpt low-dimensional noble-metal materials at the atomic scale, providing new platforms for precise active-site construction.",
+        "research.c2t": "Multiscale Structural Characterization",
+        "research.c2d": "Seeing is understanding. Combining TEM/HRTEM, HAADF-STEM, XRD, XPS, XAFS and synchrotron in situ techniques, I track the evolution of structure and electronic states under real reaction conditions, offering atomic-level evidence for catalytic mechanisms.",
+        "research.c3t": "Electrocatalysis & Energy Small-molecule Conversion",
+        "research.c3d": "From active sites to reaction mechanisms. Focusing on the activation and selective conversion of H2, O2 and CO2, I bridge the full chain from materials design to performance validation, translating atomic-scale design into macroscopic performance.",
+        "education.title": "Education", "education.sub": "Click to expand the timeline",
+        "education.stageTitle": "Education",
+        "education.stageLine": "Starting from materials chemistry, journeying toward the frontiers of inorganic chemistry.",
+        "education.stageStats": "Ph.D. · M.S. · B.S.",
+        "education.deg1": "Ph.D. Candidate · Inorganic Chemistry",
+        "education.school1": "University of Science and Technology of China (Supervisor: Changzheng Wu)",
+        "education.deg2": "M.S. Student · Inorganic Chemistry",
+        "education.school2": "University of Science and Technology of China (Supervisor: Changzheng Wu)",
+        "education.deg3": "B.S. · Materials Chemistry",
+        "education.school3": "University of Science and Technology of China",
+        "publications.title": "Publications", "publications.sub": "Published · Submitted · Patents",
+        "publications.stageTitle": "Publications",
+        "publications.stageLine": "Turning every scientific question into peer-reviewed chapters.",
+        "publications.stageStats": "Published 3 · Submitted 2 · Patents 3",
+        "publications.published": "Published", "publications.pending": "Submitted / In Preparation",
+        "publications.patents": "Patents", "publications.patentTag": "Patent", "publications.pubNo": "Pub. No.: ",
+        "publications.doiPending": "DOI: to be added",
+        "publications.pub1meta": "R. Gui, H. Cheng, <strong>Yi Tan</strong>, et al. <em>Angew. Chem. Int. Ed.</em>, <strong>2025</strong>, e15811 (co-first author).",
+        "publications.pub2meta": "H. Ding, et al. <em>J. Am. Chem. Soc.</em>, <strong>2024</strong>, 146, 7858–7867 (fourth author).",
+        "publications.pub3meta": "C. Su, C. Chen, <strong>Yi Tan</strong>, et al. <em>Nano Lett.</em>, <strong>2026</strong>",
+        "publications.pub4meta": "H. Ding, <strong>Yi Tan</strong>, et al. Submitted (co-first author).",
+        "publications.pub5meta": "R. Gui, <strong>Yi Tan</strong>, et al. Submitted (co-first author).",
+        "publications.pat1t": "Mesoporous Carbon-supported Layered Platinum-based Intermetallic Compound, Preparation Method and Use Thereof",
+        "publications.pat1meta": "Inventors: Renjie Gui, <strong>Yi Tan</strong> (second inventor)",
+        "publications.pat2t": "Nickel-based Noble-metal Multi-shell Nanocage Material, Preparation Method and Application Thereof",
+        "publications.pat2meta": "Inventors: Changzheng Wu, <strong>Yi Tan</strong> (second inventor; supervisor as first inventor)",
+        "publications.pat3t": "Hybrid Unmanned Aerial Vehicle Powered by Hydrogen Fuel Cell and Lithium Battery",
+        "publications.pat3meta": "Inventors: Han Cheng, Renjie Gui, <strong>Yi Tan</strong>",
+        "projects.title": "Projects", "projects.sub": "Research Projects · Teaching Assistant",
+        "projects.stageTitle": "Projects",
+        "projects.stageLine": "Between funded research and the teaching podium: connecting discovery with mentorship.",
+        "projects.stageStats": "Research 1 · Teaching 1",
+        "projects.researchTitle": "Research Projects", "projects.taTitle": "Teaching Assistant",
+        "projects.p1role": "USTC Youth Innovation Fund · Team Member · 2027.1 – 2028.12",
+        "projects.p1title": "Nonmetal-Intercalation-Induced Two-Dimensional Layered Platinum-Based Structures and Their Fuel-Cell Electrocatalytic Performance",
+        "projects.p1desc": "Responsibilities & outcomes: catalyst synthesis, electrochemical testing, and data analysis",
+        "projects.ta1role": "Teaching Assistant, Advanced Inorganic Chemistry · 2026",
+        "projects.ta1title": "Advanced Inorganic Chemistry",
+        "projects.ta1desc": "Duties: organize problem sessions, grade assignments, and hold office hours (to be updated)",
+        "honors.title": "Honors", "honors.sub": "Scholarships · Awards",
+        "honors.stageTitle": "Honors",
+        "honors.stageLine": "Every recognition is a footnote for the journey ahead.",
+        "honors.stageStats": "4 awards",
+        "honors.h1": "Graduate Academic Excellence Scholarship (First Class)", "honors.h2": "Graduate Academic Excellence Scholarship (First Class)",
+        "honors.h3": "Graduate Academic Excellence Scholarship (First Class)", "honors.h4": "Graduate Academic Excellence Scholarship (First Class)",
+        "honors.schoolLevel": "University",
+        "album.title": "Album", "album.summary": "Life Album (click to expand)",
+        "album.loading": "Loading album…",
+        "album.count": "{f} albums, {n} photos — click a folder to explore.",
+        "album.fail": "Album index failed to load: run python build_album.py first.",
+        "album.back": "← Back to albums", "album.photoCount": "{n} photos",
+        "contact.title": "Contact",
+        "contact.emailTitle": "Email", "contact.emailNote": "Welcome to connect and collaborate",
+        "contact.emailAlt": "Alt: 3313952565@qq.com",
+        "contact.scholarTitle": "ResearchGate", "contact.scholarNote": "Publications & research updates",
+        "contact.orcidTitle": "ORCID", "contact.orcidNote": "Researcher identifier",
+        "site.title": "Site Stats · Calendar & Clock",
+        "stats.title": "Site Statistics", "stats.live": "LIVE",
+        "stats.totalVisits": "Total Visits", "stats.totalVisitors": "Total Visitors",
+        "stats.todayVisits": "Today Visits", "stats.todayVisitors": "Today Visitors",
+        "stats.runtime": "Site Running Time",
+        "stats.note": "Today's visits/visitors will appear after configuring a free counter service in TODAY_API (see code comments).",
+        "cal.title": "Calendar · Clock", "cal.backToday": "Today",
+        "cal.prevMonth": "Previous month", "cal.nextMonth": "Next month",
+        "footer.copy": "© <span id=\"year\">{y}</span> Tan Yi. All rights reserved.",
+        "footer.note": "Curious, free-spirited research · <a href=\"#home\">Back to top</a>",
+        "footer.visits": "Total visits", "footer.times": ""
+      }
+    };
+
+    let currentLang = "zh";
+    try { currentLang = localStorage.getItem("site-lang") || "zh"; } catch (e) { /* 忽略 */ }
+
+    function t(key, params) {
+      let str = (I18N[currentLang] && I18N[currentLang][key]) || I18N.zh[key] || key;
+      if (params) {
+        Object.keys(params).forEach(function (k) {
+          str = str.split("{" + k + "}").join(params[k]);
+        });
+      }
+      return str;
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang = currentLang === "en" ? "en" : "zh-CN";
+      const sw = document.getElementById("langSwitch");
+      if (sw) sw.setAttribute("data-lang", currentLang);
+      document.querySelectorAll("[data-i18n]").forEach(function (el) {
+        const key = el.getAttribute("data-i18n");
+        const params = {};
+        if (key === "footer.copy") params.y = document.getElementById("year").textContent;
+        el.innerHTML = t(key, params);
+      });
+      if (typeof window.albumRefresh === "function") window.albumRefresh();
+      if (typeof window.siteRefresh === "function") window.siteRefresh();
+    }
+
+    const langSwitch = document.getElementById("langSwitch");
+    langSwitch.addEventListener("click", function () {
+      currentLang = currentLang === "zh" ? "en" : "zh";
+      try { localStorage.setItem("site-lang", currentLang); } catch (e) { /* 忽略 */ }
+      applyLanguage();
+    });
+
+    /* ======================================================
+       10. 主题控制：亮色 / 暗色 / 跟随系统
+       ====================================================== */
+    const themeBtn = document.getElementById("themeBtn");
+    const themeMenu = document.getElementById("themeMenu");
+    const themeIcon = document.getElementById("themeIcon");
+    let themeChoice = "auto";
+    try { themeChoice = localStorage.getItem("site-theme") || "auto"; } catch (e) { /* 忽略 */ }
+
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+    function resolvedTheme() {
+      return (themeChoice === "dark" || (themeChoice === "auto" && prefersDark.matches)) ? "dark" : "light";
+    }
+
+    function applyTheme() {
+      const resolved = resolvedTheme();
+      document.documentElement.setAttribute("data-theme", resolved);
+      document.querySelectorAll(".theme-menu button[data-theme-option]").forEach(function (b) {
+        b.classList.toggle("active", b.getAttribute("data-theme-option") === themeChoice);
+      });
+      themeIcon.innerHTML = resolved === "dark"
+        ? '<path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-5.4-5.4 5.4 5.4 0 0 1 2.26-4.4A9.03 9.03 0 0 0 12 3z"/>'
+        : '<path d="M12 2a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zM4.9 4.9a1 1 0 0 1 1.4 0l1.4 1.4a1 1 0 1 1-1.4 1.4L4.9 6.3a1 1 0 0 1 0-1.4zm11.4 11.4a1 1 0 0 1 1.4 0l1.4 1.4a1 1 0 1 1-1.4 1.4l-1.4-1.4a1 1 0 0 1 0-1.4zM2 12a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1zm16 0a1 1 0 0 1 1-1h2a1 1 0 1 1 0 2h-2a1 1 0 0 1-1-1zM4.9 19.1a1 1 0 0 1 0-1.4l1.4-1.4a1 1 0 1 1 1.4 1.4l-1.4 1.4a1 1 0 0 1-1.4 0zm11.4-11.4a1 1 0 0 1 0-1.4l1.4-1.4a1 1 0 1 1 1.4 1.4l-1.4 1.4a1 1 0 0 1-1.4 0zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>';
+    }
+
+    themeBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      themeMenu.hidden = !themeMenu.hidden;
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!themeMenu.hidden && !themeMenu.contains(e.target)) {
+        themeMenu.hidden = true;
+      }
+    });
+
+    themeMenu.querySelectorAll("button[data-theme-option]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        themeChoice = b.getAttribute("data-theme-option");
+        try { localStorage.setItem("site-theme", themeChoice); } catch (e) { /* 忽略 */ }
+        applyTheme();
+        themeMenu.hidden = true;
+      });
+    });
+
+    if (prefersDark.addEventListener) {
+      prefersDark.addEventListener("change", applyTheme);
+    }
+
+    /* ======================================================
+       11. 站点统计 + 日历时钟
+       ====================================================== */
+
+    /* ---------- 11.1 今日访问 / 今日访客接入点（默认关闭） ----------
+       说明：不蒜子只提供“累计”数据，没有“今日”维度。
+       如需显示今日访问/访客，推荐使用免费的 CounterAPI：
+         1. 到 https://counterapi.dev 注册账号并创建 workspace；
+         2. 把下面的 enabled 改为 true，并填入你的 workspace 名；
+         3. 部署后，代码会按日期自动建立计数器，例如：
+              ustctanyi-homepage-visit-2026-08-26   （今日访问）
+              ustctanyi-homepage-visitor-2026-08-26 （今日访客）
+         （PV 每次刷新 +1；UV 用 localStorage 标记，每台设备每天只 +1）
+       ----------------------------------------------------------- */
+    const TODAY_API = {
+      enabled: false,               // ← 配置好后改为 true
+      workspace: "YOUR_WORKSPACE",  // ← 你的 CounterAPI workspace 名
+      counterPrefix: "ustctanyi-homepage",
+      base: "https://api.counterapi.dev/v2"
+    };
+
+    function todayCounterName(kind) {
+      const d = new Date();
+      const ymd = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      return TODAY_API.counterPrefix + "-" + kind + "-" + ymd;
+    }
+
+    function bumpCounter(name, el) {
+      if (!TODAY_API.enabled || !TODAY_API.workspace || TODAY_API.workspace === "YOUR_WORKSPACE") return;
+      const url = TODAY_API.base + "/" + encodeURIComponent(TODAY_API.workspace) + "/" + encodeURIComponent(name) + "/";
+      fetch(url, { method: "PUT" })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          const v = j && (j.data !== undefined ? j.data : (j.value !== undefined ? j.value : j.count));
+          if (v !== undefined && el) el.textContent = Number(v).toLocaleString();
+        })
+        .catch(function () { /* 网络失败时保持 “–”，不影响页面 */ });
+    }
+
+    function loadTodayStats() {
+      if (!TODAY_API.enabled || !TODAY_API.workspace || TODAY_API.workspace === "YOUR_WORKSPACE") return;
+      const elPv = document.getElementById("statTodayPv");
+      const elUv = document.getElementById("statTodayUv");
+      // 今日访客标记：同一浏览器同一天只计一次
+      let isNewVisitor = false;
+      try {
+        const d = new Date();
+        const ymd = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+        const key = "site-uv-" + ymd;
+        isNewVisitor = !localStorage.getItem(key);
+        if (isNewVisitor) localStorage.setItem(key, "1");
+      } catch (e) { /* 忽略隐私模式等异常 */ }
+      bumpCounter(todayCounterName("visit"), elPv);
+      if (isNewVisitor) bumpCounter(todayCounterName("visitor"), elUv);
+    }
+
+    /* ---------- 11.2 累计访问 / 访客：从不蒜子读取 ---------- */
+    function syncTotalStats() {
+      const srcPv = document.getElementById("busuanzi_value_site_pv");
+      const srcUv = document.getElementById("busuanzi_value_site_uv");
+      const pv = document.getElementById("statPv");
+      const uv = document.getElementById("statUv");
+      const clean = function (s) { return s && s.trim() && s.trim() !== "–" ? s.trim() : null; };
+      const vPv = clean(srcPv && srcPv.textContent);
+      const vUv = clean(srcUv && srcUv.textContent);
+      if (vPv && pv) pv.textContent = vPv;
+      if (vUv && uv) uv.textContent = vUv;
+    }
+
+    /* ---------- 11.3 本站已运行时间（从上线日期起，每秒跳动） ---------- */
+    const SITE_LAUNCH = new Date(2026, 7, 25);  // 网站上线日期（可按实际修改）
+
+    function updateRuntime() {
+      const el = document.getElementById("statRuntime");
+      if (!el) return;
+      const diff = Math.max(0, Date.now() - SITE_LAUNCH.getTime());
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor(diff % 86400000 / 3600000);
+      const m = Math.floor(diff % 3600000 / 60000);
+      const s = Math.floor(diff % 60000 / 1000);
+      el.textContent = currentLang === "en"
+        ? d + " d " + h + " h " + m + " m " + s + " s"
+        : d + " 天 " + h + " 时 " + m + " 分 " + s + " 秒";
+    }
+
+    /* ---------- 11.4 实时时钟 + 今日农历/节日 ---------- */
+    const WEEK_ZH = ["日", "一", "二", "三", "四", "五", "六"];
+    const WEEK_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const MONTH_EN = ["January", "February", "March", "April", "May", "June",
+                      "July", "August", "September", "October", "November", "December"];
+
+    // 常用节日的中英对照（农历库返回中文名，这里负责翻译）
+    const EN_FESTIVALS = {
+      "春节": "Spring Festival", "元宵节": "Lantern Festival", "清明节": "Qingming Festival",
+      "端午节": "Dragon Boat Festival", "七夕": "Qixi Festival", "中元节": "Ghost Festival",
+      "中秋节": "Mid-Autumn Festival", "重阳节": "Double Ninth Festival", "除夕": "CNY Eve",
+      "元旦": "New Year's Day", "情人节": "Valentine's Day", "妇女节": "Women's Day",
+      "植树节": "Arbor Day", "愚人节": "April Fools' Day", "劳动节": "Labor Day",
+      "青年节": "Youth Day", "儿童节": "Children's Day", "建党节": "CPC Founding Day",
+      "建军节": "Army Day", "教师节": "Teachers' Day", "国庆节": "National Day",
+      "圣诞节": "Christmas", "万圣节": "Halloween", "腊八节": "Laba Festival",
+      "祭灶日": "Kitchen God Day", "母亲节": "Mother's Day", "父亲节": "Father's Day",
+      "感恩节": "Thanksgiving", "平安夜": "Christmas Eve", "复活节": "Easter"
+    };
+
+    // 二十四节气的中英对照
+    const EN_JIEQI = {
+      "立春": "Beginning of Spring", "雨水": "Rain Water", "惊蛰": "Awakening of Insects",
+      "春分": "Spring Equinox", "清明": "Pure Brightness", "谷雨": "Grain Rain",
+      "立夏": "Beginning of Summer", "小满": "Grain Full", "芒种": "Grain in Ear",
+      "夏至": "Summer Solstice", "小暑": "Minor Heat", "大暑": "Major Heat",
+      "立秋": "Beginning of Autumn", "处暑": "End of Heat", "白露": "White Dew",
+      "秋分": "Autumn Equinox", "寒露": "Cold Dew", "霜降": "Frost's Descent",
+      "立冬": "Beginning of Winter", "小雪": "Minor Snow", "大雪": "Major Snow",
+      "冬至": "Winter Solstice", "小寒": "Minor Cold", "大寒": "Major Cold"
+    };
+
+    function pad2(n) { return String(n).padStart(2, "0"); }
+
+    function updateClock() {
+      const now = new Date();
+      const timeEl = document.getElementById("clockTime");
+      const dateEl = document.getElementById("clockDate");
+      const festEl = document.getElementById("todayFest");
+
+      if (timeEl) {
+        timeEl.textContent = pad2(now.getHours()) + ":" + pad2(now.getMinutes()) + ":" + pad2(now.getSeconds());
+      }
+      if (dateEl) {
+        dateEl.textContent = currentLang === "en"
+          ? WEEK_EN[now.getDay()] + ", " + MONTH_EN[now.getMonth()] + " " + now.getDate() + ", " + now.getFullYear()
+          : now.getFullYear() + " 年 " + (now.getMonth() + 1) + " 月 " + now.getDate() + " 日 · 星期" + WEEK_ZH[now.getDay()];
+      }
+      if (festEl) {
+        if (typeof Lunar === "undefined") {
+          festEl.textContent = "";
+        } else {
+          const lunar = Lunar.fromDate(now);
+          const fest = lunar.getFestivals().concat(lunar.getOtherFestivals());
+          const jq = lunar.getJieQi();
+          const parts = [];
+          if (currentLang === "en") {
+            parts.push(lunar.getYearInGanZhi() + " Year · Lunar " + lunar.getMonth() + "/" + lunar.getDay());
+            if (fest.length) parts.push(fest.map(function (f) { return EN_FESTIVALS[f] || f; }).join(" · "));
+            if (jq) parts.push(EN_JIEQI[jq] || jq);
+          } else {
+            parts.push(lunar.getYearInGanZhi() + "年 · 农历" + lunar.getMonthInChinese() + "月" + lunar.getDayInChinese());
+            if (fest.length) parts.push(fest.join(" · "));
+            if (jq) parts.push(jq);
+          }
+          festEl.textContent = parts.join(" · ");
+        }
+      }
+      updateRuntime();
+    }
+
+    /* ---------- 11.5 月历（含农历、节日、节气） ---------- */
+    let calYear = new Date().getFullYear();
+    let calMonth = new Date().getMonth();
+
+    function renderCalendar() {
+      const grid = document.getElementById("calGrid");
+      const week = document.getElementById("calWeek");
+      const title = document.getElementById("calTitle");
+      const btnPrev = document.getElementById("calPrev");
+      const btnNext = document.getElementById("calNext");
+      if (!grid || !title) return;
+
+      // 星期表头（周一开头，符合中文习惯）
+      const wd = currentLang === "en" ? ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+                                      : ["一", "二", "三", "四", "五", "六", "日"];
+      week.innerHTML = wd.map(function (w) { return "<span>" + w + "</span>"; }).join("");
+
+      title.textContent = currentLang === "en"
+        ? MONTH_EN[calMonth] + " " + calYear
+        : calYear + " 年 " + (calMonth + 1) + " 月";
+
+      if (btnPrev) btnPrev.setAttribute("aria-label", t("cal.prevMonth"));
+      if (btnNext) btnNext.setAttribute("aria-label", t("cal.nextMonth"));
+
+      const first = new Date(calYear, calMonth, 1);
+      const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+      const lead = (first.getDay() + 6) % 7;                 // 周一为第一列
+      const totalCells = Math.ceil((lead + daysInMonth) / 7) * 7;
+      const today = new Date();
+      let html = "";
+
+      for (let i = 0; i < totalCells; i++) {
+        const dayNum = i - lead + 1;
+        const inMonth = dayNum >= 1 && dayNum <= daysInMonth;
+        const dt = new Date(calYear, calMonth, dayNum);
+        const cls = ["cal-cell"];
+        if (!inMonth) cls.push("dim");
+
+        let dayText = String(dayNum);
+        let lunarText = "";
+        let festText = "";
+
+        if (inMonth) {
+          const dow = dt.getDay();
+          if (dow === 0 || dow === 6) cls.push("weekend");
+          const isToday = dt.getFullYear() === today.getFullYear() &&
+                          dt.getMonth() === today.getMonth() &&
+                          dt.getDate() === today.getDate();
+          if (isToday) cls.push("today");
+
+          if (typeof Lunar !== "undefined") {
+            const lunar = Lunar.fromDate(dt);
+            const fest = lunar.getFestivals().concat(lunar.getOtherFestivals());
+            const jq = lunar.getJieQi();
+            if (fest.length || jq) cls.push("festival");
+
+            if (fest.length) {
+              festText = currentLang === "en"
+                ? fest.map(function (f) { return EN_FESTIVALS[f] || f; }).slice(0, 2).join("·")
+                : fest.slice(0, 2).join("·");
+            } else if (jq) {
+              festText = currentLang === "en" ? (EN_JIEQI[jq] || jq) : jq;
+            } else {
+              lunarText = lunar.getDayInChinese();
+            }
+          }
+        }
+
+        html += '<div class="' + cls.join(" ") + '">' +
+          '<span class="cal-day">' + dayText + '</span>' +
+          (festText ? '<span class="cal-fest">' + festText + '</span>' :
+                      (lunarText ? '<span class="cal-lunar">' + lunarText + '</span>' : "")) +
+          "</div>";
+      }
+      grid.innerHTML = html;
+    }
+
+    document.getElementById("calPrev").addEventListener("click", function () {
+      calMonth--;
+      if (calMonth < 0) { calMonth = 11; calYear--; }
+      renderCalendar();
+    });
+    document.getElementById("calNext").addEventListener("click", function () {
+      calMonth++;
+      if (calMonth > 11) { calMonth = 0; calYear++; }
+      renderCalendar();
+    });
+    document.getElementById("calTodayBtn").addEventListener("click", function () {
+      const now = new Date();
+      calYear = now.getFullYear();
+      calMonth = now.getMonth();
+      renderCalendar();
+    });
+
+    /* ---------- 11.6 统一刷新入口（语言切换时调用） ---------- */
+    function siteRefresh() {
+      renderCalendar();
+      updateClock();
+    }
+    window.siteRefresh = siteRefresh;
+
+    /* 启动：初始化统计、时钟与日历 */
+    loadTodayStats();
+    syncTotalStats();
+    setInterval(syncTotalStats, 2000);       // 等待不蒜子异步写入
+    updateClock();
+    setInterval(updateClock, 1000);          // 时钟与运行时间每秒跳动
+    renderCalendar();
+
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) {
+        loadTodayStats();
+        syncTotalStats();
+        updateClock();
+        renderCalendar();
+      }
+    });
+
+    /* 初始化语言与主题 */
+    applyLanguage();
+    applyTheme();
   </script>
 </body>
 </html>
