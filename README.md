@@ -28,16 +28,23 @@
 ## 修改说明
 
 - 全文搜索「【」即可找到需要替换的占位内容（姓名、论文、项目、荣誉等）。
-- 相册：照片放在本地 `albums/` 文件夹（按文件夹分类，支持中文名）。
+- 相册（照片书模式）：照片放在本地 `albums/` 文件夹（按文件夹分类，支持中文名）。
   新增或删除照片后，运行 `python build_album.py` 重新生成网页相册资源
-  （自动压缩图片、生成索引到 `assets/albums/`），然后提交推送即可。
+  （自动压缩图片，输出 `assets/albums/<文件夹>/` 与两份索引
+  `index.json`、`albums.json`），然后提交推送即可。
+- 相册描述：编辑根目录 `album_descriptions.json`（键为相册名，值为简短
+  markdown 文本，支持 `**加粗**`、`*斜体*`、`- 列表`），会显示在照片书的扉页。
 - 头像与头部风景图：替换 `assets/` 下的图片后，修改 `index.html` 中的路径。
 
 ## 更新相册的完整流程
 
 ```bash
-python build_album.py            # 1. 压缩照片并生成索引
+python build_album.py            # 1. 压缩照片并生成索引（index.json + albums.json）
 git add -A
 git commit -m "更新相册"
 git push                         # 2. 推送后 GitHub Pages 自动重新部署
 ```
+
+> 提示：`albums.json` 是照片书组件的唯一数据源（含名称、描述、封面、图片数组），
+> 封面默认取相册第一张图；如果手动维护该文件，请保持图片路径为
+> `assets/albums/` 下的相对路径。

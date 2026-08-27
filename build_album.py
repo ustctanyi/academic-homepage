@@ -5,7 +5,10 @@
 做什么：
   1. 遍历 albums/ 下每个文件夹，把其中的图片压缩（最长边 1000px、JPEG 质量 80，
      自动按拍摄方向摆正）输出到 assets/albums/<文件夹>/<同名>.jpg；
-  2. 生成 assets/albums/index.json，记录文件夹与照片列表，供页面动态渲染。
+  2. 生成 assets/albums/index.json 与 assets/albums/albums.json：
+     - index.json 为“文件夹+照片”列表（旧格式，保留兼容）；
+     - albums.json 为照片书配置：每个相册含名称、描述、封面图、图片数组，
+       供主页照片书组件读取（描述来自 album_descriptions.json，可直接编辑）。
 
 怎么用：
   python build_album.py
@@ -31,8 +34,19 @@ QUALITY = 80         # JPEG 质量
 ALLOWED_EXT = {".jpg", ".jpeg", ".png", ".gif", ".webp"}
 
 
+def load_descriptions():
+    """读取相册描述（album_descriptions.json，键为文件夹名，值为 markdown 文本）。"""
+    path = os.path.join(BASE, "album_descriptions.json")
+    if not os.path.isfile(path):
+        return {}
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data if isinstance(data, dict) else {}
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
+    descriptions = load_descriptions()
 
     # 收集源文件夹
     src_folders = {
@@ -79,6 +93,19 @@ def main():
 
     with open(os.path.join(OUT, "index.json"), "w", encoding="utf-8") as f:
         json.dump({"folders": result}, f, ensure_ascii=False, indent=1)
+
+    # 照片书配置：名称 / 描述 / 封面（第一张）/ 图片数组（路径相对 assets/albums/）
+    book_albums = []
+    for folder in result:
+        rel = [folder["name"] + "/" + p for p in folder["photos"]]
+        book_albums.append({
+            "name": folder["name"],
+            "description": descriptions.get(folder["name"], ""),
+            "cover": rel[0] if rel else "",
+            "images": rel,
+        })
+    with open(os.path.join(OUT, "albums.json"), "w", encoding="utf-8") as f:
+        json.dump({"albums": book_albums}, f, ensure_ascii=False, indent=1)
 
     total = sum(len(f["photos"]) for f in result)
     print("完成：%d 个文件夹，%d 张照片 -> assets/albums/" % (len(result), total))

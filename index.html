@@ -657,9 +657,10 @@
     }
 
     /* 暗色主题下的细节修正 */
-    html[data-theme="dark"] .album-item,
-    html[data-theme="dark"] .album-folder {
-      background: rgba(255, 255, 255, 0.05);
+    html[data-theme="dark"] .pb-page,
+    html[data-theme="dark"] .pb-leaf,
+    html[data-theme="dark"] .pb-inner {
+      background: #1a2b3f;               /* 照片书“纸张”在暗色下变深 */
     }
 
     html[data-theme="dark"] .chapter-head:hover {
@@ -675,8 +676,8 @@
     html[data-theme="dark"] .project-item h4,
     html[data-theme="dark"] .edu-degree,
     html[data-theme="dark"] .contact-card h3,
-    html[data-theme="dark"] .album-folder .folder-name,
-    html[data-theme="dark"] .album-breadcrumb {
+    html[data-theme="dark"] .pb-fly-title,
+    html[data-theme="dark"] .pb-reader-title {
       color: var(--text);
     }
 
@@ -966,122 +967,397 @@
     }
 
     /* ==========================================================
-        相册（默认折叠；复用 .edu-card 的折叠样式）
+        相册（照片书模式，默认折叠；复用 .edu-card 折叠样式）
+        - 总览：一本本照片书封面组成的网格
+        - 阅读器：点击封面翻开 → 左右跨页 + 3D 翻页叶子
         ========================================================== */
-    .album-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      padding: 18px 0 6px;
-    }
-
-    .album-item {
-      position: relative;
-      aspect-ratio: 4 / 3;                    /* 统一横图比例 */
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      background: rgba(22, 50, 79, 0.06);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .album-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;                      /* 图片裁切铺满，保持 4:3 */
-      display: block;
-    }
-
-    /* 相册：加载状态提示 */
     .album-mode {
       color: var(--muted);
       font-size: 0.85rem;
       margin-bottom: 12px;
     }
 
-    /* 文件夹网格 */
-    .album-folders {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 14px;
-    }
-
-    .album-folder {
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 20px 14px 16px;
-      text-align: center;
-      background: rgba(22, 50, 79, 0.04);
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .album-folder:hover {
-      transform: translateY(-3px);
-      box-shadow: var(--shadow);
-    }
-
-    .album-folder svg {
-      width: 34px;
-      height: 34px;
-      fill: var(--accent);
-      opacity: 0.9;
-    }
-
-    .album-folder .folder-name {
-      display: block;
-      margin-top: 10px;
-      font-weight: 600;
-      color: var(--deep-blue);
-      font-size: 0.92rem;
-      word-break: break-all;
-    }
-
-    .album-folder .folder-count {
-      display: block;
-      color: var(--muted);
-      font-size: 0.78rem;
-      margin-top: 2px;
-    }
-
-    /* 文件夹内的照片视图 */
-    .album-photo-view[hidden],
-    .album-folders[hidden] {
+    .pb-overview[hidden],
+    .pb-reader[hidden] {
       display: none !important;
     }
 
-    .album-breadcrumb {
+    /* 总览网格：大屏多列，小屏自动单列 */
+    .pb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 20px;
+      padding: 18px 0 6px;
+    }
+
+    .pb-card {
+      cursor: pointer;
+      outline: none;
+    }
+
+    .pb-card-cover {
+      position: relative;
+      aspect-ratio: 3 / 4;                 /* 竖版书封 */
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .pb-card:hover .pb-card-cover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(22, 50, 79, 0.16);
+    }
+
+    .pb-card:focus-visible .pb-card-cover {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .pb-card-cover img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* 书封底部深蓝渐变遮罩，保证标题可读 */
+    .pb-card-cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(22, 50, 79, 0.06) 40%, rgba(16, 38, 62, 0.72));
+    }
+
+    .pb-card-count {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 2;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(10, 22, 36, 0.55);
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 0.72rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .pb-card-title {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 12px;
+      z-index: 2;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1rem;
+      line-height: 1.35;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    }
+
+    /* ---- 照片书阅读器 ---- */
+    .pb-toolbar {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 16px;
-      color: var(--deep-blue);
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pb-reader-title {
       font-weight: 600;
-      font-size: 0.95rem;
-    }
-
-    .album-btn {
-      padding: 7px 14px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--surface);
       color: var(--deep-blue);
-      font-size: 0.88rem;
-      cursor: pointer;
-      transition: border-color 0.2s ease, color 0.2s ease;
+      font-size: 1rem;
     }
 
-    .album-btn:hover {
-      border-color: var(--accent);
+    .pb-stage {
+      perspective: 2000px;
+      padding: 6px 0 16px;
+    }
+
+    .pb-book {
+      position: relative;
+      aspect-ratio: 2 / 1;                 /* 跨页：左右各一页 */
+      max-width: 900px;
+      margin: 0 auto;
+      transform-style: preserve-3d;
+      user-select: none;
+      touch-action: pan-y;
+    }
+
+    .pb-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 14px 38px rgba(22, 50, 79, 0.18);
+      background: #f8f4ea;                 /* 纸张底色 */
+      perspective: 1600px;                 /* 让翻页叶子有立体透视 */
+    }
+
+    .pb-page {
+      position: relative;
+      width: 50%;
+      height: 100%;
+      background: #f8f4ea;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .pb-left {
+      border-radius: 8px 0 0 8px;
+      box-shadow: inset -16px 0 20px -16px rgba(30, 45, 60, 0.28);
+    }
+
+    .pb-right {
+      border-radius: 0 8px 8px 0;
+      box-shadow: inset 16px 0 20px -16px rgba(30, 45, 60, 0.28);
+    }
+
+    .pb-page-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pb-blank {
+      background:
+        repeating-linear-gradient(0deg, transparent 0 22px, rgba(90, 110, 130, 0.06) 22px 23px);
+    }
+
+    /* 扉页：相册标题 + markdown 描述 */
+    .pb-flyleaf {
+      flex-direction: column;
+      gap: 8px;
+      padding: 6% 8%;
+      text-align: center;
+    }
+
+    .pb-fly-kicker {
       color: var(--accent);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
     }
 
-    .album-item img {
-      cursor: zoom-in;                        /* 提示可点击放大 */
+    .pb-fly-title {
+      color: var(--deep-blue);
+      font-size: 1.22rem;
+      font-weight: 700;
+      margin: 2px 0 10px;
+    }
+
+    .pb-fly-desc {
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.8;
+      text-align: left;
+      max-width: 86%;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+
+    .pb-fly-desc p { margin: 0 0 0.6em; }
+    .pb-fly-desc ul { margin: 0.2em 0 0.6em; padding-left: 1.25em; }
+    .pb-fly-desc li { margin-bottom: 0.2em; }
+
+    .pb-fly-count {
+      margin-top: auto;
+      color: var(--muted);
+      font-size: 0.76rem;
+      opacity: 0.8;
+    }
+
+    /* 图片页 */
+    .pb-photo-wrap {
+      padding: 5%;
+    }
+
+    .pb-photo {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 3px;
+      box-shadow: 0 4px 16px rgba(20, 35, 55, 0.18);
+      cursor: zoom-in;
+    }
+
+    .pb-page-num {
+      position: absolute;
+      right: 14px;
+      bottom: 8px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      opacity: 0.75;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 翻页叶子：模拟正在翻动的那一页纸 */
+    .pb-leaf {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      z-index: 6;
+      background: #f8f4ea;
+      opacity: 0;                          /* 静止时不可见，翻页时才显示 */
+      box-shadow: 0 0 26px rgba(20, 35, 55, 0.22);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transition: transform 0.55s cubic-bezier(0.42, 0.2, 0.25, 1);
+      will-change: transform;
+    }
+
+    .pb-leaf.is-right {
+      left: 50%;
+      transform-origin: left center;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .pb-leaf.is-left {
+      left: 0;
+      transform-origin: right center;
+      border-radius: 6px 0 0 6px;
+    }
+
+    .pb-leaf.flip-next { transform: rotateY(-168deg); }
+    .pb-leaf.flip-prev { transform: rotateY(168deg); }
+
+    .pb-leaf-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5%;
+    }
+
+    .pb-leaf-inner .pb-photo {
+      box-shadow: none;
+    }
+
+    /* 封面：闭合时盖住整本书，翻开后绕左书脊旋转消失 */
+    .pb-cover {
+      position: absolute;
+      inset: 0;
+      z-index: 5;
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--deep-blue);
+      transform-origin: left center;
+      transform: rotateY(0deg);
+      transition: transform 0.75s cubic-bezier(0.35, 0.1, 0.2, 1);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      box-shadow: 0 12px 34px rgba(15, 32, 52, 0.28);
+    }
+
+    .pb-cover img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .pb-cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(22, 50, 79, 0.14), rgba(15, 34, 56, 0.78));
+    }
+
+    /* 书脊阴影：封面左缘 */
+    .pb-cover::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 30px;
+      z-index: 2;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.3), transparent);
+    }
+
+    .pb-book.open .pb-cover {
+      transform: rotateY(-168deg);
+      pointer-events: none;
+    }
+
+    .pb-cover-body {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px 24px;
+      color: #fff;
+    }
+
+    .pb-cover-kicker {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .pb-cover-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      line-height: 1.35;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+    }
+
+    .pb-cover-meta {
+      margin-top: 6px;
+      font-size: 0.8rem;
+      opacity: 0.92;
+    }
+
+    .pb-cover-hint {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      opacity: 0.95;
+    }
+
+    /* 翻页控制 */
+    .pb-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 6px;
+    }
+
+    .pb-page-info {
+      color: var(--muted);
+      font-size: 0.85rem;
+      min-width: 64px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .album-btn[disabled] {
+      opacity: 0.42;
+      cursor: default;
     }
 
     /* 大图查看（lightbox） */
@@ -1178,11 +1454,15 @@
       backdrop-filter: blur(4px);
     }
 
-    /* 手机上相册改为两列 */
-    @media (max-width: 700px) {
-      .album-grid {
-        grid-template-columns: repeat(2, 1fr);
+    /* 手机上相册总览改为单列，阅读器字号收敛 */
+    @media (max-width: 620px) {
+      .pb-grid {
+        grid-template-columns: 1fr;
       }
+
+      .pb-cover-title { font-size: 1.05rem; }
+      .pb-cover-body { padding: 16px 18px; }
+      .pb-fly-title { font-size: 1.02rem; }
     }
 
     /* ==========================================================
@@ -2361,23 +2641,54 @@
         </div>
 
         <!-- <details> 折叠组件：默认收起，点击标题栏展开。
-             相册为“文件夹模式”：点击文件夹进入查看照片，点击照片可放大。
-             照片索引由 build_album.py 自动生成到 assets/albums/。 -->
+             相册为“照片书”模式：每本相册 = 一本可翻阅的书（封面/扉页/图片跨页）。
+             配置来源：assets/albums/albums.json（由 build_album.py 生成，
+             含 名称/描述/封面/图片数组；描述可编辑 album_descriptions.json）。 -->
         <details class="edu-card" id="albumDetails">
           <summary data-i18n="album.summary">生活相册（点击展开查看）</summary>
           <div class="edu-body">
             <p class="album-mode" id="albumMode" data-i18n="album.loading">正在加载相册…</p>
 
-            <!-- 相册根目录：文件夹列表 -->
-            <div id="albumFolders" class="album-folders"></div>
+            <!-- 相册总览：一本本照片书封面 -->
+            <div id="albumOverview">
+              <div id="albumBooks" class="pb-grid"></div>
+            </div>
 
-            <!-- 文件夹内：照片网格 -->
-            <div id="albumPhotoView" class="album-photo-view" hidden>
-              <div class="album-breadcrumb">
-                <button type="button" class="album-btn" id="btnBack" data-i18n="album.back">← 返回相册</button>
-                <span id="albumFolderName"></span>
+            <!-- 照片书阅读器 -->
+            <div id="albumReader" class="pb-reader" hidden>
+              <div class="pb-toolbar">
+                <button type="button" class="album-btn" id="pbBack" data-i18n="album.back">← 返回全部相册</button>
+                <span class="pb-reader-title" id="pbTitle"></span>
               </div>
-              <div id="albumPhotos" class="album-grid"></div>
+
+              <div class="pb-stage">
+                <div class="pb-book" id="pbBook">
+                  <!-- 封面：点击翻开 -->
+                  <div class="pb-cover" id="pbCover" role="button" tabindex="0" aria-label="打开相册">
+                    <img id="pbCoverImg" src="" alt="" />
+                    <div class="pb-cover-body">
+                      <span class="pb-cover-kicker" data-i18n="album.kicker">Photo Book</span>
+                      <div>
+                        <div class="pb-cover-title" id="pbCoverTitle"></div>
+                        <div class="pb-cover-meta" id="pbCoverMeta"></div>
+                      </div>
+                      <span class="pb-cover-hint" data-i18n="album.openHint">点击翻开</span>
+                    </div>
+                  </div>
+                  <!-- 内页：左右两页 + 翻页叶子 -->
+                  <div class="pb-inner" id="pbInner">
+                    <div class="pb-page pb-left" id="pbLeft"></div>
+                    <div class="pb-page pb-right" id="pbRight"></div>
+                    <div class="pb-leaf" id="pbLeaf"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pb-controls">
+                <button type="button" class="album-btn" id="pbPrev" data-i18n="album.prev">← 上一页</button>
+                <span class="pb-page-info" id="pbPageInfo">1 / 1</span>
+                <button type="button" class="album-btn" id="pbNext" data-i18n="album.next">下一页 →</button>
+              </div>
             </div>
           </div>
         </details>
@@ -2607,104 +2918,359 @@
     }
 
     /* ======================================================
-       4. 相册：文件夹模式（点进文件夹看照片，点击照片放大）
-       数据来源：assets/albums/index.json（由 build_album.py 生成）
+       4. 相册：照片书模式（每本相册 = 一本可翻阅的书）
+       数据来源：assets/albums/albums.json（由 build_album.py 生成，
+       每个相册含 名称/描述/封面/图片数组，路径相对 assets/albums/）
        ====================================================== */
     (function () {
       const albumDetails = document.getElementById("albumDetails");
       const modeEl = document.getElementById("albumMode");
-      const foldersEl = document.getElementById("albumFolders");
-      const photoView = document.getElementById("albumPhotoView");
-      const photosEl = document.getElementById("albumPhotos");
-      const folderNameEl = document.getElementById("albumFolderName");
-      const btnBack = document.getElementById("btnBack");
+      const overviewEl = document.getElementById("albumOverview");
+      const booksEl = document.getElementById("albumBooks");
+      const readerEl = document.getElementById("albumReader");
+      const readTitleEl = document.getElementById("pbTitle");
+      const bookEl = document.getElementById("pbBook");
+      const coverEl = document.getElementById("pbCover");
+      const coverImgEl = document.getElementById("pbCoverImg");
+      const coverTitleEl = document.getElementById("pbCoverTitle");
+      const coverMetaEl = document.getElementById("pbCoverMeta");
+      const leftEl = document.getElementById("pbLeft");
+      const rightEl = document.getElementById("pbRight");
+      const leafEl = document.getElementById("pbLeaf");
+      const btnBack = document.getElementById("pbBack");
+      const btnPrev = document.getElementById("pbPrev");
+      const btnNext = document.getElementById("pbNext");
+      const pageInfoEl = document.getElementById("pbPageInfo");
       const lightbox = document.getElementById("albumLightbox");
       const lightboxImg = document.getElementById("lightboxImg");
       const lightboxCaption = document.getElementById("lightboxCaption");
       const lightboxClose = document.getElementById("lightboxClose");
 
-      const folderIconSvg =
-        '<svg viewBox="0 0 24 24" aria-hidden="true">' +
-        '<path d="M10 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-8l-2-2z"/>' +
-        "</svg>";
+      let data = { albums: [] };
+      let current = null;      // 当前打开的相册
+      let pages = [];          // 逻辑页：[扉页, 图片1, 图片2, ...]（奇数时末尾补空白页）
+      let spread = 0;          // 当前跨页序号（0 起）
+      let total = 0;           // 跨页总数
+      let flipping = false;    // 翻页动画进行中
+      let bookOpen = false;    // 封面是否已翻开
 
-      let data = { folders: [] };
-      let currentFolder = null;   // null = 在相册根目录
+      // 图片加载失败的兜底占位（内联 SVG，无需额外资源）
+      const PLACEHOLDER = (function () {
+        const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360">' +
+          '<rect width="100%" height="100%" fill="#e8edf3"/>' +
+          '<g fill="#9fb0c2" font-family="Arial, sans-serif" font-size="20" text-anchor="middle">' +
+          '<text x="240" y="180">Image unavailable</text></g></svg>';
+        return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+      })();
+
+      /* 极简 markdown：段落、**加粗**、*斜体*、- 列表、换行（其余内容自动转义） */
+      function esc(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+      }
+
+      function inlineMd(s) {
+        return esc(s)
+          .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+          .replace(/\*([^*]+)\*/g, "<em>$1</em>");
+      }
+
+      function mdToHtml(text) {
+        if (!text || !String(text).trim()) return "";
+        const lines = String(text).replace(/\r\n/g, "\n").split("\n");
+        let html = "", inList = false;
+        lines.forEach(function (line) {
+          const isLi = /^\s*[-*]\s+/.test(line);
+          if (isLi && !inList) { html += "<ul>"; inList = true; }
+          if (!isLi && inList) { html += "</ul>"; inList = false; }
+          if (isLi) {
+            html += "<li>" + inlineMd(line.replace(/^\s*[-*]\s+/, "")) + "</li>";
+          } else if (line.trim() === "") {
+            if (inList) { html += "</ul>"; inList = false; }
+          } else {
+            html += "<p>" + inlineMd(line) + "</p>";
+          }
+        });
+        if (inList) html += "</ul>";
+        return html;
+      }
+
+      // 图片地址：沿用现有 assets/albums/<文件夹>/<图片> 路径
+      function photoSrc(rel) {
+        return "assets/albums/" + rel;
+      }
 
       async function loadAlbum() {
         modeEl.textContent = t("album.loading");
         try {
-          const res = await fetch("assets/albums/index.json?t=" + Date.now());
+          const res = await fetch("assets/albums/albums.json?t=" + Date.now());
           if (!res.ok) throw new Error("HTTP " + res.status);
           data = await res.json();
-          const total = data.folders.reduce(function (n, f) { return n + f.photos.length; }, 0);
-          modeEl.textContent = t("album.count", { f: data.folders.length, n: total });
+          if (!data.albums || !data.albums.length) throw new Error("empty");
+          const n = data.albums.reduce(function (s, a) { return s + a.images.length; }, 0);
+          modeEl.textContent = t("album.count", { f: data.albums.length, n: n });
         } catch (e) {
-          data = { folders: [] };
+          data = { albums: [] };
           modeEl.textContent = t("album.fail");
         }
-        render();
+        renderOverview();
       }
 
-      function render() {
-        if (currentFolder === null) {
-          photoView.hidden = true;
-          foldersEl.hidden = false;
-          renderFolders();
-        } else {
-          foldersEl.hidden = true;
-          photoView.hidden = false;
-          renderPhotos();
-        }
-      }
+      /* ---- 相册总览：照片书封面网格 ---- */
+      function renderOverview() {
+        // 回到总览时复位阅读器
+        readerEl.hidden = true;
+        overviewEl.hidden = false;
+        bookEl.classList.remove("open");
+        bookOpen = false;
+        flipping = false;
+        leafEl.classList.remove("flip-next", "flip-prev");
+        leafEl.style.opacity = "";
+        leafEl.innerHTML = "";
 
-      function renderFolders() {
-        foldersEl.innerHTML = "";
-        data.folders.forEach(function (folder) {
+        booksEl.innerHTML = "";
+        data.albums.forEach(function (album) {
           const card = document.createElement("div");
-          card.className = "album-folder";
-          card.innerHTML = folderIconSvg +
-            '<span class="folder-name"></span><span class="folder-count"></span>';
-          card.querySelector(".folder-name").textContent = folder.name;
-          card.querySelector(".folder-count").textContent = t("album.photoCount", { n: folder.photos.length });
-          card.addEventListener("click", function () { openFolder(folder.name); });
-          foldersEl.appendChild(card);
-        });
-      }
-
-      function renderPhotos() {
-        folderNameEl.textContent = currentFolder.name;
-        photosEl.innerHTML = "";
-        currentFolder.photos.forEach(function (photo) {
-          const item = document.createElement("div");
-          item.className = "album-item";
-          const img = document.createElement("img");
-          img.src = "assets/albums/" + encodeURIComponent(currentFolder.name) +
-            "/" + encodeURIComponent(photo);
-          img.alt = currentFolder.name + " - " + photo;
-          img.loading = "lazy";
-          img.addEventListener("click", function () {
-            openLightbox(img.src, img.alt);
+          card.className = "pb-card";
+          card.setAttribute("role", "button");
+          card.tabIndex = 0;
+          card.setAttribute("aria-label", album.name);
+          card.innerHTML =
+            '<div class="pb-card-cover">' +
+              '<img src="" alt="" loading="lazy">' +
+              '<span class="pb-card-count"></span>' +
+              '<span class="pb-card-title"></span>' +
+            '</div>';
+          const img = card.querySelector("img");
+          img.src = photoSrc(album.cover);           // 封面 = 相册第一张图
+          img.alt = album.name;
+          img.addEventListener("error", function () { img.src = PLACEHOLDER; });
+          card.querySelector(".pb-card-count").textContent =
+            t("album.photoCount", { n: album.images.length });
+          card.querySelector(".pb-card-title").textContent = album.name;
+          card.addEventListener("click", function () { openBook(album); });
+          card.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openBook(album); }
           });
-          item.appendChild(img);
-          photosEl.appendChild(item);
+          booksEl.appendChild(card);
         });
       }
 
-      function openFolder(name) {
-        const found = data.folders.find(function (f) { return f.name === name; });
-        if (found) {
-          currentFolder = found;
-          render();
-        }
+      /* ---- 打开照片书（先合上封面，点击封面翻开） ---- */
+      function buildPages(album) {
+        const ps = [{ type: "flyleaf", num: 1 }];
+        album.images.forEach(function (rel, i) {
+          ps.push({ type: "image", src: rel, num: i + 2 });
+        });
+        if (ps.length % 2 === 1) ps.push({ type: "blank", num: ps.length });
+        return ps;
       }
 
-      btnBack.addEventListener("click", function () {
-        currentFolder = null;
-        render();
+      function openBook(album) {
+        current = album;
+        pages = buildPages(album);
+        spread = 0;
+        total = Math.ceil(pages.length / 2);
+        bookOpen = false;
+        flipping = false;
+
+        coverImgEl.src = photoSrc(album.cover);
+        coverImgEl.onerror = function () { coverImgEl.src = PLACEHOLDER; };
+        coverTitleEl.textContent = album.name;
+        coverMetaEl.textContent = t("album.photoCount", { n: album.images.length });
+        readTitleEl.textContent = album.name;
+
+        overviewEl.hidden = true;
+        readerEl.hidden = false;
+        bookEl.classList.remove("open");            // 封面先闭合，等待点击翻开
+        renderSpread();
+        if (readerEl.scrollIntoView) readerEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      function openCover() {
+        if (bookOpen) return;
+        bookOpen = true;
+        bookEl.classList.add("open");               // 触发 3D 翻开动画
+        updateControls();
+      }
+
+      function closeBook() {
+        flipping = false;
+        leafEl.classList.remove("flip-next", "flip-prev");
+        leafEl.style.opacity = "";
+        leafEl.innerHTML = "";
+        bookEl.classList.remove("open");            // 封面合上
+        bookOpen = false;
+        setTimeout(function () {
+          current = null;
+          pages = [];
+          readerEl.hidden = true;
+          overviewEl.hidden = false;
+        }, 800);                                    // 等封面合拢动画结束
+      }
+
+      /* ---- 渲染当前跨页（左页 + 右页） ---- */
+      function renderSpread() {
+        leftEl.innerHTML = "";
+        rightEl.innerHTML = "";
+        leftEl.appendChild(pageNode(pages[spread * 2]));
+        rightEl.appendChild(pageNode(pages[spread * 2 + 1]));
+        pageInfoEl.textContent = (spread + 1) + " / " + total;
+        updateControls();
+      }
+
+      function pageNode(page) {
+        const wrap = document.createElement("div");
+        wrap.className = "pb-page-inner";
+        if (!page || page.type === "blank") {
+          wrap.classList.add("pb-blank");
+          return wrap;
+        }
+        if (page.type === "flyleaf") {
+          wrap.classList.add("pb-flyleaf");
+          wrap.innerHTML =
+            '<span class="pb-fly-kicker">Photo Book</span>' +
+            '<h4 class="pb-fly-title"></h4>' +
+            '<div class="pb-fly-desc"></div>' +
+            '<span class="pb-fly-count"></span>' +
+            '<span class="pb-page-num"></span>';
+          wrap.querySelector(".pb-fly-title").textContent = current.name;
+          const descEl = wrap.querySelector(".pb-fly-desc");
+          const md = mdToHtml(current.description);
+          descEl.innerHTML = md || ("<p>" + esc(t("album.emptyDesc")) + "</p>");
+          wrap.querySelector(".pb-fly-count").textContent =
+            t("album.photoCount", { n: current.images.length });
+          wrap.querySelector(".pb-page-num").textContent = page.num;
+          return wrap;
+        }
+        // 图片页：进入当前跨页时才赋值 src（按需懒加载）
+        wrap.classList.add("pb-photo-wrap");
+        const img = document.createElement("img");
+        img.className = "pb-photo";
+        img.alt = current.name + " - " + page.num;
+        img.loading = "lazy";
+        img.addEventListener("error", function () { img.src = PLACEHOLDER; });
+        img.addEventListener("click", function () { openLightbox(img.src, img.alt); });
+        img.src = photoSrc(page.src);
+        wrap.appendChild(img);
+        const num = document.createElement("span");
+        num.className = "pb-page-num";
+        num.textContent = page.num;
+        wrap.appendChild(num);
+        return wrap;
+      }
+
+      /* ---- 翻页 ---- */
+      function goNext() {
+        if (flipping || !bookOpen || spread >= total - 1) return;
+        flipTo(spread + 1, "next");
+      }
+
+      function goPrev() {
+        if (flipping || !bookOpen || spread <= 0) return;
+        flipTo(spread - 1, "prev");
+      }
+
+      function flipTo(target, dir) {
+        flipping = true;
+        preloadSpread(target);                       // 预加载目标跨页图片
+
+        const isNext = dir === "next";
+        const fromIdx = spread * 2 + (isNext ? 1 : 0);
+        const fromPage = pages[fromIdx];
+
+        // 把“正在翻走”的那一页内容放进叶子
+        leafEl.className = "pb-leaf " + (isNext ? "is-right" : "is-left");
+        leafEl.style.opacity = "1";
+        leafEl.innerHTML = "";
+        const inner = document.createElement("div");
+        inner.className = "pb-leaf-inner";
+        if (fromPage && fromPage.type === "image") {
+          const img = document.createElement("img");
+          img.className = "pb-photo";
+          img.alt = "";
+          img.addEventListener("error", function () { img.src = PLACEHOLDER; });
+          img.src = photoSrc(fromPage.src);
+          inner.appendChild(img);
+        } else {
+          inner.classList.add("pb-blank");
+        }
+        leafEl.appendChild(inner);
+
+        // 底层切换为目标跨页
+        spread = target;
+        renderSpread();
+
+        // 强制重排后开始翻页动画
+        void leafEl.offsetWidth;
+        leafEl.classList.add(isNext ? "flip-next" : "flip-prev");
+
+        function done() {
+          leafEl.removeEventListener("transitionend", done);
+          leafEl.classList.remove("flip-next", "flip-prev");
+          leafEl.style.opacity = "";
+          leafEl.innerHTML = "";
+          flipping = false;
+        }
+        leafEl.addEventListener("transitionend", done);
+        // 兜底：极端情况下 transitionend 未触发时释放锁定
+        setTimeout(function () {
+          if (flipping) {
+            leafEl.classList.remove("flip-next", "flip-prev");
+            leafEl.style.opacity = "";
+            leafEl.innerHTML = "";
+            flipping = false;
+          }
+        }, 900);
+      }
+
+      // 预加载目标跨页的图片，让翻页更流畅
+      function preloadSpread(s) {
+        [s * 2, s * 2 + 1].forEach(function (i) {
+          const p = pages[i];
+          if (p && p.type === "image") {
+            const im = new Image();
+            im.src = photoSrc(p.src);
+          }
+        });
+      }
+
+      function updateControls() {
+        btnPrev.disabled = !bookOpen || spread <= 0;
+        btnNext.disabled = !bookOpen || spread >= total - 1;
+      }
+
+      /* 事件绑定 */
+      coverEl.addEventListener("click", openCover);
+      coverEl.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openCover(); }
+      });
+      btnNext.addEventListener("click", goNext);
+      btnPrev.addEventListener("click", goPrev);
+      btnBack.addEventListener("click", closeBook);
+
+      // 键盘翻页（仅阅读器打开时）
+      document.addEventListener("keydown", function (e) {
+        if (readerEl.hidden) return;
+        if (e.key === "ArrowRight" || e.key === "PageDown") { goNext(); return; }
+        if (e.key === "ArrowLeft" || e.key === "PageUp") { goPrev(); return; }
+        if (e.key === "Escape" && lightbox.hidden) closeBook();
       });
 
-      /* 大图查看 */
+      // 触摸滑动翻页
+      let touchX = null;
+      bookEl.addEventListener("touchstart", function (e) {
+        touchX = e.touches[0].clientX;
+      }, { passive: true });
+      bookEl.addEventListener("touchend", function (e) {
+        if (touchX === null) return;
+        const dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 50) { dx < 0 ? goNext() : goPrev(); }
+        touchX = null;
+      }, { passive: true });
+
+      /* 大图查看（lightbox） */
       function openLightbox(src, caption) {
         lightboxImg.src = src;
         lightboxCaption.textContent = caption;
@@ -2721,9 +3287,6 @@
       lightboxClose.addEventListener("click", closeLightbox);
       lightbox.addEventListener("click", function (e) {
         if (e.target === lightbox) closeLightbox();   // 点击遮罩空白处关闭
-      });
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && !lightbox.hidden) closeLightbox();
       });
 
       /* 每次展开相册时刷新（带时间戳避开缓存） */
@@ -2854,9 +3417,12 @@
         "honors.schoolLevel": "校级",
         "album.title": "相册", "album.summary": "生活相册（点击展开查看）",
         "album.loading": "正在加载相册…",
-        "album.count": "共 {f} 个相册、{n} 张照片，点击文件夹进入查看。",
-        "album.fail": "相册索引加载失败：请先在项目目录运行 python build_album.py 生成相册资源。",
-        "album.back": "← 返回相册", "album.photoCount": "{n} 张照片",
+        "album.count": "共 {f} 本照片书、{n} 张照片，点击封面翻开阅读。",
+        "album.fail": "相册配置加载失败：请先在项目目录运行 python build_album.py 生成相册资源。",
+        "album.back": "← 返回全部相册", "album.photoCount": "{n} 张照片",
+        "album.kicker": "Photo Book", "album.openHint": "点击翻开",
+        "album.prev": "← 上一页", "album.next": "下一页 →",
+        "album.emptyDesc": "记录生活中的光影瞬间。",
         "contact.title": "联系方式",
         "contact.emailTitle": "邮箱", "contact.emailNote": "欢迎交流与合作",
         "contact.emailAlt": "备用：3313952565@qq.com",
@@ -2942,9 +3508,12 @@
         "honors.schoolLevel": "University",
         "album.title": "Album", "album.summary": "Life Album (click to expand)",
         "album.loading": "Loading album…",
-        "album.count": "{f} albums, {n} photos — click a folder to explore.",
-        "album.fail": "Album index failed to load: run python build_album.py first.",
-        "album.back": "← Back to albums", "album.photoCount": "{n} photos",
+        "album.count": "{f} photo books, {n} photos — click a cover to open.",
+        "album.fail": "Album config failed to load: run python build_album.py first.",
+        "album.back": "← All albums", "album.photoCount": "{n} photos",
+        "album.kicker": "Photo Book", "album.openHint": "Open",
+        "album.prev": "← Prev", "album.next": "Next →",
+        "album.emptyDesc": "Moments captured in light.",
         "contact.title": "Contact",
         "contact.emailTitle": "Email", "contact.emailNote": "Welcome to connect and collaborate",
         "contact.emailAlt": "Alt: 3313952565@qq.com",
