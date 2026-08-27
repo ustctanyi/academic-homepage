@@ -658,7 +658,7 @@
 
     /* 暗色主题下的细节修正 */
     html[data-theme="dark"] .pb-page,
-    html[data-theme="dark"] .pb-leaf,
+    html[data-theme="dark"] .pb-slide,
     html[data-theme="dark"] .pb-inner {
       background: #1a2b3f;               /* 照片书“纸张”在暗色下变深 */
     }
@@ -1087,6 +1087,7 @@
       transform-style: preserve-3d;
       user-select: none;
       touch-action: pan-y;
+      cursor: grab;
     }
 
     .pb-inner {
@@ -1097,7 +1098,6 @@
       overflow: hidden;
       box-shadow: 0 14px 38px rgba(22, 50, 79, 0.18);
       background: #f8f4ea;                 /* 纸张底色 */
-      perspective: 1600px;                 /* 让翻页叶子有立体透视 */
     }
 
     .pb-page {
@@ -1202,48 +1202,27 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* 翻页叶子：模拟正在翻动的那一页纸 */
-    .pb-leaf {
+    /* 翻页滑层：横向快速翻页（左滑=下一页，右滑=上一页） */
+    .pb-slide {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 50%;
+      inset: 0;
       z-index: 6;
+      display: flex;
       background: #f8f4ea;
+      box-shadow: 0 0 30px rgba(20, 35, 55, 0.20);
       opacity: 0;                          /* 静止时不可见，翻页时才显示 */
-      box-shadow: 0 0 26px rgba(20, 35, 55, 0.22);
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      transition: transform 0.55s cubic-bezier(0.42, 0.2, 0.25, 1);
-      will-change: transform;
+      transition: transform 0.34s cubic-bezier(0.25, 0.8, 0.35, 1), opacity 0.34s ease;
+      will-change: transform, opacity;
     }
 
-    .pb-leaf.is-right {
-      left: 50%;
-      transform-origin: left center;
-      border-radius: 0 6px 6px 0;
-    }
+    .pb-slide.show { opacity: 1; }
+    .pb-slide.out-left { transform: translateX(-100%); }
+    .pb-slide.out-right { transform: translateX(100%); }
 
-    .pb-leaf.is-left {
-      left: 0;
-      transform-origin: right center;
-      border-radius: 6px 0 0 6px;
-    }
-
-    .pb-leaf.flip-next { transform: rotateY(-168deg); }
-    .pb-leaf.flip-prev { transform: rotateY(168deg); }
-
-    .pb-leaf-inner {
+    .pb-slide-inner {
+      display: flex;
       width: 100%;
       height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 5%;
-    }
-
-    .pb-leaf-inner .pb-photo {
-      box-shadow: none;
     }
 
     /* 封面：闭合时盖住整本书，翻开后绕左书脊旋转消失 */
@@ -1257,7 +1236,7 @@
       background: var(--deep-blue);
       transform-origin: left center;
       transform: rotateY(0deg);
-      transition: transform 0.75s cubic-bezier(0.35, 0.1, 0.2, 1);
+      transition: transform 0.6s cubic-bezier(0.35, 0.1, 0.2, 1);
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
       box-shadow: 0 12px 34px rgba(15, 32, 52, 0.28);
@@ -2679,7 +2658,7 @@
                   <div class="pb-inner" id="pbInner">
                     <div class="pb-page pb-left" id="pbLeft"></div>
                     <div class="pb-page pb-right" id="pbRight"></div>
-                    <div class="pb-leaf" id="pbLeaf"></div>
+                    <div class="pb-slide" id="pbSlide"></div>
                   </div>
                 </div>
               </div>
@@ -2936,7 +2915,7 @@
       const coverMetaEl = document.getElementById("pbCoverMeta");
       const leftEl = document.getElementById("pbLeft");
       const rightEl = document.getElementById("pbRight");
-      const leafEl = document.getElementById("pbLeaf");
+      const slideEl = document.getElementById("pbSlide");
       const btnBack = document.getElementById("pbBack");
       const btnPrev = document.getElementById("pbPrev");
       const btnNext = document.getElementById("pbNext");
@@ -3025,9 +3004,8 @@
         bookEl.classList.remove("open");
         bookOpen = false;
         flipping = false;
-        leafEl.classList.remove("flip-next", "flip-prev");
-        leafEl.style.opacity = "";
-        leafEl.innerHTML = "";
+        slideEl.classList.remove("show", "out-left", "out-right");
+        slideEl.innerHTML = "";
 
         booksEl.innerHTML = "";
         data.albums.forEach(function (album) {
@@ -3097,9 +3075,8 @@
 
       function closeBook() {
         flipping = false;
-        leafEl.classList.remove("flip-next", "flip-prev");
-        leafEl.style.opacity = "";
-        leafEl.innerHTML = "";
+        slideEl.classList.remove("show", "out-left", "out-right");
+        slideEl.innerHTML = "";
         bookEl.classList.remove("open");            // 封面合上
         bookOpen = false;
         setTimeout(function () {
@@ -3177,52 +3154,49 @@
         preloadSpread(target);                       // 预加载目标跨页图片
 
         const isNext = dir === "next";
-        const fromIdx = spread * 2 + (isNext ? 1 : 0);
-        const fromPage = pages[fromIdx];
+        // 滑层承载“正在翻走”的当前跨页，横向滑出
+        slideEl.innerHTML = "";
+        slideEl.appendChild(buildSlide(spread));
+        slideEl.classList.add("show");
 
-        // 把“正在翻走”的那一页内容放进叶子
-        leafEl.className = "pb-leaf " + (isNext ? "is-right" : "is-left");
-        leafEl.style.opacity = "1";
-        leafEl.innerHTML = "";
-        const inner = document.createElement("div");
-        inner.className = "pb-leaf-inner";
-        if (fromPage && fromPage.type === "image") {
-          const img = document.createElement("img");
-          img.className = "pb-photo";
-          img.alt = "";
-          img.addEventListener("error", function () { img.src = PLACEHOLDER; });
-          img.src = photoSrc(fromPage.src);
-          inner.appendChild(img);
-        } else {
-          inner.classList.add("pb-blank");
-        }
-        leafEl.appendChild(inner);
-
-        // 底层切换为目标跨页
+        // 底层切换为目标跨页，随滑层移开逐渐露出
         spread = target;
         renderSpread();
 
-        // 强制重排后开始翻页动画
-        void leafEl.offsetWidth;
-        leafEl.classList.add(isNext ? "flip-next" : "flip-prev");
+        // 强制重排后开始横向滑动
+        void slideEl.offsetWidth;
+        slideEl.classList.add(isNext ? "out-left" : "out-right");
 
         function done() {
-          leafEl.removeEventListener("transitionend", done);
-          leafEl.classList.remove("flip-next", "flip-prev");
-          leafEl.style.opacity = "";
-          leafEl.innerHTML = "";
+          slideEl.removeEventListener("transitionend", done);
+          slideEl.classList.remove("show", "out-left", "out-right");
+          slideEl.innerHTML = "";
           flipping = false;
         }
-        leafEl.addEventListener("transitionend", done);
+        slideEl.addEventListener("transitionend", done);
         // 兜底：极端情况下 transitionend 未触发时释放锁定
         setTimeout(function () {
           if (flipping) {
-            leafEl.classList.remove("flip-next", "flip-prev");
-            leafEl.style.opacity = "";
-            leafEl.innerHTML = "";
+            slideEl.classList.remove("show", "out-left", "out-right");
+            slideEl.innerHTML = "";
             flipping = false;
           }
-        }, 900);
+        }, 700);
+      }
+
+      // 构造一个完整跨页（左页 + 右页），用于滑层
+      function buildSlide(s) {
+        const wrap = document.createElement("div");
+        wrap.className = "pb-slide-inner";
+        const left = document.createElement("div");
+        left.className = "pb-page pb-left";
+        left.appendChild(pageNode(pages[s * 2]));
+        const right = document.createElement("div");
+        right.className = "pb-page pb-right";
+        right.appendChild(pageNode(pages[s * 2 + 1]));
+        wrap.appendChild(left);
+        wrap.appendChild(right);
+        return wrap;
       }
 
       // 预加载目标跨页的图片，让翻页更流畅
@@ -3258,17 +3232,51 @@
         if (e.key === "Escape" && lightbox.hidden) closeBook();
       });
 
-      // 触摸滑动翻页
-      let touchX = null;
-      bookEl.addEventListener("touchstart", function (e) {
-        touchX = e.touches[0].clientX;
-      }, { passive: true });
-      bookEl.addEventListener("touchend", function (e) {
-        if (touchX === null) return;
-        const dx = e.changedTouches[0].clientX - touchX;
-        if (Math.abs(dx) > 50) { dx < 0 ? goNext() : goPrev(); }
-        touchX = null;
-      }, { passive: true });
+      /* 鼠标/触屏：在书本上左右滑动快速翻页（左滑下一页 / 右滑上一页） */
+      let dragState = null;
+
+      function endDrag(e) {
+        if (!dragState || !dragState.active) return;
+        const dx = e.clientX - dragState.x;
+        const dy = e.clientY - dragState.y;
+        bookEl.style.transform = "";
+        dragState = null;
+        // 快速轻甩：松手时仍满足横向阈值则补一次翻页
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.2 && !flipping) {
+          if (dx < 0) goNext(); else goPrev();
+        }
+      }
+
+      bookEl.addEventListener("pointerdown", function (e) {
+        dragState = { x: e.clientX, y: e.clientY, active: true };
+        try { bookEl.setPointerCapture(e.pointerId); } catch (err) { /* 忽略 */ }
+      });
+
+      bookEl.addEventListener("pointermove", function (e) {
+        if (!dragState || !dragState.active) return;
+        const dx = e.clientX - dragState.x;
+        const dy = e.clientY - dragState.y;
+        // 书本轻微跟随拖拽，提示可左右滑动
+        const shift = Math.max(-18, Math.min(18, dx * 0.2));
+        bookEl.style.transform = "translateX(" + shift + "px)";
+        // 越过阈值且以横向为主时立即翻页；继续拖可连续翻页
+        if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.2 && !flipping) {
+          if (dx < 0) goNext(); else goPrev();
+          dragState.x = e.clientX;
+        }
+      });
+
+      bookEl.addEventListener("pointerup", endDrag);
+      bookEl.addEventListener("pointercancel", endDrag);
+
+      // 触控板横向滚动翻页（不影响页面纵向滚动）
+      bookEl.addEventListener("wheel", function (e) {
+        if (!bookOpen || flipping) return;
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 5) {
+          e.preventDefault();
+          if (e.deltaX > 0) goNext(); else goPrev();
+        }
+      }, { passive: false });
 
       /* 大图查看（lightbox） */
       function openLightbox(src, caption) {
