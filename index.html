@@ -657,10 +657,9 @@
     }
 
     /* 暗色主题下的细节修正 */
-    html[data-theme="dark"] .pb-page,
-    html[data-theme="dark"] .pb-panel,
-    html[data-theme="dark"] .pb-book {
-      background: #1a2b3f;               /* 照片书“纸张”在暗色下变深 */
+    html[data-theme="dark"] .ac-stage,
+    html[data-theme="dark"] .ac-panel {
+      background: #1a2b3f;               /* 轮播“纸张”在暗色下变深 */
     }
 
     html[data-theme="dark"] .chapter-head:hover {
@@ -676,8 +675,7 @@
     html[data-theme="dark"] .project-item h4,
     html[data-theme="dark"] .edu-degree,
     html[data-theme="dark"] .contact-card h3,
-    html[data-theme="dark"] .pb-fly-title,
-    html[data-theme="dark"] .pb-reader-title {
+    html[data-theme="dark"] .ac-title {
       color: var(--text);
     }
 
@@ -967,9 +965,8 @@
     }
 
     /* ==========================================================
-        相册（照片书模式，默认折叠；复用 .edu-card 折叠样式）
-        - 总览：一本本照片书封面组成的网格
-        - 阅读器：点击封面翻开 → 左右跨页 + 3D 翻页叶子
+        相册（圆形循环轮播模式，默认折叠；复用 .edu-card 折叠样式）
+        每个相册文件夹 = 一个可左右循环拖动的轮播，无需点进相册
         ========================================================== */
     .album-mode {
       color: var(--muted);
@@ -977,265 +974,145 @@
       margin-bottom: 12px;
     }
 
-    .pb-overview[hidden],
-    .pb-reader[hidden] {
-      display: none !important;
+    .ac-album {
+      margin-bottom: 38px;
     }
 
-    /* 总览网格：大屏多列，小屏自动单列 */
-    .pb-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 20px;
-      padding: 18px 0 6px;
-    }
-
-    .pb-card {
-      cursor: pointer;
-      outline: none;
-    }
-
-    .pb-card-cover {
-      position: relative;
-      aspect-ratio: 3 / 4;                 /* 竖版书封 */
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      background: var(--surface);
-      box-shadow: var(--shadow);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .pb-card:hover .pb-card-cover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 28px rgba(22, 50, 79, 0.16);
-    }
-
-    .pb-card:focus-visible .pb-card-cover {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    .pb-card-cover img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* 书封底部深蓝渐变遮罩，保证标题可读 */
-    .pb-card-cover::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(22, 50, 79, 0.06) 40%, rgba(16, 38, 62, 0.72));
-    }
-
-    .pb-card-count {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      z-index: 2;
-      padding: 3px 9px;
-      border-radius: 999px;
-      background: rgba(10, 22, 36, 0.55);
-      color: rgba(255, 255, 255, 0.92);
-      font-size: 0.72rem;
-      backdrop-filter: blur(4px);
-    }
-
-    .pb-card-title {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 12px;
-      z-index: 2;
-      color: #fff;
-      font-weight: 600;
-      font-size: 1rem;
-      line-height: 1.35;
-      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
-    }
-
-    /* ---- 照片书阅读器 ---- */
-    .pb-toolbar {
+    .ac-head {
       display: flex;
-      align-items: center;
-      gap: 12px;
+      flex-direction: column;
+      gap: 4px;
       margin-bottom: 12px;
-      flex-wrap: wrap;
     }
 
-    .pb-reader-title {
-      font-weight: 600;
+    .ac-title {
       color: var(--deep-blue);
-      font-size: 1rem;
+      font-size: 1.08rem;
+      font-weight: 600;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
     }
 
-    .pb-stage {
-      perspective: 2000px;
-      padding: 6px 0 16px;
+    .ac-count {
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 400;
     }
 
-    .pb-book {
+    .ac-desc {
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.7;
+    }
+
+    .ac-desc p { margin: 0.2em 0; }
+    .ac-desc ul { margin: 0.2em 0 0.2em; padding-left: 1.25em; }
+    .ac-desc li { margin-bottom: 0.1em; }
+
+    /* 轮播舞台：一个相册一个 */
+    .ac-stage {
       position: relative;
-      aspect-ratio: 2 / 1;                 /* 跨页：左右各一页 */
-      max-width: 900px;
+      max-width: 720px;
+      aspect-ratio: 16 / 10;
       margin: 0 auto;
       overflow: hidden;
-      border-radius: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
       background: #f8f4ea;                 /* 纸张底色 */
-      box-shadow: 0 14px 38px rgba(22, 50, 79, 0.18);
+      box-shadow: var(--shadow);
       user-select: none;
       touch-action: pan-y;
       cursor: grab;
     }
 
-    /* 循环滑动轨道：跟手拖拽，松手后平滑吸附 */
-    .pb-track {
+    .ac-track {
       position: absolute;
       inset: 0;
       will-change: transform;
     }
 
-    .pb-track.anim {
+    .ac-track.anim {
       transition: transform 0.38s cubic-bezier(0.22, 0.61, 0.36, 1);
     }
 
-    .pb-panel {
+    .ac-panel {
       position: absolute;
       inset: 0;
       display: flex;
+      align-items: center;
+      justify-content: center;
       background: #f8f4ea;
     }
 
-    .pb-panel-prev { transform: translateX(-100%); }
-    .pb-panel-next { transform: translateX(100%); }
+    .ac-panel-prev { transform: translateX(-100%); }
+    .ac-panel-next { transform: translateX(100%); }
 
-    .pb-page {
-      position: relative;
-      width: 50%;
-      height: 100%;
-      background: #f8f4ea;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .pb-left {
-      border-radius: 8px 0 0 8px;
-      box-shadow: inset -16px 0 20px -16px rgba(30, 45, 60, 0.28);
-    }
-
-    .pb-right {
-      border-radius: 0 8px 8px 0;
-      box-shadow: inset 16px 0 20px -16px rgba(30, 45, 60, 0.28);
-    }
-
-    .pb-page-inner {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .pb-blank {
-      background:
-        repeating-linear-gradient(0deg, transparent 0 22px, rgba(90, 110, 130, 0.06) 22px 23px);
-    }
-
-    /* 扉页：相册标题 + markdown 描述 */
-    .pb-flyleaf {
-      flex-direction: column;
-      gap: 8px;
-      padding: 6% 8%;
-      text-align: center;
-    }
-
-    .pb-fly-kicker {
-      color: var(--accent);
-      font-size: 0.68rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-    }
-
-    .pb-fly-title {
-      color: var(--deep-blue);
-      font-size: 1.22rem;
-      font-weight: 700;
-      margin: 2px 0 10px;
-    }
-
-    .pb-fly-desc {
-      color: var(--muted);
-      font-size: 0.86rem;
-      line-height: 1.8;
-      text-align: left;
-      max-width: 86%;
-      margin: 0 auto;
-      overflow: hidden;
-    }
-
-    .pb-fly-desc p { margin: 0 0 0.6em; }
-    .pb-fly-desc ul { margin: 0.2em 0 0.6em; padding-left: 1.25em; }
-    .pb-fly-desc li { margin-bottom: 0.2em; }
-
-    .pb-fly-count {
-      margin-top: auto;
-      color: var(--muted);
-      font-size: 0.76rem;
-      opacity: 0.8;
-    }
-
-    /* 图片页 */
-    .pb-photo-wrap {
-      padding: 5%;
-    }
-
-    .pb-photo {
-      max-width: 100%;
-      max-height: 100%;
+    .ac-photo {
+      max-width: 92%;
+      max-height: 88%;
       object-fit: contain;
-      border-radius: 3px;
-      box-shadow: 0 4px 16px rgba(20, 35, 55, 0.18);
+      border-radius: 6px;
+      box-shadow: 0 4px 16px rgba(20, 35, 55, 0.16);
       cursor: zoom-in;
     }
 
-    .pb-page-num {
+    .ac-info {
       position: absolute;
-      right: 14px;
-      bottom: 8px;
+      right: 12px;
+      bottom: 9px;
+      z-index: 2;
       color: var(--muted);
-      font-size: 0.7rem;
-      opacity: 0.75;
+      font-size: 0.72rem;
+      opacity: 0.85;
       font-variant-numeric: tabular-nums;
     }
 
-    /* 翻页控制 */
-    .pb-controls {
+    .ac-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--glass-bg);
+      color: var(--deep-blue);
+      font-size: 1.25rem;
+      line-height: 1;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 14px;
-      margin-top: 6px;
+      opacity: 0.92;
+      transition: border-color 0.2s ease, color 0.2s ease;
     }
 
-    .pb-page-info {
-      color: var(--muted);
-      font-size: 0.85rem;
-      min-width: 64px;
-      text-align: center;
-      font-variant-numeric: tabular-nums;
+    .ac-arrow:hover {
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
-    .album-btn[disabled] {
-      opacity: 0.42;
-      cursor: default;
+    .ac-arrow-prev { left: 10px; }
+    .ac-arrow-next { right: 10px; }
+
+    html[data-theme="dark"] .ac-stage,
+    html[data-theme="dark"] .ac-panel {
+      background: #1a2b3f;                 /* 轮播“纸张”在暗色下变深 */
+    }
+
+    html[data-theme="dark"] .ac-title,
+    html[data-theme="dark"] .ac-arrow {
+      color: var(--text);
+    }
+
+    @media (max-width: 620px) {
+      .ac-arrow {
+        width: 32px;
+        height: 32px;
+        font-size: 1.05rem;
+      }
     }
 
     /* 大图查看（lightbox） */
@@ -1330,15 +1207,6 @@
       font-size: 0.75rem;
       box-shadow: 0 2px 10px rgba(22, 50, 79, 0.08);
       backdrop-filter: blur(4px);
-    }
-
-    /* 手机上相册总览改为单列，阅读器字号收敛 */
-    @media (max-width: 620px) {
-      .pb-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .pb-fly-title { font-size: 1.02rem; }
     }
 
     /* ==========================================================
@@ -2517,43 +2385,16 @@
         </div>
 
         <!-- <details> 折叠组件：默认收起，点击标题栏展开。
-             相册为“照片书”模式：每本相册 = 一本可翻阅的书（封面/扉页/图片跨页）。
+             相册为“圆形循环轮播”模式：每个相册文件夹 = 一个可左右循环拖动的轮播，
+             无需点进相册，直接在板块内左右拖动浏览。
              配置来源：assets/albums/albums.json（由 build_album.py 生成，
              含 名称/描述/封面/图片数组；描述可编辑 album_descriptions.json）。 -->
         <details class="edu-card" id="albumDetails">
           <summary data-i18n="album.summary">生活相册（点击展开查看）</summary>
           <div class="edu-body">
             <p class="album-mode" id="albumMode" data-i18n="album.loading">正在加载相册…</p>
-
-            <!-- 相册总览：一本本照片书封面 -->
-            <div id="albumOverview">
-              <div id="albumBooks" class="pb-grid"></div>
-            </div>
-
-            <!-- 照片书阅读器 -->
-            <div id="albumReader" class="pb-reader" hidden>
-              <div class="pb-toolbar">
-                <button type="button" class="album-btn" id="pbBack" data-i18n="album.back">← 返回全部相册</button>
-                <span class="pb-reader-title" id="pbTitle"></span>
-              </div>
-
-              <div class="pb-stage">
-                <div class="pb-book" id="pbBook">
-                  <!-- 循环滑动的跨页轨道：上一页 | 当前页 | 下一页（跟手拖拽） -->
-                  <div class="pb-track" id="pbTrack">
-                    <div class="pb-panel pb-panel-prev" id="pbPanelPrev"></div>
-                    <div class="pb-panel pb-panel-cur" id="pbPanelCur"></div>
-                    <div class="pb-panel pb-panel-next" id="pbPanelNext"></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="pb-controls">
-                <button type="button" class="album-btn" id="pbPrev" data-i18n="album.prev">← 上一页</button>
-                <span class="pb-page-info" id="pbPageInfo">1 / 1</span>
-                <button type="button" class="album-btn" id="pbNext" data-i18n="album.next">下一页 →</button>
-              </div>
-            </div>
+            <!-- 每个相册一个圆形循环轮播：直接左右拖动，自动循环 -->
+            <div id="albumCarousels"></div>
           </div>
         </details>
 
@@ -2782,37 +2623,20 @@
     }
 
     /* ======================================================
-       4. 相册：照片书模式（每本相册 = 一本可翻阅的书）
+       4. 相册：圆形循环轮播（每个相册文件夹 = 一个可循环拖动的轮播）
        数据来源：assets/albums/albums.json（由 build_album.py 生成，
        每个相册含 名称/描述/封面/图片数组，路径相对 assets/albums/）
        ====================================================== */
     (function () {
       const albumDetails = document.getElementById("albumDetails");
       const modeEl = document.getElementById("albumMode");
-      const overviewEl = document.getElementById("albumOverview");
-      const booksEl = document.getElementById("albumBooks");
-      const readerEl = document.getElementById("albumReader");
-      const readTitleEl = document.getElementById("pbTitle");
-      const bookEl = document.getElementById("pbBook");
-      const trackEl = document.getElementById("pbTrack");
-      const panelPrev = document.getElementById("pbPanelPrev");
-      const panelCur = document.getElementById("pbPanelCur");
-      const panelNext = document.getElementById("pbPanelNext");
-      const btnBack = document.getElementById("pbBack");
-      const btnPrev = document.getElementById("pbPrev");
-      const btnNext = document.getElementById("pbNext");
-      const pageInfoEl = document.getElementById("pbPageInfo");
+      const carouselsEl = document.getElementById("albumCarousels");
       const lightbox = document.getElementById("albumLightbox");
       const lightboxImg = document.getElementById("lightboxImg");
       const lightboxCaption = document.getElementById("lightboxCaption");
       const lightboxClose = document.getElementById("lightboxClose");
 
       let data = { albums: [] };
-      let current = null;      // 当前打开的相册
-      let pages = [];          // 逻辑页：[扉页, 图片1, 图片2, ...]（奇数时末尾补空白页）
-      let spread = 0;          // 当前跨页序号（0 起）
-      let total = 0;           // 跨页总数
-      let animating = false;   // 翻页动画进行中
 
       // 图片加载失败的兜底占位（内联 SVG，无需额外资源）
       const PLACEHOLDER = (function () {
@@ -2874,278 +2698,202 @@
           data = { albums: [] };
           modeEl.textContent = t("album.fail");
         }
-        renderOverview();
+        renderCarousels();
       }
 
-      /* ---- 相册总览：照片书封面网格 ---- */
-      function renderOverview() {
-        // 回到总览时复位阅读器
-        readerEl.hidden = true;
-        overviewEl.hidden = false;
-        animating = false;
-        trackEl.classList.remove("anim");
-        trackEl.style.transform = "";
+      /* ---- 为每本相册构建一个圆形循环轮播 ---- */
+      function buildCarousel(album) {
+        const wrap = document.createElement("section");
+        wrap.className = "ac-album";
+        wrap.setAttribute("aria-label", album.name);
 
-        booksEl.innerHTML = "";
-        data.albums.forEach(function (album) {
-          const card = document.createElement("div");
-          card.className = "pb-card";
-          card.setAttribute("role", "button");
-          card.tabIndex = 0;
-          card.setAttribute("aria-label", album.name);
-          card.innerHTML =
-            '<div class="pb-card-cover">' +
-              '<img src="" alt="" loading="lazy">' +
-              '<span class="pb-card-count"></span>' +
-              '<span class="pb-card-title"></span>' +
-            '</div>';
-          const img = card.querySelector("img");
-          img.src = photoSrc(album.cover);           // 封面 = 相册第一张图
-          img.alt = album.name;
+        // 标题区：名称 + 照片数 + markdown 描述
+        const head = document.createElement("div");
+        head.className = "ac-head";
+        head.innerHTML =
+          '<h3 class="ac-title"></h3>' +
+          '<span class="ac-count"></span>' +
+          '<div class="ac-desc"></div>';
+        head.querySelector(".ac-title").textContent = album.name;
+        head.querySelector(".ac-count").textContent =
+          t("album.photoCount", { n: album.images.length });
+        head.querySelector(".ac-desc").innerHTML = mdToHtml(album.description);
+        wrap.appendChild(head);
+
+        // 轮播舞台：上一张 | 当前张 | 下一张
+        const stage = document.createElement("div");
+        stage.className = "ac-stage";
+        const track = document.createElement("div");
+        track.className = "ac-track";
+        const pPrev = document.createElement("div");
+        pPrev.className = "ac-panel ac-panel-prev";
+        const pCur = document.createElement("div");
+        pCur.className = "ac-panel ac-panel-cur";
+        const pNext = document.createElement("div");
+        pNext.className = "ac-panel ac-panel-next";
+        track.appendChild(pPrev);
+        track.appendChild(pCur);
+        track.appendChild(pNext);
+        stage.appendChild(track);
+
+        const info = document.createElement("span");
+        info.className = "ac-info";
+        stage.appendChild(info);
+
+        const btnPrev = document.createElement("button");
+        btnPrev.type = "button";
+        btnPrev.className = "ac-arrow ac-arrow-prev";
+        btnPrev.setAttribute("aria-label", t("album.prev"));
+        btnPrev.innerHTML = "&#8249;";
+        const btnNext = document.createElement("button");
+        btnNext.type = "button";
+        btnNext.className = "ac-arrow ac-arrow-next";
+        btnNext.setAttribute("aria-label", t("album.next"));
+        btnNext.innerHTML = "&#8250;";
+        stage.appendChild(btnPrev);
+        stage.appendChild(btnNext);
+        wrap.appendChild(stage);
+
+        // 轮播状态（独立于其它相册）
+        const state = {
+          total: album.images.length,
+          index: 0,
+          animating: false,
+          suppressClick: 0,
+          dragState: null
+        };
+
+        function wrapIndex(i) {
+          return ((i % state.total) + state.total) % state.total;
+        }
+
+        function fillPanel(panel, idx) {
+          panel.innerHTML = "";
+          const i = wrapIndex(idx);
+          const img = document.createElement("img");
+          img.className = "ac-photo";
+          img.alt = album.name + " - " + (i + 1);
+          img.loading = "lazy";
           img.addEventListener("error", function () { img.src = PLACEHOLDER; });
-          card.querySelector(".pb-card-count").textContent =
-            t("album.photoCount", { n: album.images.length });
-          card.querySelector(".pb-card-title").textContent = album.name;
-          card.addEventListener("click", function () { openBook(album); });
-          card.addEventListener("keydown", function (e) {
-            if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openBook(album); }
-          });
-          booksEl.appendChild(card);
-        });
-      }
-
-      /* ---- 打开照片书：直接进入第一跨页，可立即左右滑动 ---- */
-      function buildPages(album) {
-        const ps = [{ type: "flyleaf", num: 1 }];
-        album.images.forEach(function (rel, i) {
-          ps.push({ type: "image", src: rel, num: i + 2 });
-        });
-        if (ps.length % 2 === 1) ps.push({ type: "blank", num: ps.length });
-        return ps;
-      }
-
-      function openBook(album) {
-        current = album;
-        pages = buildPages(album);
-        spread = 0;
-        total = Math.ceil(pages.length / 2);
-        animating = false;
-        readTitleEl.textContent = album.name;
-        overviewEl.hidden = true;
-        readerEl.hidden = false;
-        renderPanels();
-        updateControls();
-        if (readerEl.scrollIntoView) readerEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }
-
-      function closeBook() {
-        animating = false;
-        trackEl.classList.remove("anim");
-        trackEl.style.transform = "";
-        current = null;
-        pages = [];
-        readerEl.hidden = true;
-        overviewEl.hidden = false;
-      }
-
-      /* ---- 渲染上/当前/下三个跨页（循环滚动） ---- */
-      function wrapIndex(i) {
-        return ((i % total) + total) % total;
-      }
-
-      function fillPanel(panel, s) {
-        panel.innerHTML = "";
-        const left = document.createElement("div");
-        left.className = "pb-page pb-left";
-        left.appendChild(pageNode(pages[s * 2]));
-        const right = document.createElement("div");
-        right.className = "pb-page pb-right";
-        right.appendChild(pageNode(pages[s * 2 + 1]));
-        panel.appendChild(left);
-        panel.appendChild(right);
-      }
-
-      function renderPanels() {
-        fillPanel(panelPrev, wrapIndex(spread - 1));
-        fillPanel(panelCur, spread);
-        fillPanel(panelNext, wrapIndex(spread + 1));
-        pageInfoEl.textContent = (spread + 1) + " / " + total;
-        trackEl.classList.remove("anim");
-        trackEl.style.transform = "";
-      }
-
-      function pageNode(page) {
-        const wrap = document.createElement("div");
-        wrap.className = "pb-page-inner";
-        if (!page || page.type === "blank") {
-          wrap.classList.add("pb-blank");
-          return wrap;
+          img.addEventListener("click", function () { openLightbox(img.src, img.alt); });
+          img.src = photoSrc(album.images[i]);
+          panel.appendChild(img);
         }
-        if (page.type === "flyleaf") {
-          wrap.classList.add("pb-flyleaf");
-          wrap.innerHTML =
-            '<span class="pb-fly-kicker">Photo Book</span>' +
-            '<h4 class="pb-fly-title"></h4>' +
-            '<div class="pb-fly-desc"></div>' +
-            '<span class="pb-fly-count"></span>' +
-            '<span class="pb-page-num"></span>';
-          wrap.querySelector(".pb-fly-title").textContent = current.name;
-          const descEl = wrap.querySelector(".pb-fly-desc");
-          const md = mdToHtml(current.description);
-          descEl.innerHTML = md || ("<p>" + esc(t("album.emptyDesc")) + "</p>");
-          wrap.querySelector(".pb-fly-count").textContent =
-            t("album.photoCount", { n: current.images.length });
-          wrap.querySelector(".pb-page-num").textContent = page.num;
-          return wrap;
+
+        function render() {
+          fillPanel(pPrev, state.index - 1);
+          fillPanel(pCur, state.index);
+          fillPanel(pNext, state.index + 1);
+          info.textContent = (state.index + 1) + " / " + state.total;
+          track.classList.remove("anim");
+          track.style.transform = "";
         }
-        // 图片页：进入当前跨页时才赋值 src（按需懒加载）
-        wrap.classList.add("pb-photo-wrap");
-        const img = document.createElement("img");
-        img.className = "pb-photo";
-        img.alt = current.name + " - " + page.num;
-        img.loading = "lazy";
-        img.addEventListener("error", function () { img.src = PLACEHOLDER; });
-        img.addEventListener("click", function () { openLightbox(img.src, img.alt); });
-        img.src = photoSrc(page.src);
-        wrap.appendChild(img);
-        const num = document.createElement("span");
-        num.className = "pb-page-num";
-        num.textContent = page.num;
-        wrap.appendChild(num);
+
+        render();
+
+        // 循环翻页：delta=+1 下一张（轨道左滑），delta=-1 上一张（轨道右滑）
+        function go(delta) {
+          if (state.animating || state.total <= 1) return;
+          state.animating = true;
+          const target = wrapIndex(state.index + delta);
+          track.classList.add("anim");
+          track.style.transform = "translateX(" + (delta < 0 ? 100 : -100) + "%)";
+          let finished = false;
+          function finish() {
+            if (finished) return;
+            finished = true;
+            track.removeEventListener("transitionend", finish);
+            track.classList.remove("anim");
+            track.style.transform = "";
+            state.index = target;
+            render();
+            state.animating = false;
+          }
+          track.addEventListener("transitionend", finish);
+          setTimeout(finish, 500);         // 兜底：transitionend 未触发时
+        }
+
+        // 位移不足时平滑回弹
+        function springBack() {
+          track.classList.add("anim");
+          track.style.transform = "";
+          setTimeout(function () { track.classList.remove("anim"); }, 450);
+        }
+
+        function endDrag(e) {
+          if (!state.dragState || !state.dragState.active) return;
+          const dx = e.clientX - state.dragState.x;
+          const dy = e.clientY - state.dragState.y;
+          const vel = state.dragState.vx || 0;
+          const dur = Date.now() - state.dragState.startT;
+          stage.style.transform = "";
+          const wasDragged = state.dragState.dragged;
+          state.dragState = null;
+          if (wasDragged || Math.abs(dx) > 25) state.suppressClick = Date.now() + 350;
+          if (state.animating || state.total <= 1) { springBack(); return; }
+          // 位移或甩动速度达标 → 循环翻页；否则平滑回弹
+          if (dx < -50 || (dx < -20 && vel < -0.55 && dur > 60)) go(1);
+          else if (dx > 50 || (dx > 20 && vel > 0.55 && dur > 60)) go(-1);
+          else springBack();
+        }
+
+        stage.addEventListener("pointerdown", function (e) {
+          stage.style.transform = "";
+          state.dragState = {
+            x: e.clientX, y: e.clientY, active: true, dragged: false,
+            lastX: e.clientX, lastT: Date.now(), startT: Date.now(), vx: 0
+          };
+        });
+
+        stage.addEventListener("pointermove", function (e) {
+          if (!state.dragState || !state.dragState.active) return;
+          const dx = e.clientX - state.dragState.x;
+          const now = Date.now();
+          const dt = now - state.dragState.lastT;
+          if (dt > 0) state.dragState.vx = (e.clientX - state.dragState.lastX) / dt;
+          state.dragState.lastX = e.clientX;
+          state.dragState.lastT = now;
+          if (Math.abs(dx) > 25) state.dragState.dragged = true;
+          // 跟手：轨道跟随指针移动（限制最大跟随距离）
+          const maxShift = Math.round(stage.clientWidth * 0.55);
+          const shift = Math.max(-maxShift, Math.min(maxShift, dx));
+          track.style.transform = "translateX(" + shift + "px)";
+          stage.style.transform = "translateX(" + Math.max(-10, Math.min(10, dx * 0.05)) + "px)";
+        });
+
+        // 在 window 上结束拖拽，保证手指/鼠标移出轮播也能复位
+        window.addEventListener("pointerup", endDrag);
+        window.addEventListener("pointercancel", endDrag);
+
+        // 拖拽后屏蔽随之触发的 click，避免误开大图
+        stage.addEventListener("click", function (e) {
+          if (Date.now() < state.suppressClick) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        }, true);
+
+        // 触控板横向滚动翻页（不影响页面纵向滚动）
+        stage.addEventListener("wheel", function (e) {
+          if (state.animating) return;
+          if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 5) {
+            e.preventDefault();
+            if (e.deltaX > 0) go(1); else go(-1);
+          }
+        }, { passive: false });
+
+        btnPrev.addEventListener("click", function () { go(-1); });
+        btnNext.addEventListener("click", function () { go(1); });
+
         return wrap;
       }
 
-      /* ---- 循环翻页：轨道平滑滑到 ±100% 后切换跨页 ---- */
-      function goNext() {
-        if (animating || !current || total <= 1) return;
-        animating = true;
-        const target = wrapIndex(spread + 1);
-        animateTrack(-100, function () {
-          spread = target;
-          renderPanels();
-          animating = false;
-          updateControls();
+      function renderCarousels() {
+        carouselsEl.innerHTML = "";
+        data.albums.forEach(function (album) {
+          carouselsEl.appendChild(buildCarousel(album));
         });
       }
-
-      function goPrev() {
-        if (animating || !current || total <= 1) return;
-        animating = true;
-        const target = wrapIndex(spread - 1);
-        animateTrack(100, function () {
-          spread = target;
-          renderPanels();
-          animating = false;
-          updateControls();
-        });
-      }
-
-      function animateTrack(percent, done) {
-        trackEl.classList.add("anim");
-        trackEl.style.transform = "translateX(" + percent + "%)";
-        let finished = false;
-        function finish() {
-          if (finished) return;
-          finished = true;
-          trackEl.removeEventListener("transitionend", finish);
-          trackEl.classList.remove("anim");
-          trackEl.style.transform = "";
-          if (done) done();
-        }
-        trackEl.addEventListener("transitionend", finish);
-        setTimeout(finish, 500);           // 兜底：transitionend 未触发时
-      }
-
-      // 位移不足时平滑回弹到当前跨页
-      function springBack() {
-        trackEl.classList.add("anim");
-        trackEl.style.transform = "";
-        setTimeout(function () { trackEl.classList.remove("anim"); }, 450);
-      }
-
-      function updateControls() {
-        btnPrev.disabled = animating || total <= 1;
-        btnNext.disabled = animating || total <= 1;
-      }
-
-      /* 事件绑定 */
-      btnNext.addEventListener("click", goNext);
-      btnPrev.addEventListener("click", goPrev);
-      btnBack.addEventListener("click", closeBook);
-
-      // 键盘翻页（仅阅读器打开时）
-      document.addEventListener("keydown", function (e) {
-        if (readerEl.hidden) return;
-        if (e.key === "ArrowRight" || e.key === "PageDown") { goNext(); return; }
-        if (e.key === "ArrowLeft" || e.key === "PageUp") { goPrev(); return; }
-        if (e.key === "Escape" && lightbox.hidden) closeBook();
-      });
-
-      /* 鼠标/触屏：跟手拖拽 + 循环翻页（左滑下一页 / 右滑上一页） */
-      let dragState = null;
-      let suppressClick = 0;               // 拖拽后短暂屏蔽误触点击（如照片放大）
-
-      function endDrag(e) {
-        if (!dragState || !dragState.active) return;
-        const dx = e.clientX - dragState.x;
-        const dy = e.clientY - dragState.y;
-        const vel = dragState.vx || 0;
-        const dur = Date.now() - dragState.startT;   // 手势持续时间（ms）
-        bookEl.style.transform = "";
-        const wasDragged = dragState.dragged;
-        dragState = null;
-        if (wasDragged || Math.abs(dx) > 25) suppressClick = Date.now() + 350;
-        if (animating || !current || total <= 1) { springBack(); return; }
-        // 位移或甩动速度达标 → 循环翻页；否则平滑回弹
-        if (dx < -50 || (dx < -20 && vel < -0.55 && dur > 60)) goNext();
-        else if (dx > 50 || (dx > 20 && vel > 0.55 && dur > 60)) goPrev();
-        else springBack();
-      }
-
-      bookEl.addEventListener("pointerdown", function (e) {
-        bookEl.style.transform = "";
-        dragState = {
-          x: e.clientX, y: e.clientY, active: true, dragged: false,
-          lastX: e.clientX, lastT: Date.now(), startT: Date.now(), vx: 0
-        };
-      });
-
-      bookEl.addEventListener("pointermove", function (e) {
-        if (!dragState || !dragState.active) return;
-        const dx = e.clientX - dragState.x;
-        const now = Date.now();
-        const dt = now - dragState.lastT;
-        if (dt > 0) dragState.vx = (e.clientX - dragState.lastX) / dt;  // px/ms
-        dragState.lastX = e.clientX;
-        dragState.lastT = now;
-        if (Math.abs(dx) > 25) dragState.dragged = true;
-        // 跟手：跨页轨道跟随指针移动（限制最大跟随距离，避免拖飞）
-        const maxShift = Math.round(bookEl.clientWidth * 0.55);
-        const shift = Math.max(-maxShift, Math.min(maxShift, dx));
-        trackEl.style.transform = "translateX(" + shift + "px)";
-        bookEl.style.transform = "translateX(" + Math.max(-12, Math.min(12, dx * 0.06)) + "px)";
-      });
-
-      // 在 window 上结束拖拽，保证手指/鼠标移出书本也能复位
-      window.addEventListener("pointerup", endDrag);
-      window.addEventListener("pointercancel", endDrag);
-
-      // 拖拽后屏蔽随之触发的 click，避免误开大图
-      bookEl.addEventListener("click", function (e) {
-        if (Date.now() < suppressClick) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      }, true);
-
-      // 触控板横向滚动翻页（不影响页面纵向滚动）
-      bookEl.addEventListener("wheel", function (e) {
-        if (animating || !current) return;
-        if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 5) {
-          e.preventDefault();
-          if (e.deltaX > 0) goNext(); else goPrev();
-        }
-      }, { passive: false });
 
       /* 大图查看（lightbox） */
       function openLightbox(src, caption) {
@@ -3294,12 +3042,11 @@
         "honors.schoolLevel": "校级",
         "album.title": "相册", "album.summary": "生活相册（点击展开查看）",
         "album.loading": "正在加载相册…",
-        "album.count": "共 {f} 本照片书、{n} 张照片，点击封面翻开阅读。",
+        "album.count": "共 {f} 本相册、{n} 张照片，左右滑动循环浏览。",
         "album.fail": "相册配置加载失败：请先在项目目录运行 python build_album.py 生成相册资源。",
-        "album.back": "← 返回全部相册", "album.photoCount": "{n} 张照片",
+        "album.photoCount": "{n} 张照片",
         "album.prev": "← 上一页", "album.next": "下一页 →",
-        "album.emptyDesc": "记录生活中的光影瞬间。",
-        "contact.title": "联系方式",
+                "contact.title": "联系方式",
         "contact.emailTitle": "邮箱", "contact.emailNote": "欢迎交流与合作",
         "contact.emailAlt": "备用：3313952565@qq.com",
         "contact.scholarTitle": "ResearchGate", "contact.scholarNote": "查看论文与科研动态",
@@ -3384,12 +3131,11 @@
         "honors.schoolLevel": "University",
         "album.title": "Album", "album.summary": "Life Album (click to expand)",
         "album.loading": "Loading album…",
-        "album.count": "{f} photo books, {n} photos — click a cover to open.",
+        "album.count": "{f} albums, {n} photos — swipe left/right to browse.",
         "album.fail": "Album config failed to load: run python build_album.py first.",
-        "album.back": "← All albums", "album.photoCount": "{n} photos",
+        "album.photoCount": "{n} photos",
         "album.prev": "← Prev", "album.next": "Next →",
-        "album.emptyDesc": "Moments captured in light.",
-        "contact.title": "Contact",
+                "contact.title": "Contact",
         "contact.emailTitle": "Email", "contact.emailNote": "Welcome to connect and collaborate",
         "contact.emailAlt": "Alt: 3313952565@qq.com",
         "contact.scholarTitle": "ResearchGate", "contact.scholarNote": "Publications & research updates",
