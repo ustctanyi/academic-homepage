@@ -657,11 +657,6 @@
     }
 
     /* 暗色主题下的细节修正 */
-    html[data-theme="dark"] .ac-stage,
-    html[data-theme="dark"] .ac-panel {
-      background: #1a2b3f;               /* 轮播“纸张”在暗色下变深 */
-    }
-
     html[data-theme="dark"] .chapter-head:hover {
       background: rgba(255, 255, 255, 0.06);
     }
@@ -1013,14 +1008,11 @@
     /* 轮播舞台：一个相册一个 */
     .ac-stage {
       position: relative;
-      max-width: 720px;
+      max-width: 900px;
       aspect-ratio: 16 / 10;
       margin: 0 auto;
       overflow: hidden;
       border-radius: 10px;
-      border: 1px solid var(--line);
-      background: #f8f4ea;                 /* 纸张底色 */
-      box-shadow: var(--shadow);
       user-select: none;
       touch-action: pan-y;
       cursor: grab;
@@ -1042,30 +1034,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f8f4ea;
     }
 
     .ac-panel-prev { transform: translateX(-100%); }
     .ac-panel-next { transform: translateX(100%); }
 
     .ac-photo {
-      max-width: 92%;
-      max-height: 88%;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
-      border-radius: 6px;
-      box-shadow: 0 4px 16px rgba(20, 35, 55, 0.16);
       cursor: zoom-in;
-    }
-
-    .ac-info {
-      position: absolute;
-      right: 12px;
-      bottom: 9px;
-      z-index: 2;
-      color: var(--muted);
-      font-size: 0.72rem;
-      opacity: 0.85;
-      font-variant-numeric: tabular-nums;
     }
 
     .ac-arrow {
@@ -1096,11 +1074,6 @@
 
     .ac-arrow-prev { left: 10px; }
     .ac-arrow-next { right: 10px; }
-
-    html[data-theme="dark"] .ac-stage,
-    html[data-theme="dark"] .ac-panel {
-      background: #1a2b3f;                 /* 轮播“纸张”在暗色下变深 */
-    }
 
     html[data-theme="dark"] .ac-title,
     html[data-theme="dark"] .ac-arrow {
@@ -2736,10 +2709,6 @@
         track.appendChild(pNext);
         stage.appendChild(track);
 
-        const info = document.createElement("span");
-        info.className = "ac-info";
-        stage.appendChild(info);
-
         const btnPrev = document.createElement("button");
         btnPrev.type = "button";
         btnPrev.className = "ac-arrow ac-arrow-prev";
@@ -2784,7 +2753,6 @@
           fillPanel(pPrev, state.index - 1);
           fillPanel(pCur, state.index);
           fillPanel(pNext, state.index + 1);
-          info.textContent = (state.index + 1) + " / " + state.total;
           track.classList.remove("anim");
           track.style.transform = "";
         }
