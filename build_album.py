@@ -8,7 +8,8 @@
   2. 生成 assets/albums/index.json 与 assets/albums/albums.json：
      - index.json 为“文件夹+照片”列表（旧格式，保留兼容）；
      - albums.json 为照片书配置：每个相册含名称、描述、封面图、图片数组，
-       供主页照片书组件读取（描述来自 album_descriptions.json，可直接编辑）。
+       供主页相册轮播组件读取（描述来自 album_descriptions.json，
+       英文名称/描述来自 album_translations.json，均可直接编辑）。
 
 怎么用：
   python build_album.py
@@ -44,9 +45,21 @@ def load_descriptions():
     return data if isinstance(data, dict) else {}
 
 
+def load_translations():
+    """读取相册英文翻译（album_translations.json）。
+    键为文件夹名，值为 { name: 英文名, description: 英文描述 }。"""
+    path = os.path.join(BASE, "album_translations.json")
+    if not os.path.isfile(path):
+        return {}
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return data if isinstance(data, dict) else {}
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     descriptions = load_descriptions()
+    translations = load_translations()
 
     # 收集源文件夹
     src_folders = {
@@ -94,13 +107,16 @@ def main():
     with open(os.path.join(OUT, "index.json"), "w", encoding="utf-8") as f:
         json.dump({"folders": result}, f, ensure_ascii=False, indent=1)
 
-    # 照片书配置：名称 / 描述 / 封面（第一张）/ 图片数组（路径相对 assets/albums/）
+    # 轮播配置：名称 / 描述 / 封面（第一张）/ 图片数组（路径相对 assets/albums/）
     book_albums = []
     for folder in result:
         rel = [folder["name"] + "/" + p for p in folder["photos"]]
+        tr = translations.get(folder["name"], {})
         book_albums.append({
             "name": folder["name"],
             "description": descriptions.get(folder["name"], ""),
+            "name_en": tr.get("name", ""),
+            "description_en": tr.get("description", ""),
             "cover": rel[0] if rel else "",
             "images": rel,
         })

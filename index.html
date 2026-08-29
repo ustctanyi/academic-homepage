@@ -2658,6 +2658,15 @@
         return "assets/albums/" + rel;
       }
 
+      // 按当前语言取相册名 / 描述（英文优先使用配置里的英文翻译）
+      function albumName(album) {
+        return currentLang === "en" && album.name_en ? album.name_en : album.name;
+      }
+
+      function albumDesc(album) {
+        return currentLang === "en" && album.description_en ? album.description_en : album.description;
+      }
+
       async function loadAlbum() {
         modeEl.textContent = t("album.loading");
         try {
@@ -2687,10 +2696,10 @@
           '<h3 class="ac-title"></h3>' +
           '<span class="ac-count"></span>' +
           '<div class="ac-desc"></div>';
-        head.querySelector(".ac-title").textContent = album.name;
+        head.querySelector(".ac-title").textContent = albumName(album);
         head.querySelector(".ac-count").textContent =
           t("album.photoCount", { n: album.images.length });
-        head.querySelector(".ac-desc").innerHTML = mdToHtml(album.description);
+        head.querySelector(".ac-desc").innerHTML = mdToHtml(albumDesc(album));
         wrap.appendChild(head);
 
         // 轮播舞台：上一张 | 当前张 | 下一张
@@ -2741,7 +2750,7 @@
           const i = wrapIndex(idx);
           const img = document.createElement("img");
           img.className = "ac-photo";
-          img.alt = album.name + " - " + (i + 1);
+          img.alt = albumName(album) + " - " + (i + 1);
           img.loading = "lazy";
           img.addEventListener("error", function () { img.src = PLACEHOLDER; });
           img.addEventListener("click", function () { openLightbox(img.src, img.alt); });

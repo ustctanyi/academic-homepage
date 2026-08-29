@@ -14,7 +14,9 @@
     "天柱山/IMG20240405085908.jpg",
     "天柱山/IMG20240405093114.jpg",
     "天柱山/IMG20240405100638.jpg"
-   ]
+   ],
+   "name_en": "Tianzhu Mountain",
+   "description_en": "A trip to Tianzhu Mountain: towering peaks, seas of clouds, and time spent together.\n\nClimbed during the Qingming Festival; as the mist parted, the peaks rose like pillars."
   },
   {
    "name": "徽班",
@@ -30,7 +32,9 @@
     "徽班/IMG20240315203812.jpg",
     "徽班/IMG20240315204012.jpg",
     "徽班/IMG20240315204407.jpg"
-   ]
+   ],
+   "name_en": "Hui Opera Troupe",
+   "description_en": "Memories of the Hui opera troupe: the stage, light and shadow, and the companions beside you."
   },
   {
    "name": "慧园",
@@ -64,7 +68,9 @@
     "慧园/IMG20251220191509.jpg",
     "慧园/IMG20251220191511.jpg",
     "慧园/IMG20251220192952.jpg"
-   ]
+   ],
+   "name_en": "Hui Garden",
+   "description_en": "Hui Garden through the seasons: every plant on campus is a quiet poem of everyday life."
   },
   {
    "name": "春日赏樱",
@@ -80,7 +86,9 @@
     "春日赏樱/IMG20240331171232.jpg",
     "春日赏樱/IMG20240331171247.jpg",
     "春日赏樱/IMG20240331171320.jpg"
-   ]
+   ],
+   "name_en": "Spring Cherry Blossoms",
+   "description_en": "Cherry blossom paths in spring, pink and white — a season in full bloom."
   },
   {
    "name": "景德镇",
@@ -130,7 +138,9 @@
     "景德镇/DSC_2798.jpg",
     "景德镇/DSC_2800.jpg",
     "景德镇/DSC_2802.jpg"
-   ]
+   ],
+   "name_en": "Jingdezhen",
+   "description_en": "A trip to Jingdezhen: kiln fire, porcelain charm, and the rhythm of a small town."
   },
   {
    "name": "樱花",
@@ -149,7 +159,9 @@
     "樱花/DSC_3382.jpg",
     "樱花/DSC_3383.jpg",
     "樱花/DSC_3384.jpg"
-   ]
+   ],
+   "name_en": "Cherry Blossoms",
+   "description_en": "The days when the campus cherry blossoms were in full bloom."
   },
   {
    "name": "济南",
@@ -195,7 +207,9 @@
     "济南/IMG20260101000055.jpg",
     "济南/IMG20260101000057.jpg",
     "济南/IMG20260101000100.jpg"
-   ]
+   ],
+   "name_en": "Jinan",
+   "description_en": "A trip to Jinan, the City of Springs: Baotu Spring, Daming Lake, and the bustle of the streets."
   },
   {
    "name": "烟台&威海",
@@ -356,7 +370,9 @@
     "烟台&威海/IMG20250807134657.jpg",
     "烟台&威海/IMG20250807150923.jpg",
     "烟台&威海/IMG20250807150946.jpg"
-   ]
+   ],
+   "name_en": "Yantai & Weihai",
+   "description_en": "A coastal trip to Yantai and Weihai: sea breeze, waves, and sunsets.\n\n- Yantai: a long coastline, the evening sun gilding the sea\n- Weihai: a quiet small city, made for strolling"
   },
   {
    "name": "烟台&威海9张",
@@ -393,7 +409,9 @@
     "烟台&威海9张/IMG20250807122521.jpg",
     "烟台&威海9张/IMG20250807124101.jpg",
     "烟台&威海9张/IMG20250807124130.jpg"
-   ]
+   ],
+   "name_en": "Yantai & Weihai (Selected)",
+   "description_en": "A few selected shots of the coast."
   },
   {
    "name": "科大雪景",
@@ -410,7 +428,9 @@
     "科大雪景/DSC_2446.jpg",
     "科大雪景/DSC_2447.jpg",
     "科大雪景/DSC_2448.jpg"
-   ]
+   ],
+   "name_en": "USTC Winter Snow",
+   "description_en": "A winter day at USTC: snow over the campus, quiet and pure."
   },
   {
    "name": "苏州园林",
@@ -457,7 +477,9 @@
     "苏州园林/IMG20240502114005.jpg",
     "苏州园林/IMG20240502115804.jpg",
     "苏州园林/IMG20240502144909.jpg"
-   ]
+   ],
+   "name_en": "Suzhou Gardens",
+   "description_en": "Suzhou gardens: winding paths, and light painted into the scenery."
   },
   {
    "name": "苏州风景",
@@ -532,7 +554,9 @@
     "苏州风景/IMG20240430161111.jpg",
     "苏州风景/IMG20240430172230.jpg",
     "苏州风景/IMG20240501093157.jpg"
-   ]
+   ],
+   "name_en": "Suzhou Scenery",
+   "description_en": "Suzhou through the lens: bridges over small streams, garden lanes, and old-town charm."
   },
   {
    "name": "蜀山",
@@ -548,7 +572,9 @@
     "蜀山/IMG20240225140811.jpg",
     "蜀山/IMG20240225140817.jpg",
     "蜀山/IMG20240225142050.jpg"
-   ]
+   ],
+   "name_en": "Shushan",
+   "description_en": "A hike up Shushan: where mountain colors meet the open sky."
   }
  ]
 }

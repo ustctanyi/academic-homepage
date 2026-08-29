@@ -1,0 +1,54 @@
+{
+  "天柱山": {
+    "name": "Tianzhu Mountain",
+    "description": "A trip to Tianzhu Mountain: towering peaks, seas of clouds, and time spent together.\n\nClimbed during the Qingming Festival; as the mist parted, the peaks rose like pillars."
+  },
+  "徽班": {
+    "name": "Hui Opera Troupe",
+    "description": "Memories of the Hui opera troupe: the stage, light and shadow, and the companions beside you."
+  },
+  "慧园": {
+    "name": "Hui Garden",
+    "description": "Hui Garden through the seasons: every plant on campus is a quiet poem of everyday life."
+  },
+  "春日赏樱": {
+    "name": "Spring Cherry Blossoms",
+    "description": "Cherry blossom paths in spring, pink and white — a season in full bloom."
+  },
+  "景德镇": {
+    "name": "Jingdezhen",
+    "description": "A trip to Jingdezhen: kiln fire, porcelain charm, and the rhythm of a small town."
+  },
+  "樱花": {
+    "name": "Cherry Blossoms",
+    "description": "The days when the campus cherry blossoms were in full bloom."
+  },
+  "济南": {
+    "name": "Jinan",
+    "description": "A trip to Jinan, the City of Springs: Baotu Spring, Daming Lake, and the bustle of the streets."
+  },
+  "烟台&威海": {
+    "name": "Yantai & Weihai",
+    "description": "A coastal trip to Yantai and Weihai: sea breeze, waves, and sunsets.\n\n- Yantai: a long coastline, the evening sun gilding the sea\n- Weihai: a quiet small city, made for strolling"
+  },
+  "烟台&威海9张": {
+    "name": "Yantai & Weihai (Selected)",
+    "description": "A few selected shots of the coast."
+  },
+  "科大雪景": {
+    "name": "USTC Winter Snow",
+    "description": "A winter day at USTC: snow over the campus, quiet and pure."
+  },
+  "苏州园林": {
+    "name": "Suzhou Gardens",
+    "description": "Suzhou gardens: winding paths, and light painted into the scenery."
+  },
+  "苏州风景": {
+    "name": "Suzhou Scenery",
+    "description": "Suzhou through the lens: bridges over small streams, garden lanes, and old-town charm."
+  },
+  "蜀山": {
+    "name": "Shushan",
+    "description": "A hike up Shushan: where mountain colors meet the open sky."
+  }
+}
