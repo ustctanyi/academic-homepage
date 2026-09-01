@@ -969,8 +969,35 @@
       margin-bottom: 12px;
     }
 
+    /* 相册书架：13 本相册横向排列，左右滑动 */
+    .ac-shelf-wrap {
+      position: relative;
+    }
+
+    .ac-shelf {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding: 4px 2px 14px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;               /* 隐藏滚动条，保持干净 */
+    }
+
+    .ac-shelf::-webkit-scrollbar {
+      display: none;
+    }
+
     .ac-album {
-      margin-bottom: 38px;
+      flex: 0 0 auto;
+      width: min(340px, 80vw);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
     }
 
     .ac-head {
@@ -999,18 +1026,70 @@
       color: var(--muted);
       font-size: 0.86rem;
       line-height: 1.7;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;               /* 默认两行截断，点击展开 */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .ac-desc.expanded {
+      display: block;
+      -webkit-line-clamp: unset;
     }
 
     .ac-desc p { margin: 0.2em 0; }
     .ac-desc ul { margin: 0.2em 0 0.2em; padding-left: 1.25em; }
     .ac-desc li { margin-bottom: 0.1em; }
 
+    .ac-desc-toggle {
+      align-self: flex-start;
+      margin-top: 4px;
+      font-size: 0.76rem;
+      color: var(--accent);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .ac-desc-toggle:hover {
+      text-decoration: underline;
+    }
+
+    /* 书架左右箭头 */
+    .ac-nav {
+      position: absolute;
+      top: 42%;
+      transform: translateY(-50%);
+      z-index: 5;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      background: var(--glass-bg);
+      color: var(--deep-blue);
+      font-size: 1.35rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .ac-nav:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .ac-nav-prev { left: -8px; }
+    .ac-nav-next { right: -8px; }
+
     /* 轮播舞台：一个相册一个 */
     .ac-stage {
       position: relative;
-      max-width: 900px;
+      width: 100%;
       aspect-ratio: 16 / 10;
-      margin: 0 auto;
+      margin: 0;
       overflow: hidden;
       border-radius: 10px;
       user-select: none;
@@ -1076,11 +1155,16 @@
     .ac-arrow-next { right: 10px; }
 
     html[data-theme="dark"] .ac-title,
-    html[data-theme="dark"] .ac-arrow {
+    html[data-theme="dark"] .ac-arrow,
+    html[data-theme="dark"] .ac-nav {
       color: var(--text);
     }
 
     @media (max-width: 620px) {
+      .ac-nav {
+        display: none;                      /* 手机上直接滑动书架 */
+      }
+
       .ac-arrow {
         width: 32px;
         height: 32px;
@@ -1394,7 +1478,7 @@
         ========================================================== */
     .site-grid {
       display: grid;
-      grid-template-columns: 1fr 1.25fr;
+      grid-template-columns: 1fr 1.05fr 1.25fr;
       gap: 28px;
       align-items: stretch;
     }
@@ -1705,6 +1789,87 @@
       .site-grid {
         grid-template-columns: 1fr;
       }
+    }
+
+    /* 毕业倒计时 + 每日语录 */
+    .grad-count {
+      font-size: 2.3rem;
+      font-weight: 700;
+      color: var(--deep-blue);
+      line-height: 1.15;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .grad-label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin: 2px 0 8px;
+    }
+
+    .grad-time {
+      color: var(--accent);
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .grad-meta {
+      color: var(--muted);
+      font-size: 0.76rem;
+      margin-top: 8px;
+      line-height: 1.7;
+    }
+
+    .grad-quote {
+      margin-top: 18px;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+    }
+
+    .grad-quote-label {
+      color: var(--accent);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .grad-quote-text {
+      margin: 8px 0 6px;
+      font-size: 0.92rem;
+      line-height: 1.75;
+      color: var(--text);
+      font-style: italic;
+      quotes: "“" "”" "‘" "’";
+    }
+
+    .grad-quote-text::before { content: open-quote; }
+    .grad-quote-text::after { content: close-quote; }
+
+    .grad-quote-src {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .grad-quote-btn {
+      margin-top: 12px;
+      padding: 5px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--deep-blue);
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .grad-quote-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    html[data-theme="dark"] .grad-count {
+      color: var(--text);
     }
 
     @media (max-width: 480px) {
@@ -2366,8 +2531,14 @@
           <summary data-i18n="album.summary">生活相册（点击展开查看）</summary>
           <div class="edu-body">
             <p class="album-mode" id="albumMode" data-i18n="album.loading">正在加载相册…</p>
-            <!-- 每个相册一个圆形循环轮播：直接左右拖动，自动循环 -->
-            <div id="albumCarousels"></div>
+            <!-- 相册书架：13 本相册横向排列，左右滑动浏览 -->
+            <div class="ac-shelf-wrap">
+              <button type="button" class="ac-nav ac-nav-prev" id="albumShelfPrev" aria-label="上一组相册">‹</button>
+              <div class="ac-shelf" id="albumShelf">
+                <!-- 每张卡片 = 一本相册（照片圆形循环轮播） -->
+              </div>
+              <button type="button" class="ac-nav ac-nav-next" id="albumShelfNext" aria-label="下一组相册">›</button>
+            </div>
           </div>
         </details>
 
@@ -2498,6 +2669,29 @@
             <p class="stats-note" data-i18n="stats.note">今日访问 / 访客数据由 CounterAPI 免费计数服务提供。</p>
           </article>
 
+          <!-- 中：毕业倒计时 + 每日语录 -->
+          <article class="site-card">
+            <div class="site-card-head">
+              <h3 data-i18n="grad.title">毕业倒计时 · 每日语录</h3>
+              <span class="live-badge">
+                <span class="live-dot" aria-hidden="true"></span>
+                <span data-i18n="stats.live">实时</span>
+              </span>
+            </div>
+
+            <div class="grad-count" id="gradDays">–</div>
+            <div class="grad-label" data-i18n="grad.daysLeft">距离毕业还剩</div>
+            <div class="grad-time" id="gradTime">-- 天 -- 时 -- 分 -- 秒</div>
+            <div class="grad-meta" id="gradMeta">目标 2028-05-10</div>
+
+            <div class="grad-quote">
+              <div class="grad-quote-label" data-i18n="grad.quote">每日语录</div>
+              <blockquote class="grad-quote-text" id="gradQuote">–</blockquote>
+              <span class="grad-quote-src" id="gradQuoteSrc"></span>
+              <button type="button" class="grad-quote-btn" id="gradQuoteBtn" data-i18n="grad.quoteNext">换一条</button>
+            </div>
+          </article>
+
           <!-- 右：日历 + 时钟 -->
           <article class="site-card">
             <div class="site-card-head">
@@ -2603,7 +2797,9 @@
     (function () {
       const albumDetails = document.getElementById("albumDetails");
       const modeEl = document.getElementById("albumMode");
-      const carouselsEl = document.getElementById("albumCarousels");
+      const shelfEl = document.getElementById("albumShelf");
+      const shelfPrevBtn = document.getElementById("albumShelfPrev");
+      const shelfNextBtn = document.getElementById("albumShelfNext");
       const lightbox = document.getElementById("albumLightbox");
       const lightboxImg = document.getElementById("lightboxImg");
       const lightboxCaption = document.getElementById("lightboxCaption");
@@ -2700,6 +2896,17 @@
         head.querySelector(".ac-count").textContent =
           t("album.photoCount", { n: album.images.length });
         head.querySelector(".ac-desc").innerHTML = mdToHtml(albumDesc(album));
+        // 描述默认两行截断，点击“展开/收起”切换
+        if (albumDesc(album)) {
+          const toggle = document.createElement("span");
+          toggle.className = "ac-desc-toggle";
+          toggle.textContent = t("album.descMore");
+          head.appendChild(toggle);
+          toggle.addEventListener("click", function () {
+            const expanded = head.querySelector(".ac-desc").classList.toggle("expanded");
+            toggle.textContent = t(expanded ? "album.descLess" : "album.descMore");
+          });
+        }
         wrap.appendChild(head);
 
         // 轮播舞台：上一张 | 当前张 | 下一张
@@ -2866,11 +3073,35 @@
       }
 
       function renderCarousels() {
-        carouselsEl.innerHTML = "";
+        shelfEl.innerHTML = "";
         data.albums.forEach(function (album) {
-          carouselsEl.appendChild(buildCarousel(album));
+          shelfEl.appendChild(buildCarousel(album));
         });
       }
+
+      /* 书架横向移动：左右箭头 / 鼠标在非照片区拖动 */
+      function shelfScroll(dir) {
+        const card = shelfEl.querySelector(".ac-album");
+        const step = card ? (card.offsetWidth || 340) + 16 : 340;
+        if (shelfEl.scrollBy) shelfEl.scrollBy({ left: dir * step, behavior: "smooth" });
+        else shelfEl.scrollLeft += dir * step;
+      }
+
+      shelfPrevBtn.addEventListener("click", function () { shelfScroll(-1); });
+      shelfNextBtn.addEventListener("click", function () { shelfScroll(1); });
+
+      let shelfDrag = null;
+      shelfEl.addEventListener("pointerdown", function (e) {
+        if (e.target.closest(".ac-stage")) return;   // 照片区交给轮播翻照片
+        shelfDrag = { x: e.clientX, left: shelfEl.scrollLeft };
+      });
+      shelfEl.addEventListener("pointermove", function (e) {
+        if (!shelfDrag) return;
+        const dx = e.clientX - shelfDrag.x;
+        shelfEl.scrollLeft = shelfDrag.left - dx;
+      });
+      window.addEventListener("pointerup", function () { shelfDrag = null; });
+      window.addEventListener("pointercancel", function () { shelfDrag = null; });
 
       /* 大图查看（lightbox） */
       function openLightbox(src, caption) {
@@ -3023,12 +3254,15 @@
         "album.fail": "相册配置加载失败：请先在项目目录运行 python build_album.py 生成相册资源。",
         "album.photoCount": "{n} 张照片",
         "album.prev": "← 上一页", "album.next": "下一页 →",
+        "album.descMore": "展开 ▾", "album.descLess": "收起 ▴",
                 "contact.title": "联系方式",
         "contact.emailTitle": "邮箱", "contact.emailNote": "欢迎交流与合作",
         "contact.emailAlt": "备用：3313952565@qq.com",
         "contact.scholarTitle": "ResearchGate", "contact.scholarNote": "查看论文与科研动态",
         "contact.orcidTitle": "ORCID", "contact.orcidNote": "学术身份标识",
         "site.title": "站点统计 · 日历时钟",
+        "grad.title": "毕业倒计时 · 每日语录", "grad.daysLeft": "距离毕业还剩",
+        "grad.done": "毕业快乐 🎓", "grad.quote": "每日语录", "grad.quoteNext": "换一条",
         "stats.title": "站点统计", "stats.live": "实时",
         "stats.totalVisits": "累计访问", "stats.totalVisitors": "累计访客",
         "stats.todayVisits": "今日访问", "stats.todayVisitors": "今日访客",
@@ -3112,12 +3346,15 @@
         "album.fail": "Album config failed to load: run python build_album.py first.",
         "album.photoCount": "{n} photos",
         "album.prev": "← Prev", "album.next": "Next →",
+        "album.descMore": "More ▾", "album.descLess": "Less ▴",
                 "contact.title": "Contact",
         "contact.emailTitle": "Email", "contact.emailNote": "Welcome to connect and collaborate",
         "contact.emailAlt": "Alt: 3313952565@qq.com",
         "contact.scholarTitle": "ResearchGate", "contact.scholarNote": "Publications & research updates",
         "contact.orcidTitle": "ORCID", "contact.orcidNote": "Researcher identifier",
         "site.title": "Site Stats · Calendar & Clock",
+        "grad.title": "Graduation Countdown · Daily Quote", "grad.daysLeft": "Days until graduation",
+        "grad.done": "Graduation Day 🎓", "grad.quote": "Daily Quote", "grad.quoteNext": "Another",
         "stats.title": "Site Statistics", "stats.live": "LIVE",
         "stats.totalVisits": "Total Visits", "stats.totalVisitors": "Total Visitors",
         "stats.todayVisits": "Today Visits", "stats.todayVisitors": "Today Visitors",
@@ -3421,6 +3658,126 @@
       updateRuntime();
     }
 
+    /* ---------- 11.4b 毕业倒计时 + 每日语录 ----------
+       日期常量可按需修改：
+       USTC_START  2019-08-23  科大入学
+       PHD_START   2025-09-01  博士入学
+       GRAD_DATE   2028-05-10  预计毕业
+       语录列表 QUOTES 可自由增删（中英对照 + 出处）。 */
+    const USTC_START = new Date(2019, 7, 23);
+    const PHD_START = new Date(2025, 8, 1);
+    const GRAD_DATE = new Date(2028, 4, 10);
+
+    function updateGrad() {
+      const daysEl = document.getElementById("gradDays");
+      const timeEl = document.getElementById("gradTime");
+      const metaEl = document.getElementById("gradMeta");
+      if (!daysEl || !timeEl || !metaEl) return;
+      const now = Date.now();
+      const diff = GRAD_DATE.getTime() - now;
+      const dayMs = 86400000;
+      if (diff <= 0) {
+        daysEl.textContent = "🎓";
+        timeEl.textContent = t("grad.done");
+        metaEl.textContent = "";
+        return;
+      }
+      daysEl.textContent = Math.ceil(diff / dayMs).toLocaleString();
+      const d = Math.floor(diff / dayMs);
+      const h = Math.floor(diff % dayMs / 3600000);
+      const m = Math.floor(diff % 3600000 / 60000);
+      const s = Math.floor(diff % 60000 / 1000);
+      timeEl.textContent = currentLang === "en"
+        ? d + " d " + h + " h " + m + " m " + s + " s"
+        : d + " 天 " + h + " 时 " + m + " 分 " + s + " 秒";
+      const phdDays = Math.floor((now - PHD_START.getTime()) / dayMs) + 1;
+      const ustcDays = Math.floor((now - USTC_START.getTime()) / dayMs) + 1;
+      metaEl.textContent = currentLang === "en"
+        ? "Target 2028-05-10 · PhD day " + phdDays + " · USTC day " + ustcDays
+        : "目标 2028-05-10 · 博士已入学 " + phdDays + " 天 · 科大已入校 " + ustcDays + " 天";
+    }
+
+    /* 每日语录（中英对照，约 50 条），按日期自动轮换，可手动“换一条” */
+    const QUOTES = [
+      { zh: "想象力比知识更重要。", en: "Imagination is more important than knowledge.", src: "— Albert Einstein 爱因斯坦" },
+      { zh: "不要努力成为一个成功者，而要努力成为一个有价值的人。", en: "Try not to become a man of success, but rather try to become a man of value.", src: "— Albert Einstein 爱因斯坦" },
+      { zh: "如果我看得更远，那是因为我站在巨人的肩膀上。", en: "If I have seen further, it is by standing on the shoulders of giants.", src: "— Isaac Newton 牛顿" },
+      { zh: "生活中没有什么可怕的东西，只有需要理解的东西。", en: "Nothing in life is to be feared; it is only to be understood.", src: "— Marie Curie 居里夫人" },
+      { zh: "我们应该有恒心，尤其要有自信心。", en: "We must have perseverance and, above all, confidence in ourselves.", src: "— Marie Curie 居里夫人" },
+      { zh: "天才是 1% 的灵感加 99% 的汗水。", en: "Genius is one percent inspiration and ninety-nine percent perspiration.", src: "— Thomas Edison 爱迪生" },
+      { zh: "我没有失败，我只是找到了一万种行不通的方法。", en: "I have not failed. I have just found 10,000 ways that won't work.", src: "— Thomas Edison 爱迪生" },
+      { zh: "能够生存下来的物种，不是最强壮的，而是最能适应变化的。", en: "It is not the strongest of the species that survives, but the most adaptable to change.", src: "— Charles Darwin 达尔文" },
+      { zh: "黑夜无论怎样悠长，白昼总会到来。", en: "The night is long that never finds the day.", src: "— William Shakespeare 莎士比亚" },
+      { zh: "哪里有天才，我是把别人喝咖啡的工夫都用在工作上的。", en: "There is no such thing as genius; I only spent the time others spent drinking coffee on my work.", src: "— 鲁迅 Lu Xun" },
+      { zh: "路漫漫其修远兮，吾将上下而求索。", en: "The road ahead is long and far; I will search high and low.", src: "— 屈原 Qu Yuan" },
+      { zh: "博观而约取，厚积而薄发。", en: "Read widely and take what is essential; accumulate deeply and release sparingly.", src: "— 苏轼 Su Shi" },
+      { zh: "不积跬步，无以至千里。", en: "A journey of a thousand miles begins with a single step.", src: "— 荀子 Xunzi" },
+      { zh: "合抱之木，生于毫末。", en: "A mighty tree grows from a tiny sprout.", src: "— 老子 Laozi" },
+      { zh: "学而不思则罔，思而不学则殆。", en: "Learning without thinking is futile; thinking without learning is perilous.", src: "— 孔子 Confucius" },
+      { zh: "知之者不如好之者，好之者不如乐之者。", en: "Those who know are not as good as those who love; those who love are not as good as those who delight.", src: "— 孔子 Confucius" },
+      { zh: "业精于勤，荒于嬉。", en: "Achievement comes from diligence and is wasted by idleness.", src: "— 韩愈 Han Yu" },
+      { zh: "看似寻常最奇崛，成如容易却艰辛。", en: "The most remarkable things often seem ordinary; what seems easy is won with hardship.", src: "— 王安石 Wang Anshi" },
+      { zh: "咬定青山不放松，立根原在破岩中。", en: "Cling to the green mountain and never let go; roots grow deep in the broken rock.", src: "— 郑板桥 Zheng Banqiao" },
+      { zh: "志不立，天下无可成之事。", en: "Without resolve, nothing in the world can be accomplished.", src: "— 王阳明 Wang Yangming" },
+      { zh: "盛年不重来，一日难再晨。", en: "Youth will not return; a day will not dawn twice.", src: "— 陶渊明 Tao Yuanming" },
+      { zh: "生活就像一本书，愚者草草翻过，智者细细品读。", en: "Life is like a book; fools skim it, the wise read it carefully.", src: "— Arthur Schopenhauer 叔本华" },
+      { zh: "世界上只有一种真正的英雄主义，那就是认清生活真相后依然热爱生活。", en: "There is only one heroism in the world: to see the world as it is, and still love it.", src: "— Romain Rolland 罗曼·罗兰" },
+      { zh: "那些杀不死我的，终将使我更强大。", en: "What does not kill me makes me stronger.", src: "— Friedrich Nietzsche 尼采" },
+      { zh: "并非因为事情困难我们不敢做，而是因为我们不敢做，事情才变得困难。", en: "It is not because things are difficult that we do not dare; it is because we do not dare that things become difficult.", src: "— Seneca 塞内加" },
+      { zh: "没有准备的人，就是在准备失败。", en: "By failing to prepare, you are preparing to fail.", src: "— Benjamin Franklin 富兰克林" },
+      { zh: "唯一值得恐惧的，就是恐惧本身。", en: "The only thing we have to fear is fear itself.", src: "— Franklin D. Roosevelt 罗斯福" },
+      { zh: "成功不是终点，失败也非末日，最重要的是继续前行的勇气。", en: "Success is not final, failure is not fatal: it is the courage to continue that counts.", src: "— Winston Churchill 丘吉尔" },
+      { zh: "未来取决于你今天所做的事。", en: "The future depends on what you do today.", src: "— Mahatma Gandhi 甘地" },
+      { zh: "我们常常无法做伟大的事，但可以用伟大的爱去做小事。", en: "We can do no great things, only small things with great love.", src: "— Mother Teresa 特蕾莎修女" },
+      { zh: "保持饥饿，保持愚蠢。", en: "Stay hungry, stay foolish.", src: "— Steve Jobs 乔布斯" },
+      { zh: "把每一天都当作生命中的最后一天。", en: "If today were the last day of my life, would I want to do what I am about to do today?", src: "— Steve Jobs 乔布斯" },
+      { zh: "今天很残酷，明天更残酷，后天很美好。", en: "Today is hard, tomorrow will be worse, but the day after tomorrow will be beautiful.", src: "— 马云 Jack Ma" },
+      { zh: "聪明出于勤奋，天才在于积累。", en: "Intelligence comes from diligence; genius lies in accumulation.", src: "— 华罗庚 Hua Luogeng" },
+      { zh: "不要失去信心，只要坚持不懈，就终会有成果。", en: "Do not lose confidence; perseverance will always bring results.", src: "— 钱学森 Qian Xuesen" },
+      { zh: "人就像一粒种子，要做一粒好种子。", en: "A person is like a seed; be a good seed.", src: "— 袁隆平 Yuan Longping" },
+      { zh: "没有行不行，只有肯不肯坚持。", en: "There is no can or cannot; only whether you persist.", src: "— 屠呦呦 Tu Youyou" },
+      { zh: "认识你自己。", en: "Know thyself.", src: "— Socrates 苏格拉底" },
+      { zh: "我们是我们反复做的事情。因此，卓越不是一种行为，而是一种习惯。", en: "We are what we repeatedly do. Excellence, then, is not an act, but a habit.", src: "— Aristotle 亚里士多德" },
+      { zh: "你无法教会一个人任何事，只能帮助他找到答案。", en: "You cannot teach a man anything; you can only help him find it within himself.", src: "— Galileo Galilei 伽利略" },
+      { zh: "我思故我在。", en: "I think, therefore I am.", src: "— René Descartes 笛卡尔" },
+      { zh: "机遇只偏爱有准备的头脑。", en: "Chance favors the prepared mind.", src: "— Louis Pasteur 巴斯德" },
+      { zh: "工作。完成。发表。", en: "Work. Finish. Publish.", src: "— Michael Faraday 法拉第" },
+      { zh: "没有充分的实验依据，我不做任何结论。", en: "I have not drawn any conclusion without sufficient experimental evidence.", src: "— Antoine Lavoisier 拉瓦锡" },
+      { zh: "生命以负熵为食。", en: "Life feeds on negative entropy.", src: "— Erwin Schrödinger 薛定谔" },
+      { zh: "首要原则是你不能欺骗自己。", en: "The first principle is that you must not fool yourself.", src: "— Richard Feynman 费曼" },
+      { zh: "专家是在一个很小的领域里犯过所有错误的人。", en: "An expert is a person who has made all the mistakes that can be made in a very narrow field.", src: "— Niels Bohr 玻尔" },
+      { zh: "科学研究不能只靠热情，还要靠坚持。", en: "Research cannot rely on enthusiasm alone, but on perseverance.", src: "— 钱三强 Qian Sanqiang" },
+      { zh: "攀登科学高峰，就像登山运动员攀登珠穆朗玛峰。", en: "Climbing the peak of science is like a mountaineer ascending Everest.", src: "— 陈景润 Chen Jingrun" },
+      { zh: "对知识的追求、对爱情的渴望、对人类苦难的同情，这三种激情支配了我的一生。", en: "Three passions, simple but overwhelmingly strong, have governed my life: the longing for love, the search for knowledge, and unbearable pity for the suffering of mankind.", src: "— Bertrand Russell 罗素" }
+    ];
+
+    let quoteOffset = 0;
+    try { quoteOffset = parseInt(localStorage.getItem("grad-quote-offset") || "0", 10) || 0; } catch (e) { /* 忽略 */ }
+
+    function dayOfYearIndex() {
+      const n = new Date();
+      const start = new Date(n.getFullYear(), 0, 0);
+      return Math.floor((n.getTime() - start.getTime()) / 86400000);
+    }
+
+    function renderQuote() {
+      const qEl = document.getElementById("gradQuote");
+      const sEl = document.getElementById("gradQuoteSrc");
+      if (!qEl || !QUOTES.length) return;
+      const q = QUOTES[(dayOfYearIndex() + quoteOffset) % QUOTES.length];
+      qEl.textContent = currentLang === "en" ? q.en : q.zh;
+      if (sEl) sEl.textContent = q.src;
+    }
+
+    const gradQuoteBtn = document.getElementById("gradQuoteBtn");
+    if (gradQuoteBtn) {
+      gradQuoteBtn.addEventListener("click", function () {
+        quoteOffset++;
+        try { localStorage.setItem("grad-quote-offset", String(quoteOffset)); } catch (e) { /* 忽略 */ }
+        renderQuote();
+      });
+    }
+
     /* ---------- 11.5 月历（含农历、节日、节气） ---------- */
     let calYear = new Date().getFullYear();
     let calMonth = new Date().getMonth();
@@ -3519,6 +3876,8 @@
     function siteRefresh() {
       renderCalendar();
       updateClock();
+      updateGrad();
+      renderQuote();
     }
     window.siteRefresh = siteRefresh;
 
@@ -3527,7 +3886,9 @@
     syncTotalStats();
     setInterval(syncTotalStats, 2000);       // 等待不蒜子异步写入
     updateClock();
-    setInterval(updateClock, 1000);          // 时钟与运行时间每秒跳动
+    updateGrad();
+    renderQuote();
+    setInterval(function () { updateClock(); updateGrad(); }, 1000);
     renderCalendar();
 
     document.addEventListener("visibilitychange", function () {
@@ -3535,6 +3896,7 @@
         loadTodayStats();
         syncTotalStats();
         updateClock();
+        updateGrad();
         renderCalendar();
       }
     });
