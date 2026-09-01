@@ -988,8 +988,8 @@
     }
 
     .ac-album {
-      flex: 0 0 auto;
-      width: min(340px, 80vw);
+      flex: 0 0 100%;                      /* 每屏一本相册 */
+      width: 100%;
       scroll-snap-align: start;
       display: flex;
       flex-direction: column;
@@ -1572,14 +1572,14 @@
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
+      gap: 16px;
     }
 
     .stat-item {
       display: flex;
       flex-direction: column;
-      gap: 2px;
-      padding: 14px 16px;
+      gap: 4px;
+      padding: 18px 18px 16px;
       background: var(--bg);
       border: 1px solid var(--line);
       border-radius: 12px;
@@ -1593,21 +1593,21 @@
 
     .stat-value {
       color: var(--deep-blue);
-      font-size: 1.7rem;
+      font-size: 2rem;
       font-weight: 700;
       line-height: 1.2;
       font-variant-numeric: tabular-nums;
     }
 
     .stat-value.small {
-      font-size: 1.02rem;
+      font-size: 1.25rem;
       font-weight: 600;
       word-break: break-all;
     }
 
     .stat-label {
       color: var(--muted);
-      font-size: 0.82rem;
+      font-size: 0.9rem;
     }
 
     .stat-runtime {
@@ -1615,11 +1615,11 @@
     }
 
     .stats-note {
-      margin-top: 14px;
-      padding-top: 10px;
+      margin-top: 16px;
+      padding-top: 12px;
       border-top: 1px dashed var(--line);
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: 0.85rem;
     }
 
     /* 时钟 */
@@ -1793,7 +1793,7 @@
 
     /* 毕业倒计时 + 每日语录 */
     .grad-count {
-      font-size: 2.3rem;
+      font-size: 2.7rem;
       font-weight: 700;
       color: var(--deep-blue);
       line-height: 1.15;
@@ -1802,22 +1802,53 @@
 
     .grad-label {
       color: var(--muted);
-      font-size: 0.85rem;
-      margin: 2px 0 8px;
+      font-size: 1rem;
+      margin: 4px 0 10px;
     }
 
     .grad-time {
       color: var(--accent);
-      font-size: 0.95rem;
+      font-size: 1.2rem;
       font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+    }
+
+    /* 两个入学时间小卡：博士入学 / 科大入学 */
+    .grad-chips {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .grad-chip {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 12px 14px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .grad-chip-label {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .grad-chip-value {
+      color: var(--deep-blue);
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.45;
       font-variant-numeric: tabular-nums;
     }
 
-    .grad-meta {
+    .grad-target {
+      margin-top: 12px;
       color: var(--muted);
-      font-size: 0.76rem;
-      margin-top: 8px;
-      line-height: 1.7;
+      font-size: 0.92rem;
     }
 
     .grad-quote {
@@ -1835,7 +1866,7 @@
 
     .grad-quote-text {
       margin: 8px 0 6px;
-      font-size: 0.92rem;
+      font-size: 1rem;
       line-height: 1.75;
       color: var(--text);
       font-style: italic;
@@ -1848,7 +1879,7 @@
     .grad-quote-src {
       display: block;
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: 0.85rem;
     }
 
     .grad-quote-btn {
@@ -1869,6 +1900,10 @@
     }
 
     html[data-theme="dark"] .grad-count {
+      color: var(--text);
+    }
+
+    html[data-theme="dark"] .grad-chip-value {
       color: var(--text);
     }
 
@@ -2682,7 +2717,18 @@
             <div class="grad-count" id="gradDays">–</div>
             <div class="grad-label" data-i18n="grad.daysLeft">距离毕业还剩</div>
             <div class="grad-time" id="gradTime">-- 天 -- 时 -- 分 -- 秒</div>
-            <div class="grad-meta" id="gradMeta">目标 2028-05-10</div>
+
+            <div class="grad-chips">
+              <div class="grad-chip">
+                <span class="grad-chip-label" data-i18n="grad.phd">博士入学</span>
+                <span class="grad-chip-value" id="gradPhd">2025-09-01 · – 天</span>
+              </div>
+              <div class="grad-chip">
+                <span class="grad-chip-label" data-i18n="grad.ustc">科大入学</span>
+                <span class="grad-chip-value" id="gradUstc">2019-08-23 · – 天</span>
+              </div>
+            </div>
+            <div class="grad-target" id="gradTarget">预计毕业 2028-05-10</div>
 
             <div class="grad-quote">
               <div class="grad-quote-label" data-i18n="grad.quote">每日语录</div>
@@ -3263,6 +3309,7 @@
         "site.title": "站点统计 · 日历时钟",
         "grad.title": "毕业倒计时 · 每日语录", "grad.daysLeft": "距离毕业还剩",
         "grad.done": "毕业快乐 🎓", "grad.quote": "每日语录", "grad.quoteNext": "换一条",
+        "grad.phd": "博士入学", "grad.ustc": "科大入学",
         "stats.title": "站点统计", "stats.live": "实时",
         "stats.totalVisits": "累计访问", "stats.totalVisitors": "累计访客",
         "stats.todayVisits": "今日访问", "stats.todayVisitors": "今日访客",
@@ -3355,6 +3402,7 @@
         "site.title": "Site Stats · Calendar & Clock",
         "grad.title": "Graduation Countdown · Daily Quote", "grad.daysLeft": "Days until graduation",
         "grad.done": "Graduation Day 🎓", "grad.quote": "Daily Quote", "grad.quoteNext": "Another",
+        "grad.phd": "PhD Enrollment", "grad.ustc": "USTC Enrollment",
         "stats.title": "Site Statistics", "stats.live": "LIVE",
         "stats.totalVisits": "Total Visits", "stats.totalVisitors": "Total Visitors",
         "stats.todayVisits": "Today Visits", "stats.todayVisitors": "Today Visitors",
@@ -3671,15 +3719,19 @@
     function updateGrad() {
       const daysEl = document.getElementById("gradDays");
       const timeEl = document.getElementById("gradTime");
-      const metaEl = document.getElementById("gradMeta");
-      if (!daysEl || !timeEl || !metaEl) return;
+      const phdEl = document.getElementById("gradPhd");
+      const ustcEl = document.getElementById("gradUstc");
+      const targetEl = document.getElementById("gradTarget");
+      if (!daysEl || !timeEl) return;
       const now = Date.now();
       const diff = GRAD_DATE.getTime() - now;
       const dayMs = 86400000;
       if (diff <= 0) {
         daysEl.textContent = "🎓";
         timeEl.textContent = t("grad.done");
-        metaEl.textContent = "";
+        if (phdEl) phdEl.textContent = "–";
+        if (ustcEl) ustcEl.textContent = "–";
+        if (targetEl) targetEl.textContent = currentLang === "en" ? "2028-05-10" : "2028-05-10";
         return;
       }
       daysEl.textContent = Math.ceil(diff / dayMs).toLocaleString();
@@ -3692,9 +3744,15 @@
         : d + " 天 " + h + " 时 " + m + " 分 " + s + " 秒";
       const phdDays = Math.floor((now - PHD_START.getTime()) / dayMs) + 1;
       const ustcDays = Math.floor((now - USTC_START.getTime()) / dayMs) + 1;
-      metaEl.textContent = currentLang === "en"
-        ? "Target 2028-05-10 · PhD day " + phdDays + " · USTC day " + ustcDays
-        : "目标 2028-05-10 · 博士已入学 " + phdDays + " 天 · 科大已入校 " + ustcDays + " 天";
+      if (phdEl) phdEl.textContent = currentLang === "en"
+        ? "2025-09-01 · day " + phdDays
+        : "2025-09-01 · 已 " + phdDays + " 天";
+      if (ustcEl) ustcEl.textContent = currentLang === "en"
+        ? "2019-08-23 · day " + ustcDays
+        : "2019-08-23 · 已 " + ustcDays + " 天";
+      if (targetEl) targetEl.textContent = currentLang === "en"
+        ? "Expected graduation: 2028-05-10"
+        : "预计毕业 2028-05-10";
     }
 
     /* 每日语录（中英对照，约 50 条），按日期自动轮换，可手动“换一条” */
